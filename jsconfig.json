@@ -1,0 +1,4 @@
+{
+  "include": ["./dist/types", "*.js"],
+  "exclude": ["node_modules"]
+}

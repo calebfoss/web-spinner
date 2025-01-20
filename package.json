@@ -1,0 +1,17 @@
+{
+  "devDependencies": {
+    "ts-loader": "^9.5.2",
+    "typescript-declaration-webpack-plugin": "^0.3.0",
+    "webpack": "^5.97.1",
+    "webpack-cli": "^6.0.1"
+  },
+  "name": "web-spinner",
+  "version": "0.0.0",
+  "module": "src/index.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Caleb Foss",
+  "license": "ISC",
+  "description": ""
+}
