@@ -1,14 +1,22 @@
+export type AngleUnit = (typeof Angle)["unit"][keyof (typeof Angle)["unit"]];
+
 export class Angle {
   #degrees: number | null = null;
   #radians: number | null = null;
 
   constructor(unit: AngleUnit, value: number) {
-    if (unit === "degrees") this.#degrees = value;
-    else this.#radians = value;
+    switch (unit) {
+      case Angle.unit.degrees:
+        this.#degrees = value;
+        break;
+      case Angle.unit.radians:
+        this.#radians = value;
+        break;
+    }
   }
 
   static degrees(value: number) {
-    return new Angle("degrees", value);
+    return new Angle(Angle.unit.degrees, value);
   }
 
   get degrees() {
@@ -30,7 +38,7 @@ export class Angle {
   }
 
   static radians(value: number) {
-    return new Angle("radians", value);
+    return new Angle(Angle.unit.radians, value);
   }
 
   get radians() {
@@ -50,4 +58,11 @@ export class Angle {
 
     this.#degrees = value * (180 / Math.PI);
   }
+
+  static unit = {
+    degrees: "deg",
+    radians: "rad",
+    gradians: "grad",
+    turn: "turn",
+  } as const;
 }

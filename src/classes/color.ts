@@ -5,24 +5,27 @@ function hex(n: number) {
 }
 
 export class Color {
-  #hex: string;
+  #str: string;
 
   constructor(gray: number, alpha?: number);
   constructor(red: number, green: number, blue: number, alpha?: number);
+  constructor(colorString: string);
   constructor(
-    firstArg: number,
+    firstArg: number | string,
     secondArg?: number,
     blue?: number,
     alpha?: number
   ) {
-    if (arguments.length < 3) {
+    if (typeof firstArg === "string") {
+      this.#str = firstArg;
+    } else if (arguments.length < 3) {
       const grayNum = firstArg;
       const grayHex = hex(grayNum);
 
       const alphaNum = secondArg;
       const alphaHex = alphaNum === undefined ? "" : hex(alphaNum);
 
-      this.#hex = `#${grayHex}${grayHex}${grayHex}${alphaHex}`;
+      this.#str = `#${grayHex}${grayHex}${grayHex}${alphaHex}`;
     } else {
       const red = firstArg;
       const redHex = hex(red);
@@ -34,7 +37,7 @@ export class Color {
 
       const alphaHex = alpha === undefined ? "" : hex(alpha);
 
-      this.#hex = `#${redHex}${greenHex}${blueHex}${alphaHex}`;
+      this.#str = `#${redHex}${greenHex}${blueHex}${alphaHex}`;
     }
   }
 
@@ -42,8 +45,12 @@ export class Color {
     return new Color(value, alpha);
   }
 
-  get hex() {
-    return this.#hex;
+  static colorString(value: string) {
+    return new Color(value);
+  }
+
+  get string() {
+    return this.#str;
   }
 
   static rgb(red: number, green: number, blue: number, alpha?: number) {

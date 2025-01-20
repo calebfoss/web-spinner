@@ -3,7 +3,7 @@ import { strokeable } from "../../mixins/stroke";
 import { transformeable } from "../../mixins/transform";
 import { Canvas2DRenderable } from "./renderable";
 
-export class CanvasRectangle extends strokeable(
+export class Canvas2DRectangle extends strokeable(
   fillable(transformeable(Canvas2DRenderable))
 ) {
   #width = 100;

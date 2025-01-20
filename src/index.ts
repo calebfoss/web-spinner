@@ -1,8 +1,24 @@
 import { Canvas2DCanvasElement } from "./elements/canvas2d/canvas";
-import { CanvasRectangle } from "./elements/canvas2d/rectangle";
+import { Canvas2DRectangle } from "./elements/canvas2d/rectangle";
 import { Color as ColorImport } from "./classes/color";
 import { Vector2D as Vector2DImport } from "./classes/vector2d";
 import { Angle as AngleImport } from "./classes/angle";
+import { Canvas2DText } from "./elements/canvas2d/text";
+import { createCustomCanvas2D } from "./utlities/createCustomElement";
+import { Font as FontImport, FontSize as FontSizeImport } from "./classes/font";
+import { Units } from "./classes/units";
+
+export type Canvas2DClassTagMap = {
+  ["canvas-2d"]: typeof Canvas2DCanvasElement;
+  ["canvas-2d-rectangle"]: typeof Canvas2DRectangle;
+  ["canvas-2d-text"]: typeof Canvas2DText;
+};
+
+export type Canvas2DElementTagMap = {
+  [Tag in keyof Canvas2DClassTagMap]: InstanceType<Canvas2DClassTagMap[Tag]>;
+};
+
+export type CSSLengthUnit = (typeof Units.size)[keyof typeof Units.size];
 
 export const NONE = "none";
 
@@ -41,23 +57,36 @@ export function createMultiple<R extends Node>(
   return new Array(count).fill(0).map((_, index) => generator(index));
 }
 
-customElements.define("z-canvas", Canvas2DCanvasElement);
+function defineCustom<T extends keyof Canvas2DClassTagMap>(
+  tag: T,
+  ElementClass: Canvas2DClassTagMap[T]
+) {
+  return customElements.define(tag, ElementClass);
+}
+
+defineCustom("canvas-2d", Canvas2DCanvasElement);
+
+defineCustom("canvas-2d-rectangle", Canvas2DRectangle);
+
+defineCustom("canvas-2d-text", Canvas2DText);
 
 export function createCanvas(options?: Partial<Canvas2DCanvasElement>) {
-  const element = document.createElement("z-canvas") as Canvas2DCanvasElement;
+  const element = createCustomCanvas2D("canvas-2d");
 
   Object.assign(element, options);
 
   return element;
 }
 
-customElements.define("z-rectangle", CanvasRectangle);
-
 export const Color = ColorImport;
 
 export const Vector2D = Vector2DImport;
 
 export const Angle = AngleImport;
+
+export const Font = FontImport;
+
+export const FontSize = FontSizeImport;
 
 const webSpinner = {
   createCanvas,

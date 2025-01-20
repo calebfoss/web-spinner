@@ -88,7 +88,7 @@ export class Canvas2DCanvasElement extends Canvas2DElement {
     if (this.#background !== "none") {
       context.save();
 
-      context.fillStyle = this.#background.hex;
+      context.fillStyle = this.#background.string;
 
       context.fillRect(0, 0, this.width, this.height);
 
