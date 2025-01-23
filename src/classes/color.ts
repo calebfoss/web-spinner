@@ -49,7 +49,11 @@ export class Color {
     return new Color(value);
   }
 
-  get string() {
+  equals(other: Color) {
+    return this.#str === other.toString();
+  }
+
+  toString() {
     return this.#str;
   }
 

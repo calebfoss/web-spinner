@@ -9,5 +9,5 @@ export class Units {
     pixels: "px",
     percentViewportHeight: "vh",
     percentViewportWidth: "vw",
-  };
+  } as const;
 }

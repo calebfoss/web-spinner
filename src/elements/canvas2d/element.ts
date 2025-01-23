@@ -10,7 +10,11 @@ export class Canvas2DElement extends HTMLElement {
 
   #everyFrame: Updater | null = null;
 
-  attributeChangedCallback(name: string, oldValue: string, newValue: string) {}
+  attributeChangedCallback(
+    name: string,
+    oldValue: string | null,
+    newValue: string | null
+  ) {}
 
   createChild<T extends keyof Canvas2DElementTagMap>(
     tag: T

@@ -13,6 +13,7 @@ export function transformeable<B extends typeof Canvas2DRenderable>(Base: B) {
       ...Base.observedAttributes,
       "angle",
       "anchor",
+      "position",
       "scale",
     ];
 
@@ -26,56 +27,72 @@ export function transformeable<B extends typeof Canvas2DRenderable>(Base: B) {
     }
 
     set angle(value) {
-      this.#angle = value;
+      if (this.#angle.equals(value)) return;
+
+      this.registerChange("angle", (this.#angle = value));
     }
 
     get anchor() {
       return this.#anchor;
     }
 
-    set anchor(vector) {
-      this.#anchor = vector;
+    set anchor(value) {
+      if (this.#anchor.equals(value)) return;
+
+      this.registerChange("anchor", (this.#anchor = value));
     }
 
     attributeChangedCallback(
       name: string,
-      oldValue: string,
-      newValue: string
+      oldValue: string | null,
+      newValue: string | null
     ): void {
-      switch (name) {
-        case "angle":
-          this.#angle = attributeParser.Angle(newValue);
-          break;
-        case "anchor":
-          this.#anchor = attributeParser.Vector2D(newValue);
-          break;
-        case "position":
-          this.#position = attributeParser.Vector2D(newValue);
-          break;
-        case "scale":
-          this.#scale = attributeParser.Vector2D(newValue);
-          break;
+      if (newValue !== null) {
+        switch (name) {
+          case "angle":
+            this.angle = attributeParser.Angle(newValue);
+            break;
+          case "anchor":
+            this.anchor = attributeParser.Vector2D(newValue);
+            break;
+          case "position":
+            this.position = attributeParser.Vector2D(newValue);
+            break;
+          case "scale":
+            this.scale = attributeParser.Vector2D(newValue);
+            break;
+        }
       }
 
       super.attributeChangedCallback(name, oldValue, newValue);
     }
 
     moveAnchor(x: number, y: number) {
+      if (x === 0 && y === 0) return;
+
       this.#anchor.x += x;
       this.#anchor.y += y;
+
+      this.registerChange("anchor", this.#anchor);
     }
 
     movePosition(x: number, y: number) {
+      if (x === 0 && y === 0) return;
+
       this.#position.x += x;
       this.#position.y += y;
+
+      this.registerChange("position", this.#position);
     }
 
     get position() {
       return this.#position;
     }
 
-    set position(vector) {
-      this.#position = vector;
+    set position(value) {
+      if (this.#position.equals(value)) return;
+
+      this.registerChange("position", (this.#position = value));
     }
 
     render(context: CanvasRenderingContext2D, frame: number): void {
@@ -99,8 +116,17 @@ export function transformeable<B extends typeof Canvas2DRenderable>(Base: B) {
     }
 
     set scale(value: Vector2D | number) {
-      if (typeof value === "number") this.#scale = new Vector2D(value);
-      else this.#scale = value;
+      if (typeof value === "number") {
+        const vectorValue = new Vector2D(value);
+
+        if (this.#scale.equals(vectorValue)) return;
+
+        this.registerChange("scale", (this.#scale = vectorValue));
+      } else if (this.#scale.equals(value)) {
+        return;
+      } else {
+        this.registerChange("scale", (this.#scale = value));
+      }
     }
   };
 }

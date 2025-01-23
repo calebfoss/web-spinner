@@ -5,7 +5,6 @@ import { Vector2D as Vector2DImport } from "./classes/vector2d";
 import { Angle as AngleImport } from "./classes/angle";
 import { Canvas2DText } from "./elements/canvas2d/text";
 import { createCustomCanvas2D } from "./utlities/createCustomElement";
-import { Font as FontImport, FontSize as FontSizeImport } from "./classes/font";
 import { Units } from "./classes/units";
 
 export type Canvas2DClassTagMap = {
@@ -83,10 +82,6 @@ export const Color = ColorImport;
 export const Vector2D = Vector2DImport;
 
 export const Angle = AngleImport;
-
-export const Font = FontImport;
-
-export const FontSize = FontSizeImport;
 
 const webSpinner = {
   createCanvas,

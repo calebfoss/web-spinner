@@ -1,31 +1,66 @@
-import { FontSize } from "../..";
-import { Font, FontSizeUnit } from "../../classes/font";
+import { useFont } from "../../classes/font";
 import { fillable } from "../../mixins/fill";
 import { strokeable } from "../../mixins/stroke";
 import { transformeable } from "../../mixins/transform";
+import { attributeParser } from "../../utlities/attributeParser";
 import { Canvas2DRenderable } from "./renderable";
 
-export class Canvas2DText extends fillable(
-  strokeable(transformeable(Canvas2DRenderable))
-) {
-  #font: Font | null = null;
+const Base = fillable(strokeable(transformeable(useFont(Canvas2DRenderable))));
 
-  createFont(...args: ConstructorParameters<typeof Font>) {
-    return new Font(...args);
+export class Canvas2DText extends Base {
+  static observedAttributes = [
+    ...Base.observedAttributes,
+    "size",
+    "align",
+    "baseline",
+    "font",
+    "stretch",
+  ];
+
+  #align: CanvasTextAlign | null = null;
+  #baseline: CanvasTextBaseline | null = null;
+
+  get align() {
+    return this.#align;
   }
 
-  get font() {
-    return this.#font;
+  set align(value) {
+    if (this.#align === value) return;
+
+    this.registerChange("align", (this.#align = value));
   }
 
-  set font(font) {
-    this.#font = font;
+  attributeChangedCallback(
+    name: string,
+    oldValue: string | null,
+    newValue: string | null
+  ): void {
+    if (newValue === null)
+      return super.attributeChangedCallback(name, oldValue, newValue);
+
+    switch (name) {
+      case "align":
+        this.align = newValue as CanvasTextAlign;
+        break;
+      default:
+        super.attributeChangedCallback(name, oldValue, newValue);
+    }
+  }
+
+  get baseline() {
+    return this.#baseline;
+  }
+
+  set baseline(value) {
+    if (this.#baseline === value) return;
+
+    this.registerChange("baseline", (this.#baseline = value));
   }
 
   render(context: CanvasRenderingContext2D, frame: number): void {
     super.render(context, frame);
 
-    if (this.#font !== null) context.font = this.#font.toString();
+    if (this.#align !== null) context.textAlign = this.#align;
 
     if (this.fill !== "none")
       context.fillText(
@@ -42,24 +77,5 @@ export class Canvas2DText extends fillable(
       );
 
     this.afterRender(context, frame);
-  }
-
-  setFont(...args: ConstructorParameters<typeof Font>) {
-    this.#font = this.createFont(...args);
-  }
-
-  set pixleSize(value: number) {
-    const size = new FontSize(value, "px");
-
-    if (this.#font === null) {
-      this.setFont({ size });
-    } else this.#font.size = size;
-  }
-
-  setSize(value: number, unit: FontSizeUnit) {
-    const size = new FontSize(value, unit);
-
-    if (this.#font === null) this.setFont({ size });
-    else this.#font.size = size;
   }
 }

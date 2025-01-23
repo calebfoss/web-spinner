@@ -37,6 +37,10 @@ export class Angle {
     this.#radians = value * (Math.PI / 180);
   }
 
+  equals(other: Angle) {
+    return this.radians === other.radians;
+  }
+
   static radians(value: number) {
     return new Angle(Angle.unit.radians, value);
   }
@@ -57,6 +61,11 @@ export class Angle {
     if (this.#degrees === null) return;
 
     this.#degrees = value * (180 / Math.PI);
+  }
+
+  toString() {
+    if (this.#degrees !== null) return `${this.#degrees}deg`;
+    return `${this.radians}rad`;
   }
 
   static unit = {

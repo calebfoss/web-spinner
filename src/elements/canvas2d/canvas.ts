@@ -1,12 +1,21 @@
 import { Color } from "../../classes/color";
+import { attributeParser } from "../../utlities/attributeParser";
 import { Canvas2DElement } from "./element";
 import { Canvas2DRenderable } from "./renderable";
 
 export class Canvas2DCanvasElement extends Canvas2DElement {
+  static observedAttributes: string[] = [
+    ...Canvas2DElement.observedAttributes,
+    "width",
+    "height",
+    "background",
+  ];
+
   #animating = false;
   #background: Color | None = "none";
   #context: CanvasRenderingContext2D;
   #frame = 0;
+  #renderQueued = false;
 
   constructor() {
     super();
@@ -24,6 +33,30 @@ export class Canvas2DCanvasElement extends Canvas2DElement {
     this.#context = context;
   }
 
+  attributeChangedCallback(
+    name: string,
+    oldValue: string | null,
+    newValue: string | null
+  ): void {
+    if (newValue !== null) {
+      switch (name) {
+        case "width":
+          this.width = attributeParser.number(newValue);
+          break;
+
+        case "height":
+          this.height = attributeParser.number(newValue);
+          break;
+
+        case "background":
+          this.#background = attributeParser.Color(newValue);
+          break;
+      }
+    }
+
+    super.attributeChangedCallback(name, oldValue, newValue);
+  }
+
   get background() {
     return this.#background;
   }
@@ -34,6 +67,10 @@ export class Canvas2DCanvasElement extends Canvas2DElement {
 
   connectedCallback() {
     this.canvas.style.scale = `${1 / devicePixelRatio}`;
+
+    document.addEventListener("DOMContentLoaded", this.render.bind(this));
+
+    this.addEventListener("change", this.queueRender.bind(this));
   }
 
   get canvas() {
@@ -56,6 +93,14 @@ export class Canvas2DCanvasElement extends Canvas2DElement {
     this.#animating = true;
 
     this.render();
+  }
+
+  queueRender() {
+    if (this.#renderQueued) return;
+
+    this.#renderQueued = true;
+
+    requestAnimationFrame(this.render.bind(this));
   }
 
   get width() {
@@ -88,7 +133,7 @@ export class Canvas2DCanvasElement extends Canvas2DElement {
     if (this.#background !== "none") {
       context.save();
 
-      context.fillStyle = this.#background.string;
+      context.fillStyle = this.#background.toString();
 
       context.fillRect(0, 0, this.width, this.height);
 
@@ -103,6 +148,6 @@ export class Canvas2DCanvasElement extends Canvas2DElement {
 
     context.restore();
 
-    if (this.#animating) requestAnimationFrame(this.render.bind(this));
+    if (this.#animating) this.queueRender();
   }
 }

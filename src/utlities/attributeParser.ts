@@ -1,3 +1,4 @@
+import { NONE } from "..";
 import { Angle, AngleUnit } from "../classes/angle";
 import { Color } from "../classes/color";
 import { Vector2D } from "../classes/vector2d";
@@ -5,6 +6,7 @@ import { Vector2D } from "../classes/vector2d";
 type AttributeTypeMap = {
   number: number;
   Color: Color;
+  FillStrokeStyle: Color | None;
   Vector2D: Vector2D;
   Angle: Angle;
 };
@@ -19,7 +21,7 @@ const angleMatch = new RegExp(
   `(\\d+)\\s*(${Object.values(Angle.unit).join("|")})`
 );
 
-console.log(angleMatch);
+const includesNumbers = (str: string) => str.match(/\d/) !== null;
 
 export const attributeParser: AttributeTypeParser = {
   number(stringValue) {
@@ -45,6 +47,11 @@ export const attributeParser: AttributeTypeParser = {
         return new Color(numbers[0], numbers[1], numbers[2], numbers[3]);
     }
   },
+  FillStrokeStyle(stringValue) {
+    if (stringValue === NONE) return stringValue;
+
+    return attributeParser.Color(stringValue);
+  },
   Vector2D(stringValue) {
     const numbers = stringValue.split(",").map(attributeParser.number);
 
@@ -67,7 +74,7 @@ export const attributeParser: AttributeTypeParser = {
     if (args === null)
       throw new Error(`Angle arguments could not be parsed: ${stringValue}`);
 
-    const value = attributeParser.number(args[0]);
+    const value = attributeParser.number(args[1]);
 
     const unit = args[2] as AngleUnit;
 
