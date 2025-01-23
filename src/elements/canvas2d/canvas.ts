@@ -33,6 +33,10 @@ export class Canvas2DCanvasElement extends Canvas2DElement {
     this.#context = context;
   }
 
+  get animating() {
+    return this.#animating;
+  }
+
   attributeChangedCallback(
     name: string,
     oldValue: string | null,
@@ -147,6 +151,8 @@ export class Canvas2DCanvasElement extends Canvas2DElement {
     }
 
     context.restore();
+
+    this.#renderQueued = false;
 
     if (this.#animating) this.queueRender();
   }

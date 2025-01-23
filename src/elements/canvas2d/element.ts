@@ -8,6 +8,22 @@ type ChildCreator<E extends Canvas2DElement> = (options?: Partial<E>) => E;
 export class Canvas2DElement extends HTMLElement {
   static observedAttributes: string[] = [];
 
+  #eventProxy = (() => {
+    const element = this;
+    return new Proxy(
+      {} as {
+        [EventName in keyof HTMLElementEventMap]: (
+          listener: TypedEventListener<EventName>
+        ) => void;
+      },
+      {
+        get<E extends keyof HTMLElementEventMap>(_: never, eventName: E) {
+          return (listener: TypedEventListener<E>) =>
+            element.addEventListener(eventName, listener);
+        },
+      }
+    );
+  })();
   #everyFrame: Updater | null = null;
 
   attributeChangedCallback(
@@ -38,6 +54,10 @@ export class Canvas2DElement extends HTMLElement {
 
   set everyFrame(updater) {
     this.#everyFrame = updater;
+  }
+
+  get listen() {
+    return this.#eventProxy;
   }
 
   get rectangle(): ChildCreator<Canvas2DRectangle> {

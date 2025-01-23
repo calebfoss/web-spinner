@@ -1,4 +1,4 @@
-import { useFont } from "../../classes/font";
+import { useFont } from "../../mixins/font";
 import { fillable } from "../../mixins/fill";
 import { strokeable } from "../../mixins/stroke";
 import { transformeable } from "../../mixins/transform";
@@ -41,9 +41,12 @@ export class Canvas2DText extends Base {
     switch (name) {
       case "align":
         this.align = newValue as CanvasTextAlign;
-        break;
+        return;
+      case "baseline":
+        this.baseline = newValue as CanvasTextBaseline;
+        return;
       default:
-        super.attributeChangedCallback(name, oldValue, newValue);
+        return super.attributeChangedCallback(name, oldValue, newValue);
     }
   }
 
@@ -62,19 +65,11 @@ export class Canvas2DText extends Base {
 
     if (this.#align !== null) context.textAlign = this.#align;
 
-    if (this.fill !== "none")
-      context.fillText(
-        this.textContent ?? "",
-        this.position.x,
-        this.position.y
-      );
+    if (this.fill !== "none" && this.textContent !== null)
+      context.fillText(this.textContent, this.position.x, this.position.y);
 
-    if (this.stroke !== "none")
-      context.strokeText(
-        this.textContent ?? "",
-        this.position.x,
-        this.position.y
-      );
+    if (this.stroke !== "none" && this.textContent !== null)
+      context.strokeText(this.textContent, this.position.x, this.position.y);
 
     this.afterRender(context, frame);
   }

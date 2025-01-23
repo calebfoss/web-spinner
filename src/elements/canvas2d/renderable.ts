@@ -4,8 +4,9 @@ const changedEvent = new Event("change", { bubbles: true });
 
 const camelToKebabCase = (camel: string) =>
   camel.replace(
-    /.([A-Z])/g,
-    (_, character: string) => `-${character.toLowerCase()}`
+    /(.)([A-Z])/g,
+    (_, beforeCharacter: string, upperCharacter: string) =>
+      `${beforeCharacter}-${upperCharacter.toLowerCase()}`
   );
 
 export class Canvas2DRenderable extends Canvas2DElement {

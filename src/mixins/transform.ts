@@ -105,10 +105,14 @@ export function transformeable<B extends typeof Canvas2DRenderable>(Base: B) {
 
     rotateClockwise(angle: Angle) {
       this.#angle.radians += angle.radians;
+
+      this.registerChange("angle", this.#angle);
     }
 
     rotateCounterclockwise(angle: Angle) {
       this.#angle.radians -= angle.radians;
+
+      this.registerChange("angle", this.#angle);
     }
 
     get scale() {

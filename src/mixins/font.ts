@@ -1,7 +1,7 @@
 import { Canvas2DRenderable } from "../elements/canvas2d/renderable";
 import { attributeParser } from "../utlities/attributeParser";
-import { Angle } from "./angle";
-import { Units } from "./units";
+import { Angle } from "../classes/angle";
+import { Units } from "../classes/units";
 
 export const fontSizeUnits = {
   ...Units.size,
@@ -40,9 +40,12 @@ export function useFont<B extends typeof Canvas2DRenderable>(Base: B) {
       "size",
       "stretch",
       "font-family",
+      "font-style",
+      "kerning",
     ];
 
     #fontFamily: string | null = null;
+    #kerning: CanvasFontKerning | null = null;
     #size: number | null = null;
     #sizeUnit: FontSizeUnit = "px";
     #stretch: CanvasFontStretch | null = null;
@@ -65,6 +68,12 @@ export function useFont<B extends typeof Canvas2DRenderable>(Base: B) {
           return;
         case "font-family":
           this.fontFamily = newValue;
+          return;
+        case "font-style":
+          this.fontStyle = newValue as FontStyle;
+          return;
+        case "kerning":
+          this.kerning = newValue as CanvasFontKerning;
           return;
         default:
           super.attributeChangedCallback(name, oldValue, newValue);
@@ -95,7 +104,29 @@ export function useFont<B extends typeof Canvas2DRenderable>(Base: B) {
       this.registerChange("fontFamily", (this.#fontFamily = value));
     }
 
+    get fontStyle() {
+      return this.#fontStyle;
+    }
+
+    set fontStyle(value) {
+      if (this.#fontStyle === value) return;
+
+      this.registerChange("fontStyle", (this.#fontStyle = value));
+    }
+
+    get kerning() {
+      return this.#kerning;
+    }
+
+    set kerning(value) {
+      if (this.#kerning === value) return;
+
+      this.registerChange("kerning", (this.#kerning = value));
+    }
+
     render(context: CanvasRenderingContext2D, frame: number): void {
+      const style = this.#fontStyle === null ? "" : `${this.#fontStyle} `;
+
       if (this.#fontFamily === null) {
         if (this.#size !== null) {
           const fontFamlyMatch = context.font.match(/\S*$/);
@@ -107,7 +138,7 @@ export function useFont<B extends typeof Canvas2DRenderable>(Base: B) {
 
           const [fontFamily] = fontFamlyMatch;
 
-          context.font = `${this.#size}${this.#sizeUnit} ${fontFamily}`;
+          context.font = `${style}${this.#size}${this.#sizeUnit} ${fontFamily}`;
         }
       } else if (this.#size === null) {
         const fontSizeMatch = context.font.match(/(\S)*\s\S*$/);
@@ -119,12 +150,16 @@ export function useFont<B extends typeof Canvas2DRenderable>(Base: B) {
 
         const fontSize = fontSizeMatch[1];
 
-        context.font = `${fontSize} ${this.#fontFamily}`;
+        context.font = `${style}${fontSize} ${this.#fontFamily}`;
       } else {
-        context.font = `${this.#size}${this.#sizeUnit} ${this.#fontFamily}`;
+        context.font = `${style}${this.#size}${this.#sizeUnit} ${
+          this.#fontFamily
+        }`;
       }
 
       if (this.#stretch !== null) context.fontStretch = this.#stretch;
+
+      if (this.#kerning !== null) context.fontKerning = this.#kerning;
 
       super.render(context, frame);
     }
@@ -161,10 +196,6 @@ export function useFont<B extends typeof Canvas2DRenderable>(Base: B) {
       if (this.#stretch === value) return;
 
       this.registerChange("stretch", (this.#stretch = value));
-    }
-
-    get fontStyle() {
-      return this.#fontStyle;
     }
   }
 

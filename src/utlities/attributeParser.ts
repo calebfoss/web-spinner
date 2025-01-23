@@ -18,7 +18,7 @@ type AttributeTypeParser = {
 };
 
 const angleMatch = new RegExp(
-  `(\\d+)\\s*(${Object.values(Angle.unit).join("|")})`
+  `([\\d\\.]+)\\s*(${Object.values(Angle.unit).join("|")})`
 );
 
 const includesNumbers = (str: string) => str.match(/\d/) !== null;

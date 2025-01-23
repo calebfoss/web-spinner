@@ -13,3 +13,7 @@ type CSSLengthUnit =
   | "em"
   | "vh"
   | "vw";
+
+type TypedEventListener<E extends keyof HTMLElementEventMap> = (
+  event: HTMLElementEventMap[E]
+) => void;
