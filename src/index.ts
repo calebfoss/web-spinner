@@ -83,12 +83,51 @@ export const Vector2D = Vector2DImport;
 
 export const Angle = AngleImport;
 
+type StateCallback<T> = (updatedValue: T) => StateCallback<T> | boolean;
+
+export class State<T> {
+  #callbacks: StateCallback<T>[] = [];
+  #value: T;
+
+  constructor(initialValue: T) {
+    this.#value = initialValue;
+  }
+
+  depend(callback: StateCallback<T>) {
+    this.#callbacks.push(callback);
+  }
+
+  get value() {
+    return this.#value;
+  }
+
+  set value(value) {
+    if (this.#value === value) return;
+
+    this.#value = value;
+
+    this.#callbacks = this.#callbacks.reduce<StateCallback<T>[]>(
+      (updatedCallbacks, callback) => {
+        const updatedCallback = callback(value);
+
+        if (updatedCallback === true) return updatedCallbacks.concat(callback);
+
+        if (updatedCallback === false) return updatedCallbacks;
+
+        return updatedCallbacks.concat(updatedCallback);
+      },
+      []
+    );
+  }
+}
+
 const webSpinner = {
   createCanvas,
   createMultiple,
   Color,
   Vector2D,
   Angle,
+  State,
 } as const;
 
 export default webSpinner;
