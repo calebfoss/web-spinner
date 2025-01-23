@@ -6,6 +6,7 @@ import { Angle as AngleImport } from "./classes/angle";
 import { Canvas2DText } from "./elements/canvas2d/text";
 import { createCustomCanvas2D } from "./utlities/createCustomElement";
 import { Units } from "./classes/units";
+import { State as StateImport, depend as dependImport } from "./classes/state";
 
 export type Canvas2DClassTagMap = {
   ["canvas-2d"]: typeof Canvas2DCanvasElement;
@@ -83,43 +84,9 @@ export const Vector2D = Vector2DImport;
 
 export const Angle = AngleImport;
 
-type StateCallback<T> = (updatedValue: T) => StateCallback<T> | boolean;
+export const State = StateImport;
 
-export class State<T> {
-  #callbacks: StateCallback<T>[] = [];
-  #value: T;
-
-  constructor(initialValue: T) {
-    this.#value = initialValue;
-  }
-
-  depend(callback: StateCallback<T>) {
-    this.#callbacks.push(callback);
-  }
-
-  get value() {
-    return this.#value;
-  }
-
-  set value(value) {
-    if (this.#value === value) return;
-
-    this.#value = value;
-
-    this.#callbacks = this.#callbacks.reduce<StateCallback<T>[]>(
-      (updatedCallbacks, callback) => {
-        const updatedCallback = callback(value);
-
-        if (updatedCallback === true) return updatedCallbacks.concat(callback);
-
-        if (updatedCallback === false) return updatedCallbacks;
-
-        return updatedCallbacks.concat(updatedCallback);
-      },
-      []
-    );
-  }
-}
+export const depend = dependImport;
 
 const webSpinner = {
   createCanvas,
@@ -128,6 +95,7 @@ const webSpinner = {
   Vector2D,
   Angle,
   State,
+  depend,
 } as const;
 
 export default webSpinner;
