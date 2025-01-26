@@ -4,12 +4,14 @@ import { positioned } from "../../mixins/position";
 import { strokeable } from "../../mixins/stroke";
 import { transformeable } from "../../mixins/transform";
 import {
-  Canvas2DRenderable,
+  Canvas2DBaseRenderable,
   Canvas2DShapePartRenderable,
   Canvas2DStandaloneRenderable,
 } from "./renderable";
 
-function renderCanvasRectangle<B extends typeof Canvas2DRenderable>(Base: B) {
+function renderCanvasRectangle<B extends typeof Canvas2DBaseRenderable>(
+  Base: B
+) {
   return class extends hasDimensions(transformeable(positioned(Base))) {
     render(context: CanvasRenderingContext2D, frame: number): void {
       super.render(context, frame);
@@ -27,10 +29,10 @@ function renderCanvasRectangle<B extends typeof Canvas2DRenderable>(Base: B) {
   };
 }
 
-export class Canvas2DShapeRectangle extends renderCanvasRectangle(
-  Canvas2DShapePartRenderable
-) {}
-
 export class Canvas2DRectangle extends strokeable(
   fillable(renderCanvasRectangle(Canvas2DStandaloneRenderable))
+) {}
+
+export class Canvas2DShapeRectangle extends renderCanvasRectangle(
+  Canvas2DShapePartRenderable
 ) {}

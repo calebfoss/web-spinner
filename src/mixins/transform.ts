@@ -1,13 +1,15 @@
 import { Angle } from "../classes/angle";
 import { Vector2D } from "../classes/vector2d";
-import { Canvas2DRenderable } from "../elements/canvas2d/renderable";
+import { Canvas2DBaseRenderable } from "../elements/canvas2d/renderable";
 import { attributeParser } from "../utlities/attributeParser";
 
 const matchAngle = new RegExp(
   `(\d*)\s?(${Object.values(Angle.unit).join("|")})`
 );
 
-export function transformeable<B extends typeof Canvas2DRenderable>(Base: B) {
+export function transformeable<B extends typeof Canvas2DBaseRenderable>(
+  Base: B
+) {
   return class Transformed extends Base {
     static observedAttributes: string[] = [
       ...Base.observedAttributes,

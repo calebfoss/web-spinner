@@ -12,7 +12,7 @@ const camelToKebabCase = (camel: string) =>
       `${beforeCharacter}-${upperCharacter.toLowerCase()}`
   );
 
-export class Canvas2DRenderable extends Canvas2DElement {
+export class Canvas2DBaseRenderable extends Canvas2DElement {
   #changedSinceRender = false;
 
   constructor(...args: any[]) {
@@ -45,7 +45,7 @@ export class Canvas2DRenderable extends Canvas2DElement {
 
   renderChildren(context: CanvasRenderingContext2D, frame: number) {
     for (const child of this.children) {
-      if (child instanceof Canvas2DRenderable) child.render(context, frame);
+      if (child instanceof Canvas2DBaseRenderable) child.render(context, frame);
     }
   }
 
@@ -59,7 +59,7 @@ export class Canvas2DRenderable extends Canvas2DElement {
 }
 
 export class Canvas2DStandaloneRenderable extends standaloneChildren(
-  Canvas2DRenderable
+  Canvas2DBaseRenderable
 ) {
   render(context: CanvasRenderingContext2D, frame: number) {
     super.render(context, frame);
@@ -69,5 +69,5 @@ export class Canvas2DStandaloneRenderable extends standaloneChildren(
 }
 
 export class Canvas2DShapePartRenderable extends partChildren(
-  Canvas2DRenderable
+  Canvas2DBaseRenderable
 ) {}

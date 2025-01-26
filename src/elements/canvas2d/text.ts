@@ -3,9 +3,11 @@ import { fillable } from "../../mixins/fill";
 import { strokeable } from "../../mixins/stroke";
 import { transformeable } from "../../mixins/transform";
 import { attributeParser } from "../../utlities/attributeParser";
-import { Canvas2DRenderable } from "./renderable";
+import { Canvas2DBaseRenderable } from "./renderable";
 
-const Base = fillable(strokeable(transformeable(useFont(Canvas2DRenderable))));
+const Base = fillable(
+  strokeable(transformeable(useFont(Canvas2DBaseRenderable)))
+);
 
 export class Canvas2DText extends Base {
   static observedAttributes = [

@@ -2,7 +2,7 @@ import { Color } from "../../classes/color";
 import { standaloneChildren } from "../../mixins/children";
 import { attributeParser } from "../../utlities/attributeParser";
 import { Canvas2DElement } from "./element";
-import { Canvas2DRenderable } from "./renderable";
+import { Canvas2DBaseRenderable } from "./renderable";
 
 export class Canvas2DCanvasElement extends standaloneChildren(Canvas2DElement) {
   static observedAttributes: string[] = [
@@ -146,7 +146,7 @@ export class Canvas2DCanvasElement extends standaloneChildren(Canvas2DElement) {
     }
 
     for (const child of this.children) {
-      if (child instanceof Canvas2DRenderable) {
+      if (child instanceof Canvas2DBaseRenderable) {
         child.render(context, this.#frame);
       }
     }

@@ -12,15 +12,21 @@ import { Units } from "./classes/units";
 import { State as StateImport, depend as dependImport } from "./classes/state";
 import { Canvas2DLine, Canvas2DShapeLine } from "./elements/canvas2d/line";
 import { Canvas2DShape } from "./elements/canvas2d/shape";
+import {
+  Canvas2DEllipse,
+  Canvas2DShapeEllipse,
+} from "./elements/canvas2d/ellipse";
 
 export type Canvas2DClass = {
-  ["ct2-canvas"]: typeof Canvas2DCanvasElement;
-  ["ct2-line"]: typeof Canvas2DLine;
-  ["ct2-rectangle"]: typeof Canvas2DRectangle;
-  ["ct2-text"]: typeof Canvas2DText;
-  ["ct2-shape"]: typeof Canvas2DShape;
-  ["ct2-shape-line"]: typeof Canvas2DShapeLine;
-  ["ct2-shape-rectangle"]: typeof Canvas2DShapeRectangle;
+  ["c2d-canvas"]: typeof Canvas2DCanvasElement;
+  ["c2d-ellipse"]: typeof Canvas2DEllipse;
+  ["c2d-line"]: typeof Canvas2DLine;
+  ["c2d-rectangle"]: typeof Canvas2DRectangle;
+  ["c2d-shape"]: typeof Canvas2DShape;
+  ["c2d-shape-ellipse"]: typeof Canvas2DShapeEllipse;
+  ["c2d-shape-line"]: typeof Canvas2DShapeLine;
+  ["c2d-shape-rectangle"]: typeof Canvas2DShapeRectangle;
+  ["c2d-text"]: typeof Canvas2DText;
 };
 
 export type Canvas2DElementTagMap = {
@@ -73,22 +79,26 @@ function defineCustom<T extends keyof Canvas2DClass>(
   return customElements.define(tag, ElementClass);
 }
 
-defineCustom("ct2-canvas", Canvas2DCanvasElement);
+defineCustom("c2d-canvas", Canvas2DCanvasElement);
 
-defineCustom("ct2-line", Canvas2DLine);
+defineCustom("c2d-ellipse", Canvas2DEllipse);
 
-defineCustom("ct2-rectangle", Canvas2DRectangle);
+defineCustom("c2d-line", Canvas2DLine);
 
-defineCustom("ct2-shape", Canvas2DShape);
+defineCustom("c2d-rectangle", Canvas2DRectangle);
 
-defineCustom("ct2-shape-line", Canvas2DShapeLine);
+defineCustom("c2d-shape", Canvas2DShape);
 
-defineCustom("ct2-shape-rectangle", Canvas2DShapeRectangle);
+defineCustom("c2d-shape-ellipse", Canvas2DShapeEllipse);
 
-defineCustom("ct2-text", Canvas2DText);
+defineCustom("c2d-shape-line", Canvas2DShapeLine);
+
+defineCustom("c2d-shape-rectangle", Canvas2DShapeRectangle);
+
+defineCustom("c2d-text", Canvas2DText);
 
 export function createCanvas(options?: Partial<Canvas2DCanvasElement>) {
-  const element = createCustomCanvas2D("ct2-canvas");
+  const element = createCustomCanvas2D("c2d-canvas");
 
   Object.assign(element, options);
 

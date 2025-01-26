@@ -1,4 +1,4 @@
-import { Canvas2DRenderable } from "../elements/canvas2d/renderable";
+import { Canvas2DBaseRenderable } from "../elements/canvas2d/renderable";
 import { attributeParser } from "../utlities/attributeParser";
 import { Angle } from "../classes/angle";
 import { Units } from "../classes/units";
@@ -25,7 +25,7 @@ const fontStyles = {
   oblique: "oblique",
 } as const;
 
-export function useFont<B extends typeof Canvas2DRenderable>(Base: B) {
+export function useFont<B extends typeof Canvas2DBaseRenderable>(Base: B) {
   type FontClass = typeof Font;
 
   type FontStyle =

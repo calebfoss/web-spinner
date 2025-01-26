@@ -1,8 +1,8 @@
 import { Vector2D } from "..";
-import { Canvas2DRenderable } from "../elements/canvas2d/renderable";
+import { Canvas2DBaseRenderable } from "../elements/canvas2d/renderable";
 import { attributeParser } from "../utlities/attributeParser";
 
-export function positioned<B extends typeof Canvas2DRenderable>(Base: B) {
+export function positioned<B extends typeof Canvas2DBaseRenderable>(Base: B) {
   return class extends Base {
     static observedAttributes = [...Base.observedAttributes, "position"];
 

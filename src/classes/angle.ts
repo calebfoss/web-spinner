@@ -74,4 +74,8 @@ export class Angle {
     gradians: "grad",
     turn: "turn",
   } as const;
+
+  static get zero() {
+    return Angle.radians(0);
+  }
 }

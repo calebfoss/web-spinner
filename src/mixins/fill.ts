@@ -1,9 +1,9 @@
 import { NONE } from "..";
 import { Color } from "../classes/color";
-import { Canvas2DRenderable } from "../elements/canvas2d/renderable";
+import { Canvas2DBaseRenderable } from "../elements/canvas2d/renderable";
 import { attributeParser } from "../utlities/attributeParser";
 
-export function fillable<B extends typeof Canvas2DRenderable>(Base: B) {
+export function fillable<B extends typeof Canvas2DBaseRenderable>(Base: B) {
   return class Fillable extends Base {
     static observedAttributes: string[] = [...Base.observedAttributes, "fill"];
 

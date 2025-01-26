@@ -2,14 +2,14 @@ import { Vector2D } from "../../classes/vector2d";
 import { strokeable } from "../../mixins/stroke";
 import { transformeable } from "../../mixins/transform";
 import {
-  Canvas2DRenderable,
+  Canvas2DBaseRenderable,
   Canvas2DShapePartRenderable,
   Canvas2DStandaloneRenderable,
 } from "./renderable";
 
-function hasTo<B extends typeof Canvas2DRenderable>(Base: B) {
+function hasTo<B extends typeof Canvas2DBaseRenderable>(Base: B) {
   return class extends transformeable(Base) {
-    #to = Vector2D.zero;
+    #to = Vector2D.xy(100, 100);
 
     get to() {
       return this.#to;

@@ -9,32 +9,40 @@ export type ChildCreator<E extends Canvas2DElement> = (
 
 export function standaloneChildren<B extends typeof Canvas2DElement>(Base: B) {
   return class extends Base {
+    get ellipse() {
+      return this.createChild("c2d-ellipse");
+    }
+
     get line() {
-      return this.createChild("ct2-line");
+      return this.createChild("c2d-line");
     }
 
     get rectangle(): ChildCreator<Canvas2DRectangle> {
-      return this.createChild("ct2-rectangle");
+      return this.createChild("c2d-rectangle");
     }
 
     get shape(): ChildCreator<Canvas2DShape> {
-      return this.createChild("ct2-shape");
+      return this.createChild("c2d-shape");
     }
 
     get text(): ChildCreator<Canvas2DText> {
-      return this.createChild("ct2-text");
+      return this.createChild("c2d-text");
     }
   };
 }
 
 export function partChildren<B extends typeof Canvas2DElement>(Base: B) {
   return class extends Base {
+    get ellipse() {
+      return this.createChild("c2d-shape-ellipse");
+    }
+
     get line() {
-      return this.createChild("ct2-shape-line");
+      return this.createChild("c2d-shape-line");
     }
 
     get rectangle() {
-      return this.createChild("ct2-shape-rectangle");
+      return this.createChild("c2d-shape-rectangle");
     }
   };
 }
