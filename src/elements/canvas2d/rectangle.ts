@@ -29,8 +29,8 @@ function renderCanvasRectangle<B extends typeof Canvas2DBaseRenderable>(
   };
 }
 
-export class Canvas2DRectangle extends strokeable(
-  fillable(renderCanvasRectangle(Canvas2DStandaloneRenderable))
+export class Canvas2DRectangle extends renderCanvasRectangle(
+  strokeable(fillable(Canvas2DStandaloneRenderable))
 ) {}
 
 export class Canvas2DShapeRectangle extends renderCanvasRectangle(
