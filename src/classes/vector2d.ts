@@ -15,6 +15,10 @@ export class Vector2D {
     return new Vector2D(1);
   }
 
+  plus(other: Vector2D) {
+    return Vector2D.xy(this.x + other.x, this.y + other.y);
+  }
+
   toString() {
     return `${this.#x}, ${this.#y}`;
   }

@@ -2,11 +2,11 @@ import { useFont } from "../../mixins/font";
 import { fillable } from "../../mixins/fill";
 import { strokeable } from "../../mixins/stroke";
 import { transformeable } from "../../mixins/transform";
-import { attributeParser } from "../../utlities/attributeParser";
 import { Canvas2DBaseRenderable } from "./renderable";
+import { positioned } from "../../mixins/position";
 
 const Base = fillable(
-  strokeable(transformeable(useFont(Canvas2DBaseRenderable)))
+  strokeable(transformeable(positioned(useFont(Canvas2DBaseRenderable))))
 );
 
 export class Canvas2DText extends Base {

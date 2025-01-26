@@ -57,7 +57,7 @@ export class Canvas2DShapeBezier extends hasControlPoints(
 }
 
 export class Canvas2DBezier extends strokeable(
-  fillable(hasControlPoints(hasFrom(Canvas2DStandaloneRenderable)))
+  fillable(hasFrom(hasControlPoints(Canvas2DStandaloneRenderable)))
 ) {
   render(context: CanvasRenderingContext2D, frame: number): void {
     super.render(context, frame);

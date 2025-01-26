@@ -14,13 +14,17 @@ export function transformeable<B extends typeof Canvas2DBaseRenderable>(
     static observedAttributes: string[] = [
       ...Base.observedAttributes,
       "angle",
+      "angular-velocity",
       "anchor",
       "scale",
+      "velocity",
     ];
 
     #anchor = new Vector2D(0, 0);
-    #angle: Angle = Angle.radians(0);
+    #angle = Angle.radians(0);
+    #angularVelocity = Angle.radians(0);
     #scale = Vector2D.one;
+    #velocity = Vector2D.zero;
 
     get angle() {
       return this.#angle;
@@ -30,6 +34,16 @@ export function transformeable<B extends typeof Canvas2DBaseRenderable>(
       if (this.#angle.equals(value)) return;
 
       this.registerChange("angle", (this.#angle = value));
+    }
+
+    get angularVelocity() {
+      return this.#angularVelocity;
+    }
+
+    set angularVelocity(value) {
+      if (this.#angularVelocity.equals(value)) return;
+
+      this.registerChange("angularVelocity", (this.#angularVelocity = value));
     }
 
     get anchor() {
@@ -52,11 +66,17 @@ export function transformeable<B extends typeof Canvas2DBaseRenderable>(
           case "angle":
             this.angle = attributeParser.Angle(newValue);
             break;
+          case "angular-velocity":
+            this.angularVelocity = attributeParser.Angle(newValue);
+            break;
           case "anchor":
             this.anchor = attributeParser.Vector2D(newValue);
             break;
           case "scale":
             this.scale = attributeParser.Vector2D(newValue);
+            break;
+          case "velocity":
+            this.velocity = attributeParser.Vector2D(newValue);
             break;
         }
       }
@@ -79,6 +99,16 @@ export function transformeable<B extends typeof Canvas2DBaseRenderable>(
       context.translate(this.#anchor.x, this.#anchor.y);
       context.rotate(this.#angle.radians);
       context.scale(this.#scale.x, this.#scale.y);
+    }
+
+    afterRender(context: CanvasRenderingContext2D, frame: number): void {
+      super.afterRender(context, frame);
+
+      this.angle = Angle.radians(
+        this.#angle.radians + this.#angularVelocity.radians
+      );
+
+      this.anchor = this.#anchor.plus(this.#velocity);
     }
 
     rotateClockwise(angle: Angle) {
@@ -109,6 +139,16 @@ export function transformeable<B extends typeof Canvas2DBaseRenderable>(
       } else {
         this.registerChange("scale", (this.#scale = value));
       }
+    }
+
+    get velocity() {
+      return this.#velocity;
+    }
+
+    set velocity(value) {
+      if (this.#velocity.equals(value)) return;
+
+      this.registerChange("velocity", (this.#velocity = value));
     }
   };
 }
