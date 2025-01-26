@@ -1,4 +1,6 @@
+import { Vector2D } from "../..";
 import { Color } from "../../classes/color";
+import { MousePosition } from "../../classes/mousePosition";
 import { standaloneChildren } from "../../mixins/children";
 import { attributeParser } from "../../utlities/attributeParser";
 import { Canvas2DElement } from "./element";
@@ -16,6 +18,7 @@ export class Canvas2DCanvasElement extends standaloneChildren(Canvas2DElement) {
   #background: Color | None = "none";
   #context: CanvasRenderingContext2D;
   #frame = 0;
+  #mousePosition = new MousePosition();
   #renderQueued = false;
 
   constructor() {
@@ -32,6 +35,8 @@ export class Canvas2DCanvasElement extends standaloneChildren(Canvas2DElement) {
     if (context === null) throw new Error("Null context");
 
     this.#context = context;
+
+    this.#mousePosition = new MousePosition();
   }
 
   get animating() {
@@ -98,6 +103,21 @@ export class Canvas2DCanvasElement extends standaloneChildren(Canvas2DElement) {
     this.#animating = true;
 
     this.render();
+  }
+
+  get mouseOnCanvas() {
+    const mouseOnWindow = this.#mousePosition;
+
+    const canvasRect = this.#context.canvas.getBoundingClientRect();
+
+    return Vector2D.xy(
+      mouseOnWindow.x - canvasRect.x,
+      mouseOnWindow.y - canvasRect.y
+    );
+  }
+
+  get mouseOnWindow() {
+    return this.#mousePosition;
   }
 
   queueRender() {
