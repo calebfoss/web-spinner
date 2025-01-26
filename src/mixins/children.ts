@@ -9,6 +9,10 @@ export type ChildCreator<E extends Canvas2DElement> = (
 
 export function standaloneChildren<B extends typeof Canvas2DElement>(Base: B) {
   return class extends Base {
+    get bezier() {
+      return this.createChild("c2d-bezier");
+    }
+
     get ellipse() {
       return this.createChild("c2d-ellipse");
     }
@@ -33,6 +37,10 @@ export function standaloneChildren<B extends typeof Canvas2DElement>(Base: B) {
 
 export function partChildren<B extends typeof Canvas2DElement>(Base: B) {
   return class extends Base {
+    get bezier() {
+      return this.createChild("c2d-shape-bezier");
+    }
+
     get ellipse() {
       return this.createChild("c2d-shape-ellipse");
     }

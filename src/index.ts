@@ -16,13 +16,19 @@ import {
   Canvas2DEllipse,
   Canvas2DShapeEllipse,
 } from "./elements/canvas2d/ellipse";
+import {
+  Canvas2DBezier,
+  Canvas2DShapeBezier,
+} from "./elements/canvas2d/bezier";
 
 export type Canvas2DClass = {
+  ["c2d-bezier"]: typeof Canvas2DBezier;
   ["c2d-canvas"]: typeof Canvas2DCanvasElement;
   ["c2d-ellipse"]: typeof Canvas2DEllipse;
   ["c2d-line"]: typeof Canvas2DLine;
   ["c2d-rectangle"]: typeof Canvas2DRectangle;
   ["c2d-shape"]: typeof Canvas2DShape;
+  ["c2d-shape-bezier"]: typeof Canvas2DShapeBezier;
   ["c2d-shape-ellipse"]: typeof Canvas2DShapeEllipse;
   ["c2d-shape-line"]: typeof Canvas2DShapeLine;
   ["c2d-shape-rectangle"]: typeof Canvas2DShapeRectangle;
@@ -79,6 +85,8 @@ function defineCustom<T extends keyof Canvas2DClass>(
   return customElements.define(tag, ElementClass);
 }
 
+defineCustom("c2d-bezier", Canvas2DBezier);
+
 defineCustom("c2d-canvas", Canvas2DCanvasElement);
 
 defineCustom("c2d-ellipse", Canvas2DEllipse);
@@ -88,6 +96,8 @@ defineCustom("c2d-line", Canvas2DLine);
 defineCustom("c2d-rectangle", Canvas2DRectangle);
 
 defineCustom("c2d-shape", Canvas2DShape);
+
+defineCustom("c2d-shape-bezier", Canvas2DShapeBezier);
 
 defineCustom("c2d-shape-ellipse", Canvas2DShapeEllipse);
 
