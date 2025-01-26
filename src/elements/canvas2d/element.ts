@@ -1,12 +1,13 @@
 import { Canvas2DElementTagMap } from "../..";
+import { ChildCreator } from "../../mixins/children";
 import { createCustomCanvas2D } from "../../utlities/createCustomElement";
-import { Canvas2DRectangle } from "./rectangle";
-import { Canvas2DText } from "./text";
-
-type ChildCreator<E extends Canvas2DElement> = (options?: Partial<E>) => E;
 
 export class Canvas2DElement extends HTMLElement {
   static observedAttributes: string[] = [];
+
+  constructor(...args: any[]) {
+    super();
+  }
 
   #eventProxy = (() => {
     const element = this;
@@ -58,13 +59,5 @@ export class Canvas2DElement extends HTMLElement {
 
   get listen() {
     return this.#eventProxy;
-  }
-
-  get rectangle(): ChildCreator<Canvas2DRectangle> {
-    return this.createChild("canvas-2d-rectangle");
-  }
-
-  get text(): ChildCreator<Canvas2DText> {
-    return this.createChild("canvas-2d-text");
   }
 }

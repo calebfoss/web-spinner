@@ -1,5 +1,8 @@
 import { Canvas2DCanvasElement } from "./elements/canvas2d/canvas";
-import { Canvas2DRectangle } from "./elements/canvas2d/rectangle";
+import {
+  Canvas2DRectangle,
+  Canvas2DShapeRectangle,
+} from "./elements/canvas2d/rectangle";
 import { Color as ColorImport } from "./classes/color";
 import { Vector2D as Vector2DImport } from "./classes/vector2d";
 import { Angle as AngleImport } from "./classes/angle";
@@ -7,15 +10,21 @@ import { Canvas2DText } from "./elements/canvas2d/text";
 import { createCustomCanvas2D } from "./utlities/createCustomElement";
 import { Units } from "./classes/units";
 import { State as StateImport, depend as dependImport } from "./classes/state";
+import { Canvas2DLine, Canvas2DShapeLine } from "./elements/canvas2d/line";
+import { Canvas2DShape } from "./elements/canvas2d/shape";
 
-export type Canvas2DClassTagMap = {
-  ["canvas-2d"]: typeof Canvas2DCanvasElement;
-  ["canvas-2d-rectangle"]: typeof Canvas2DRectangle;
-  ["canvas-2d-text"]: typeof Canvas2DText;
+export type Canvas2DClass = {
+  ["ct2-canvas"]: typeof Canvas2DCanvasElement;
+  ["ct2-line"]: typeof Canvas2DLine;
+  ["ct2-rectangle"]: typeof Canvas2DRectangle;
+  ["ct2-text"]: typeof Canvas2DText;
+  ["ct2-shape"]: typeof Canvas2DShape;
+  ["ct2-shape-line"]: typeof Canvas2DShapeLine;
+  ["ct2-shape-rectangle"]: typeof Canvas2DShapeRectangle;
 };
 
 export type Canvas2DElementTagMap = {
-  [Tag in keyof Canvas2DClassTagMap]: InstanceType<Canvas2DClassTagMap[Tag]>;
+  [Tag in keyof Canvas2DClass]: InstanceType<Canvas2DClass[Tag]>;
 };
 
 export type CSSLengthUnit = (typeof Units.size)[keyof typeof Units.size];
@@ -57,21 +66,29 @@ export function createMultiple<R extends Node>(
   return new Array(count).fill(0).map((_, index) => generator(index));
 }
 
-function defineCustom<T extends keyof Canvas2DClassTagMap>(
+function defineCustom<T extends keyof Canvas2DClass>(
   tag: T,
-  ElementClass: Canvas2DClassTagMap[T]
+  ElementClass: Canvas2DClass[T]
 ) {
   return customElements.define(tag, ElementClass);
 }
 
-defineCustom("canvas-2d", Canvas2DCanvasElement);
+defineCustom("ct2-canvas", Canvas2DCanvasElement);
 
-defineCustom("canvas-2d-rectangle", Canvas2DRectangle);
+defineCustom("ct2-line", Canvas2DLine);
 
-defineCustom("canvas-2d-text", Canvas2DText);
+defineCustom("ct2-rectangle", Canvas2DRectangle);
+
+defineCustom("ct2-shape", Canvas2DShape);
+
+defineCustom("ct2-shape-line", Canvas2DShapeLine);
+
+defineCustom("ct2-shape-rectangle", Canvas2DShapeRectangle);
+
+defineCustom("ct2-text", Canvas2DText);
 
 export function createCanvas(options?: Partial<Canvas2DCanvasElement>) {
-  const element = createCustomCanvas2D("canvas-2d");
+  const element = createCustomCanvas2D("ct2-canvas");
 
   Object.assign(element, options);
 

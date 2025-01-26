@@ -72,5 +72,7 @@ export class Canvas2DText extends Base {
       context.strokeText(this.textContent, this.position.x, this.position.y);
 
     this.afterRender(context, frame);
+
+    this.renderChildren(context, frame);
   }
 }

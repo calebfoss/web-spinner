@@ -1,4 +1,7 @@
+import { partChildren, standaloneChildren } from "../../mixins/children";
+import { Canvas2DCanvasElement } from "./canvas";
 import { Canvas2DElement } from "./element";
+import { Canvas2DShape } from "./shape";
 
 const changedEvent = new Event("change", { bubbles: true });
 
@@ -37,18 +40,34 @@ export class Canvas2DRenderable extends Canvas2DElement {
   render(context: CanvasRenderingContext2D, frame: number) {
     context.save();
 
-    context.beginPath();
-
     this.everyFrame?.(frame);
+  }
+
+  renderChildren(context: CanvasRenderingContext2D, frame: number) {
+    for (const child of this.children) {
+      if (child instanceof Canvas2DRenderable) child.render(context, frame);
+    }
   }
 
   afterRender(context: CanvasRenderingContext2D, frame: number) {
     this.#changedSinceRender = false;
 
-    for (const child of this.children) {
-      if (child instanceof Canvas2DRenderable) child.render(context, frame);
-    }
+    this.renderChildren(context, frame);
 
     context.restore();
   }
 }
+
+export class Canvas2DStandaloneRenderable extends standaloneChildren(
+  Canvas2DRenderable
+) {
+  render(context: CanvasRenderingContext2D, frame: number) {
+    super.render(context, frame);
+
+    context.beginPath();
+  }
+}
+
+export class Canvas2DShapePartRenderable extends partChildren(
+  Canvas2DRenderable
+) {}

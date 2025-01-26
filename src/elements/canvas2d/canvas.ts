@@ -1,9 +1,10 @@
 import { Color } from "../../classes/color";
+import { standaloneChildren } from "../../mixins/children";
 import { attributeParser } from "../../utlities/attributeParser";
 import { Canvas2DElement } from "./element";
 import { Canvas2DRenderable } from "./renderable";
 
-export class Canvas2DCanvasElement extends Canvas2DElement {
+export class Canvas2DCanvasElement extends standaloneChildren(Canvas2DElement) {
   static observedAttributes: string[] = [
     ...Canvas2DElement.observedAttributes,
     "width",

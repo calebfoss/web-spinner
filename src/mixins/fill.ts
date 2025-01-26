@@ -7,7 +7,7 @@ export function fillable<B extends typeof Canvas2DRenderable>(Base: B) {
   return class Fillable extends Base {
     static observedAttributes: string[] = [...Base.observedAttributes, "fill"];
 
-    #fill: Color | None = Color.gray(32);
+    #fill: Color | None | null = null;
 
     get fill() {
       return this.#fill;
@@ -29,7 +29,8 @@ export function fillable<B extends typeof Canvas2DRenderable>(Base: B) {
     render(context: CanvasRenderingContext2D, frame: number): void {
       super.render(context, frame);
 
-      if (this.#fill !== "none") context.fillStyle = this.#fill.toString();
+      if (this.#fill !== "none" && this.#fill !== null)
+        context.fillStyle = this.#fill.toString();
     }
 
     afterRender(context: CanvasRenderingContext2D, frame: number): void {

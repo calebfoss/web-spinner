@@ -13,13 +13,11 @@ export function transformeable<B extends typeof Canvas2DRenderable>(Base: B) {
       ...Base.observedAttributes,
       "angle",
       "anchor",
-      "position",
       "scale",
     ];
 
     #anchor = new Vector2D(0, 0);
     #angle: Angle = Angle.radians(0);
-    #position = new Vector2D(0, 0);
     #scale = Vector2D.one;
 
     get angle() {
@@ -55,9 +53,6 @@ export function transformeable<B extends typeof Canvas2DRenderable>(Base: B) {
           case "anchor":
             this.anchor = attributeParser.Vector2D(newValue);
             break;
-          case "position":
-            this.position = attributeParser.Vector2D(newValue);
-            break;
           case "scale":
             this.scale = attributeParser.Vector2D(newValue);
             break;
@@ -74,25 +69,6 @@ export function transformeable<B extends typeof Canvas2DRenderable>(Base: B) {
       this.#anchor.y += y;
 
       this.registerChange("anchor", this.#anchor);
-    }
-
-    movePosition(x: number, y: number) {
-      if (x === 0 && y === 0) return;
-
-      this.#position.x += x;
-      this.#position.y += y;
-
-      this.registerChange("position", this.#position);
-    }
-
-    get position() {
-      return this.#position;
-    }
-
-    set position(value) {
-      if (this.#position.equals(value)) return;
-
-      this.registerChange("position", (this.#position = value));
     }
 
     render(context: CanvasRenderingContext2D, frame: number): void {

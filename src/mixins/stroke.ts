@@ -10,7 +10,7 @@ export function strokeable<B extends typeof Canvas2DRenderable>(Base: B) {
       "stroke",
     ];
 
-    #stroke: Color | None = Color.gray(200);
+    #stroke: Color | None | null = null;
     #lineWidth: number | null = null;
 
     get lineWidth() {
@@ -43,7 +43,7 @@ export function strokeable<B extends typeof Canvas2DRenderable>(Base: B) {
     render(context: CanvasRenderingContext2D, frame: number): void {
       super.render(context, frame);
 
-      if (this.#stroke !== "none")
+      if (this.#stroke !== "none" && this.#stroke !== null)
         context.strokeStyle = this.#stroke.toString();
       if (this.#lineWidth !== null) context.lineWidth = this.#lineWidth;
     }
