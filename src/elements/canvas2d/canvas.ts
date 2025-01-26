@@ -145,6 +145,8 @@ export class Canvas2DCanvasElement extends standaloneChildren(Canvas2DElement) {
       context.restore();
     }
 
+    context.beginPath();
+
     for (const child of this.children) {
       if (child instanceof Canvas2DBaseRenderable) {
         child.render(context, this.#frame);
