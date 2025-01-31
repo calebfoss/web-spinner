@@ -21,6 +21,7 @@ import {
   Canvas2DShapeBezier,
 } from "./elements/canvas2d/bezier";
 import { Canvas2DImage } from "./elements/canvas2d/image";
+import { Canvas2DVideo } from "./elements/canvas2d/video";
 
 export type Canvas2DClass = {
   ["c2d-bezier"]: typeof Canvas2DBezier;
@@ -35,6 +36,7 @@ export type Canvas2DClass = {
   ["c2d-shape-line"]: typeof Canvas2DShapeLine;
   ["c2d-shape-rectangle"]: typeof Canvas2DShapeRectangle;
   ["c2d-text"]: typeof Canvas2DText;
+  ["c2d-video"]: typeof Canvas2DVideo;
 };
 
 export type Canvas2DElementTagMap = {
@@ -110,6 +112,8 @@ defineCustom("c2d-shape-line", Canvas2DShapeLine);
 defineCustom("c2d-shape-rectangle", Canvas2DShapeRectangle);
 
 defineCustom("c2d-text", Canvas2DText);
+
+defineCustom("c2d-video", Canvas2DVideo);
 
 export function createCanvas(options?: Partial<Canvas2DCanvasElement>) {
   const element = createCustomCanvas2D("c2d-canvas");

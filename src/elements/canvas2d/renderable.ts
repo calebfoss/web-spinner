@@ -5,7 +5,7 @@ import { Canvas2DCanvasElement } from "./canvas";
 import { Canvas2DElement } from "./element";
 import { Canvas2DShape } from "./shape";
 
-const changedEvent = new Event("change", { bubbles: true });
+export const changedEvent = new Event("change", { bubbles: true });
 
 const camelToKebabCase = (camel: string) =>
   camel.replace(

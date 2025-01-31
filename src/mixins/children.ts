@@ -36,6 +36,10 @@ export function standaloneChildren<B extends typeof Canvas2DElement>(Base: B) {
     get text(): ChildCreator<Canvas2DText> {
       return this.createChild("c2d-text");
     }
+
+    get video() {
+      return this.createChild("c2d-video");
+    }
   };
 }
 

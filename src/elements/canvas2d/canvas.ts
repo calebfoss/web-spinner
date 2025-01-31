@@ -139,16 +139,6 @@ export class Canvas2DCanvasElement extends standaloneChildren(Canvas2DElement) {
     requestAnimationFrame(this.render.bind(this));
   }
 
-  waitFor(element: Element) {
-    this.#waitFor.add(element);
-
-    element.addEventListener("load", () => {
-      this.#waitFor.delete(element);
-
-      if (this.#waitFor.size === 0) this.queueRender();
-    });
-  }
-
   get width() {
     return this.domCanvas.width / devicePixelRatio;
   }
@@ -211,5 +201,15 @@ export class Canvas2DCanvasElement extends standaloneChildren(Canvas2DElement) {
     this.domCanvas.addEventListener(eventName, this.queueRender.bind(this));
 
     this.#renderEvents.add(eventName);
+  }
+
+  waitFor(element: Element, eventName: keyof HTMLElementEventMap = "load") {
+    this.#waitFor.add(element);
+
+    element.addEventListener(eventName, () => {
+      this.#waitFor.delete(element);
+
+      if (this.#waitFor.size === 0) this.queueRender();
+    });
   }
 }
