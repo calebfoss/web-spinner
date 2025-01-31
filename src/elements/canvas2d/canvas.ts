@@ -1,6 +1,7 @@
 import { Vector2D } from "../..";
 import { ClickTracker } from "../../classes/click";
 import { Color } from "../../classes/color";
+import { KeyboardTracker } from "../../classes/keyboard";
 import { MouseTracker } from "../../classes/mouse";
 import { standaloneChildren } from "../../mixins/children";
 import { attributeParser } from "../../utlities/attributeParser";
@@ -17,10 +18,11 @@ export class Canvas2DCanvasElement extends standaloneChildren(Canvas2DElement) {
 
   #animating = false;
   #background: Color | None = "none";
+  #clickTracker: ClickTracker;
   #context: CanvasRenderingContext2D;
   #frame = 0;
+  #keyboardTracker = new KeyboardTracker();
   #mouseTracker: MouseTracker;
-  #clickTracker: ClickTracker;
   #renderEvents = new Set<keyof HTMLElementEventMap>();
   #renderQueued = false;
   #waitFor = new Set<Element>();
@@ -43,6 +45,21 @@ export class Canvas2DCanvasElement extends standaloneChildren(Canvas2DElement) {
     this.#mouseTracker = new MouseTracker(this.domCanvas);
 
     this.#clickTracker = new ClickTracker(this.domCanvas);
+  }
+
+  addEventListener(
+    type: string,
+    listener: EventListenerOrEventListenerObject,
+    options?: boolean | AddEventListenerOptions | undefined
+  ): void {
+    switch (type) {
+      case "keydown":
+      case "keyup":
+        window.addEventListener(type, listener, options);
+        break;
+      default:
+        super.addEventListener(type, listener, options);
+    }
   }
 
   get animating() {
@@ -93,6 +110,10 @@ export class Canvas2DCanvasElement extends standaloneChildren(Canvas2DElement) {
     this.addEventListener("change", this.queueRender.bind(this));
   }
 
+  get keyDown() {
+    return this.#keyboardTracker.down;
+  }
+
   get domCanvas() {
     return this.#context.canvas;
   }
@@ -125,6 +146,18 @@ export class Canvas2DCanvasElement extends standaloneChildren(Canvas2DElement) {
 
   get frame() {
     return this.#frame;
+  }
+
+  keyHeld(...args: Parameters<KeyboardTracker["keyHeld"]>) {
+    return this.#keyboardTracker.keyHeld(...args);
+  }
+
+  keyPreviouslyHeld(...args: Parameters<KeyboardTracker["keyPreviouslyHeld"]>) {
+    return this.#keyboardTracker.keyPreviouslyHeld(...args);
+  }
+
+  get lastKey() {
+    return this.#keyboardTracker.last;
   }
 
   get mouse() {

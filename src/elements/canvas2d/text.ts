@@ -80,4 +80,14 @@ export class Canvas2DText extends Base {
 
     this.renderChildren(canvas2D);
   }
+
+  get textContent() {
+    return super.textContent;
+  }
+
+  set textContent(value) {
+    if (super.textContent === value) return;
+
+    this.registerChange("textContent", (super.textContent = value));
+  }
 }
