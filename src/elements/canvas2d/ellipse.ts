@@ -1,9 +1,11 @@
 import { Angle } from "../..";
+import { MouseTracker } from "../../classes/mouse";
 import { hasDimensions } from "../../mixins/dimensions";
 import { fillable } from "../../mixins/fill";
 import { positioned } from "../../mixins/position";
 import { strokeable } from "../../mixins/stroke";
 import { transformeable } from "../../mixins/transform";
+import { Canvas2DCanvasElement } from "./canvas";
 import {
   Canvas2DBaseRenderable,
   Canvas2DShapePartRenderable,
@@ -15,12 +17,12 @@ function renderEllipse<B extends typeof Canvas2DBaseRenderable>(Base: B) {
     #startAngle = Angle.zero;
     #endAngle = Angle.radians(Math.PI * 2);
 
-    render(context: CanvasRenderingContext2D, frame: number): void {
-      super.render(context, frame);
+    render(canvas2D: Canvas2DCanvasElement): void {
+      super.render(canvas2D);
 
       const { position, width, height } = this;
 
-      context.ellipse(
+      canvas2D.context.ellipse(
         position.x,
         position.y,
         width / 2,
@@ -30,7 +32,7 @@ function renderEllipse<B extends typeof Canvas2DBaseRenderable>(Base: B) {
         this.#endAngle.radians
       );
 
-      this.afterRender(context, frame);
+      this.afterRender(canvas2D);
     }
 
     get startAngle() {

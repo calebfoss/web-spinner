@@ -5,31 +5,32 @@ import {
   Canvas2DShapePartRenderable,
   Canvas2DStandaloneRenderable,
 } from "./renderable";
+import { Canvas2DCanvasElement } from "./canvas";
 
 export class Canvas2DShapeLine extends hasTo(Canvas2DShapePartRenderable) {
-  render(context: CanvasRenderingContext2D, frame: number): void {
-    super.render(context, frame);
+  render(canvas2D: Canvas2DCanvasElement): void {
+    super.render(canvas2D);
 
     const { to } = this;
 
-    context.lineTo(to.x, to.y);
+    canvas2D.context.lineTo(to.x, to.y);
 
-    this.afterRender(context, frame);
+    this.afterRender(canvas2D);
   }
 }
 
 export class Canvas2DLine extends strokeable(
   hasTo(hasFrom(Canvas2DStandaloneRenderable))
 ) {
-  render(context: CanvasRenderingContext2D, frame: number): void {
-    super.render(context, frame);
+  render(canvas2D: Canvas2DCanvasElement): void {
+    super.render(canvas2D);
 
     const { from, to } = this;
 
-    context.moveTo(from.x, from.y);
+    canvas2D.context.moveTo(from.x, from.y);
 
-    context.lineTo(to.x, to.y);
+    canvas2D.context.lineTo(to.x, to.y);
 
-    this.afterRender(context, frame);
+    this.afterRender(canvas2D);
   }
 }

@@ -1,5 +1,7 @@
 import { Angle } from "../classes/angle";
+import { MouseTracker } from "../classes/mouse";
 import { Vector2D } from "../classes/vector2d";
+import { Canvas2DCanvasElement } from "../elements/canvas2d/canvas";
 import { Canvas2DBaseRenderable } from "../elements/canvas2d/renderable";
 import { attributeParser } from "../utlities/attributeParser";
 
@@ -93,16 +95,18 @@ export function transformeable<B extends typeof Canvas2DBaseRenderable>(
       this.registerChange("anchor", this.#anchor);
     }
 
-    render(context: CanvasRenderingContext2D, frame: number): void {
-      super.render(context, frame);
+    render(canvas2D: Canvas2DCanvasElement): void {
+      super.render(canvas2D);
+
+      const { context } = canvas2D;
 
       context.translate(this.#anchor.x, this.#anchor.y);
       context.rotate(this.#angle.radians);
       context.scale(this.#scale.x, this.#scale.y);
     }
 
-    afterRender(context: CanvasRenderingContext2D, frame: number): void {
-      super.afterRender(context, frame);
+    afterRender(canvas2D: Canvas2DCanvasElement): void {
+      super.afterRender(canvas2D);
 
       this.angle = Angle.radians(
         this.#angle.radians + this.#angularVelocity.radians

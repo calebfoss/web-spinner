@@ -1,8 +1,10 @@
+import { MouseTracker } from "../../classes/mouse";
 import { hasDimensions } from "../../mixins/dimensions";
 import { fillable } from "../../mixins/fill";
 import { positioned } from "../../mixins/position";
 import { strokeable } from "../../mixins/stroke";
 import { transformeable } from "../../mixins/transform";
+import { Canvas2DCanvasElement } from "./canvas";
 import {
   Canvas2DBaseRenderable,
   Canvas2DShapePartRenderable,
@@ -13,8 +15,8 @@ function renderCanvasRectangle<B extends typeof Canvas2DBaseRenderable>(
   Base: B
 ) {
   return class extends hasDimensions(transformeable(positioned(Base))) {
-    render(context: CanvasRenderingContext2D, frame: number): void {
-      super.render(context, frame);
+    render(canvas2D: Canvas2DCanvasElement): void {
+      super.render(canvas2D);
 
       const {
         position: { x, y },
@@ -22,9 +24,9 @@ function renderCanvasRectangle<B extends typeof Canvas2DBaseRenderable>(
         height,
       } = this;
 
-      context.rect(x, y, width, height);
+      canvas2D.context.rect(x, y, width, height);
 
-      this.afterRender(context, frame);
+      this.afterRender(canvas2D);
     }
   };
 }

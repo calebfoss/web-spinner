@@ -2,6 +2,8 @@ import { Canvas2DBaseRenderable } from "../elements/canvas2d/renderable";
 import { attributeParser } from "../utlities/attributeParser";
 import { Angle } from "../classes/angle";
 import { Units } from "../classes/units";
+import { MouseTracker } from "../classes/mouse";
+import { Canvas2DCanvasElement } from "../elements/canvas2d/canvas";
 
 export const fontSizeUnits = {
   ...Units.size,
@@ -124,7 +126,9 @@ export function useFont<B extends typeof Canvas2DBaseRenderable>(Base: B) {
       this.registerChange("kerning", (this.#kerning = value));
     }
 
-    render(context: CanvasRenderingContext2D, frame: number): void {
+    render(canvas2D: Canvas2DCanvasElement): void {
+      const { context } = canvas2D;
+
       const style = this.#fontStyle === null ? "" : `${this.#fontStyle} `;
 
       if (this.#fontFamily === null) {
@@ -161,7 +165,7 @@ export function useFont<B extends typeof Canvas2DBaseRenderable>(Base: B) {
 
       if (this.#kerning !== null) context.fontKerning = this.#kerning;
 
-      super.render(context, frame);
+      super.render(canvas2D);
     }
 
     get size() {

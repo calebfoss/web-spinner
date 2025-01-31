@@ -1,5 +1,7 @@
 import { NONE } from "..";
 import { Color } from "../classes/color";
+import { MouseTracker } from "../classes/mouse";
+import { Canvas2DCanvasElement } from "../elements/canvas2d/canvas";
 import { Canvas2DBaseRenderable } from "../elements/canvas2d/renderable";
 import { attributeParser } from "../utlities/attributeParser";
 
@@ -26,17 +28,17 @@ export function fillable<B extends typeof Canvas2DBaseRenderable>(Base: B) {
       this.registerChange("fill", (this.#fill = value));
     }
 
-    render(context: CanvasRenderingContext2D, frame: number): void {
-      super.render(context, frame);
+    render(canvas2D: Canvas2DCanvasElement): void {
+      super.render(canvas2D);
 
       if (this.#fill !== "none" && this.#fill !== null)
-        context.fillStyle = this.#fill.toString();
+        canvas2D.context.fillStyle = this.#fill.toString();
     }
 
-    afterRender(context: CanvasRenderingContext2D, frame: number): void {
-      if (this.#fill !== "none") context.fill();
+    afterRender(canvas2D: Canvas2DCanvasElement): void {
+      if (this.#fill !== "none") canvas2D.context.fill();
 
-      super.afterRender(context, frame);
+      super.afterRender(canvas2D);
     }
 
     attributeChangedCallback(

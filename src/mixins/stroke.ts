@@ -1,5 +1,7 @@
 import { NONE } from "..";
 import { Color } from "../classes/color";
+import { MouseTracker } from "../classes/mouse";
+import { Canvas2DCanvasElement } from "../elements/canvas2d/canvas";
 import { Canvas2DBaseRenderable } from "../elements/canvas2d/renderable";
 import { attributeParser } from "../utlities/attributeParser";
 
@@ -40,18 +42,20 @@ export function strokeable<B extends typeof Canvas2DBaseRenderable>(Base: B) {
       this.registerChange("stroke", (this.#stroke = value));
     }
 
-    render(context: CanvasRenderingContext2D, frame: number): void {
-      super.render(context, frame);
+    render(canvas2D: Canvas2DCanvasElement): void {
+      super.render(canvas2D);
+
+      const { context } = canvas2D;
 
       if (this.#stroke !== "none" && this.#stroke !== null)
         context.strokeStyle = this.#stroke.toString();
       if (this.#lineWidth !== null) context.lineWidth = this.#lineWidth;
     }
 
-    afterRender(context: CanvasRenderingContext2D, frame: number): void {
-      if (this.#stroke !== "none") context.stroke();
+    afterRender(canvas2D: Canvas2DCanvasElement): void {
+      if (this.#stroke !== "none") canvas2D.context.stroke();
 
-      super.afterRender(context, frame);
+      super.afterRender(canvas2D);
     }
 
     attributeChangedCallback(

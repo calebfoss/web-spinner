@@ -7,6 +7,8 @@ import {
   Canvas2DShapePartRenderable,
   Canvas2DStandaloneRenderable,
 } from "./renderable";
+import { MouseTracker } from "../../classes/mouse";
+import { Canvas2DCanvasElement } from "./canvas";
 
 function hasControlPoints<B extends typeof Canvas2DBaseRenderable>(Base: B) {
   return class extends hasTo(Base) {
@@ -38,12 +40,12 @@ function hasControlPoints<B extends typeof Canvas2DBaseRenderable>(Base: B) {
 export class Canvas2DShapeBezier extends hasControlPoints(
   Canvas2DShapePartRenderable
 ) {
-  render(context: CanvasRenderingContext2D, frame: number): void {
-    super.render(context, frame);
+  render(canvas2D: Canvas2DCanvasElement): void {
+    super.render(canvas2D);
 
     const { controlA, controlB, to } = this;
 
-    context.bezierCurveTo(
+    canvas2D.context.bezierCurveTo(
       controlA.x,
       controlA.y,
       controlB.x,
@@ -52,21 +54,21 @@ export class Canvas2DShapeBezier extends hasControlPoints(
       to.y
     );
 
-    this.afterRender(context, frame);
+    this.afterRender(canvas2D);
   }
 }
 
 export class Canvas2DBezier extends strokeable(
   fillable(hasFrom(hasControlPoints(Canvas2DStandaloneRenderable)))
 ) {
-  render(context: CanvasRenderingContext2D, frame: number): void {
-    super.render(context, frame);
+  render(canvas2D: Canvas2DCanvasElement): void {
+    super.render(canvas2D);
 
     const { controlA, controlB, from, to } = this;
 
-    context.moveTo(from.x, from.y);
+    canvas2D.context.moveTo(from.x, from.y);
 
-    context.bezierCurveTo(
+    canvas2D.context.bezierCurveTo(
       controlA.x,
       controlA.y,
       controlB.x,
@@ -75,6 +77,6 @@ export class Canvas2DBezier extends strokeable(
       to.y
     );
 
-    this.afterRender(context, frame);
+    this.afterRender(canvas2D);
   }
 }

@@ -1,3 +1,5 @@
+import { ClickData } from "../../classes/click";
+import { MouseTracker, MouseData } from "../../classes/mouse";
 import { partChildren, standaloneChildren } from "../../mixins/children";
 import { Canvas2DCanvasElement } from "./canvas";
 import { Canvas2DElement } from "./element";
@@ -14,13 +16,32 @@ const camelToKebabCase = (camel: string) =>
 
 export class Canvas2DBaseRenderable extends Canvas2DElement {
   #changedSinceRender = false;
+  #localClick = new ClickData();
+  #localMouse = new MouseData();
 
   constructor(...args: any[]) {
     super();
   }
 
+  addEventListener(
+    type: string,
+    listener: EventListenerOrEventListenerObject,
+    options?: boolean | AddEventListenerOptions | undefined
+  ): void {
+    this.canvas.domCanvas.addEventListener(
+      type,
+      this.canvas.render.bind(this.canvas)
+    );
+
+    super.addEventListener(type, listener, options);
+  }
+
   get changedSinceRender() {
     return this.#changedSinceRender;
+  }
+
+  get clicked() {
+    return this.#localClick.clicked;
   }
 
   registerChange<P extends keyof this, V extends this[P]>(
@@ -37,34 +58,45 @@ export class Canvas2DBaseRenderable extends Canvas2DElement {
     this.setAttribute(attributeName, newValue as string);
   }
 
-  render(context: CanvasRenderingContext2D, frame: number) {
+  render(canvas2D: Canvas2DCanvasElement) {
+    const { context, frame } = canvas2D;
+
     context.save();
 
     this.everyFrame?.(frame);
   }
 
-  renderChildren(context: CanvasRenderingContext2D, frame: number) {
+  renderChildren(canvas2D: Canvas2DCanvasElement) {
     for (const child of this.children) {
-      if (child instanceof Canvas2DBaseRenderable) child.render(context, frame);
+      if (child instanceof Canvas2DBaseRenderable) child.render(canvas2D);
     }
   }
 
-  afterRender(context: CanvasRenderingContext2D, frame: number) {
+  afterRender(canvas2D: Canvas2DCanvasElement) {
     this.#changedSinceRender = false;
 
-    this.renderChildren(context, frame);
+    const { context, clicked, mouse } = canvas2D;
 
-    context.restore();
+    this.#localClick.clicked =
+      clicked && context.isPointInPath(mouse.x, mouse.y);
+
+    if (this.#localClick.clicked) this.dispatchEvent(new MouseEvent("click"));
+
+    this.renderChildren(canvas2D);
+
+    canvas2D.context.restore();
+
+    this.#localClick.clicked = false;
   }
 }
 
 export class Canvas2DStandaloneRenderable extends standaloneChildren(
   Canvas2DBaseRenderable
 ) {
-  render(context: CanvasRenderingContext2D, frame: number) {
-    super.render(context, frame);
+  render(canvas2D: Canvas2DCanvasElement) {
+    super.render(canvas2D);
 
-    context.beginPath();
+    canvas2D.context.beginPath();
   }
 }
 

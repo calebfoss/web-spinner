@@ -4,6 +4,8 @@ import { strokeable } from "../../mixins/stroke";
 import { transformeable } from "../../mixins/transform";
 import { Canvas2DBaseRenderable } from "./renderable";
 import { positioned } from "../../mixins/position";
+import { MouseTracker } from "../../classes/mouse";
+import { Canvas2DCanvasElement } from "./canvas";
 
 const Base = fillable(
   strokeable(transformeable(positioned(useFont(Canvas2DBaseRenderable))))
@@ -62,8 +64,10 @@ export class Canvas2DText extends Base {
     this.registerChange("baseline", (this.#baseline = value));
   }
 
-  render(context: CanvasRenderingContext2D, frame: number): void {
-    super.render(context, frame);
+  render(canvas2D: Canvas2DCanvasElement): void {
+    super.render(canvas2D);
+
+    const { context } = canvas2D;
 
     if (this.#align !== null) context.textAlign = this.#align;
 
@@ -73,8 +77,8 @@ export class Canvas2DText extends Base {
     if (this.stroke !== "none" && this.textContent !== null)
       context.strokeText(this.textContent, this.position.x, this.position.y);
 
-    this.afterRender(context, frame);
+    this.afterRender(canvas2D);
 
-    this.renderChildren(context, frame);
+    this.renderChildren(canvas2D);
   }
 }

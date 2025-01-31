@@ -1,6 +1,6 @@
-import { Vector2D } from "../..";
+import { ClickTracker } from "../../classes/click";
 import { Color } from "../../classes/color";
-import { MousePosition } from "../../classes/mousePosition";
+import { MouseTracker } from "../../classes/mouse";
 import { standaloneChildren } from "../../mixins/children";
 import { attributeParser } from "../../utlities/attributeParser";
 import { Canvas2DElement } from "./element";
@@ -18,7 +18,8 @@ export class Canvas2DCanvasElement extends standaloneChildren(Canvas2DElement) {
   #background: Color | None = "none";
   #context: CanvasRenderingContext2D;
   #frame = 0;
-  #mousePosition = new MousePosition();
+  #mouseTracker: MouseTracker;
+  #clickTracker: ClickTracker;
   #renderQueued = false;
 
   constructor() {
@@ -36,7 +37,9 @@ export class Canvas2DCanvasElement extends standaloneChildren(Canvas2DElement) {
 
     this.#context = context;
 
-    this.#mousePosition = new MousePosition();
+    this.#mouseTracker = new MouseTracker(this.domCanvas);
+
+    this.#clickTracker = new ClickTracker(this.domCanvas);
   }
 
   get animating() {
@@ -76,15 +79,19 @@ export class Canvas2DCanvasElement extends standaloneChildren(Canvas2DElement) {
   }
 
   connectedCallback() {
-    this.canvas.style.scale = `${1 / devicePixelRatio}`;
+    this.domCanvas.style.scale = `${1 / devicePixelRatio}`;
 
     document.addEventListener("DOMContentLoaded", this.render.bind(this));
 
     this.addEventListener("change", this.queueRender.bind(this));
   }
 
-  get canvas() {
+  get domCanvas() {
     return this.#context.canvas;
+  }
+
+  get clicked() {
+    return this.#clickTracker.clicked;
   }
 
   get context() {
@@ -105,19 +112,12 @@ export class Canvas2DCanvasElement extends standaloneChildren(Canvas2DElement) {
     this.render();
   }
 
-  get mouseOnCanvas() {
-    const mouseOnWindow = this.#mousePosition;
-
-    const canvasRect = this.#context.canvas.getBoundingClientRect();
-
-    return Vector2D.xy(
-      mouseOnWindow.x - canvasRect.x,
-      mouseOnWindow.y - canvasRect.y
-    );
+  get frame() {
+    return this.#frame;
   }
 
-  get mouseOnWindow() {
-    return this.#mousePosition;
+  get mouse() {
+    return this.#mouseTracker;
   }
 
   queueRender() {
@@ -129,19 +129,19 @@ export class Canvas2DCanvasElement extends standaloneChildren(Canvas2DElement) {
   }
 
   get width() {
-    return this.canvas.width / devicePixelRatio;
+    return this.domCanvas.width / devicePixelRatio;
   }
 
   set width(value) {
-    this.canvas.width = value * devicePixelRatio;
+    this.domCanvas.width = value * devicePixelRatio;
   }
 
   get height() {
-    return this.canvas.width / devicePixelRatio;
+    return this.domCanvas.width / devicePixelRatio;
   }
 
   set height(value) {
-    this.canvas.height = value * devicePixelRatio;
+    this.domCanvas.height = value * devicePixelRatio;
   }
 
   render() {
@@ -169,7 +169,7 @@ export class Canvas2DCanvasElement extends standaloneChildren(Canvas2DElement) {
 
     for (const child of this.children) {
       if (child instanceof Canvas2DBaseRenderable) {
-        child.render(context, this.#frame);
+        child.render(this);
       }
     }
 

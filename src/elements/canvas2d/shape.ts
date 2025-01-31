@@ -1,7 +1,9 @@
+import { MouseTracker } from "../../classes/mouse";
 import { fillable } from "../../mixins/fill";
 import { positioned } from "../../mixins/position";
 import { strokeable } from "../../mixins/stroke";
 import { transformeable } from "../../mixins/transform";
+import { Canvas2DCanvasElement } from "./canvas";
 import { Canvas2DShapePartRenderable } from "./renderable";
 
 export class Canvas2DShape extends fillable(
@@ -19,15 +21,17 @@ export class Canvas2DShape extends fillable(
     this.registerChange("close", (this.#close = value));
   }
 
-  render(context: CanvasRenderingContext2D, frame: number): void {
-    super.render(context, frame);
+  render(canvas2D: Canvas2DCanvasElement): void {
+    super.render(canvas2D);
+
+    const { context } = canvas2D;
 
     context.moveTo(this.position.x, this.position.y);
 
-    this.renderChildren(context, frame);
+    this.renderChildren(canvas2D);
 
     if (this.#close) context.closePath();
 
-    this.afterRender(context, frame);
+    this.afterRender(canvas2D);
   }
 }

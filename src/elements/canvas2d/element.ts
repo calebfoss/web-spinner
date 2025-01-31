@@ -1,6 +1,7 @@
 import { Canvas2DElementTagMap } from "../..";
 import { ChildCreator } from "../../mixins/children";
 import { createCustomCanvas2D } from "../../utlities/createCustomElement";
+import { Canvas2DCanvasElement } from "./canvas";
 
 export class Canvas2DElement extends HTMLElement {
   static observedAttributes: string[] = [];
@@ -32,6 +33,20 @@ export class Canvas2DElement extends HTMLElement {
     oldValue: string | null,
     newValue: string | null
   ) {}
+
+  get canvas(): Canvas2DCanvasElement {
+    const { parentElement } = this;
+
+    if (
+      parentElement === null ||
+      parentElement instanceof Canvas2DElement === false
+    )
+      throw new Error("Canvas2D renderable is not a child of a Canvas2DCanvas");
+
+    if (parentElement instanceof Canvas2DCanvasElement) return parentElement;
+
+    return parentElement.canvas;
+  }
 
   createChild<T extends keyof Canvas2DElementTagMap>(
     tag: T
