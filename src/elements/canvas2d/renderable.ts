@@ -104,6 +104,9 @@ export class Canvas2DBaseRenderable extends Canvas2DElement {
 
     this.dispatchEvent(new MouseEvent("mouseover"));
 
+    if (!this.#localMouse.equals(mouse))
+      this.dispatchEvent(new MouseEvent("mousemove"));
+
     if (!this.#localMouse.over) {
       this.dispatchEvent(new MouseEvent("mouseenter"));
 

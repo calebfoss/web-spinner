@@ -13,8 +13,12 @@ export class ClickData extends Vector2D {
 }
 
 export class ClickTracker extends ClickData {
+  #target: HTMLElement;
+
   constructor(target: HTMLElement) {
     super();
+
+    this.#target = target;
 
     target.addEventListener("click", (event) => {
       super.clicked = true;
@@ -31,5 +35,21 @@ export class ClickTracker extends ClickData {
 
   get clicked() {
     return super.clicked;
+  }
+
+  get position(): Vector2D {
+    if (this.#target instanceof Window) return this;
+
+    const boundingRect = this.#target.getBoundingClientRect();
+
+    return Vector2D.xy(super.x - boundingRect.x, super.y - boundingRect.y);
+  }
+
+  get x() {
+    return this.position.x;
+  }
+
+  get y() {
+    return this.position.y;
   }
 }
