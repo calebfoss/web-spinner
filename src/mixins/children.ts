@@ -17,6 +17,10 @@ export function standaloneChildren<B extends typeof Canvas2DElement>(Base: B) {
       return this.createChild("c2d-ellipse");
     }
 
+    get image() {
+      return this.createChild("c2d-image");
+    }
+
     get line() {
       return this.createChild("c2d-line");
     }

@@ -4,7 +4,6 @@ import { strokeable } from "../../mixins/stroke";
 import { transformeable } from "../../mixins/transform";
 import { Canvas2DBaseRenderable } from "./renderable";
 import { positioned } from "../../mixins/position";
-import { MouseTracker } from "../../classes/mouse";
 import { Canvas2DCanvasElement } from "./canvas";
 
 const Base = fillable(

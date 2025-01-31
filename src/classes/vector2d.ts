@@ -11,6 +11,10 @@ export class Vector2D {
     return this.x === other.x && this.y === other.y;
   }
 
+  get inverse() {
+    return Vector2D.xy(-this.x, -this.y);
+  }
+
   static get one() {
     return new Vector2D(1);
   }

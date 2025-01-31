@@ -1,3 +1,4 @@
+import { Vector2D } from "../..";
 import { ClickTracker } from "../../classes/click";
 import { Color } from "../../classes/color";
 import { MouseTracker } from "../../classes/mouse";
@@ -22,6 +23,7 @@ export class Canvas2DCanvasElement extends standaloneChildren(Canvas2DElement) {
   #clickTracker: ClickTracker;
   #renderEvents = new Set<keyof HTMLElementEventMap>();
   #renderQueued = false;
+  #waitFor = new Set<Element>();
 
   constructor() {
     super();
@@ -79,10 +81,14 @@ export class Canvas2DCanvasElement extends standaloneChildren(Canvas2DElement) {
     this.#background = color;
   }
 
+  get center() {
+    return Vector2D.xy(this.width / 2, this.height / 2);
+  }
+
   connectedCallback() {
     this.domCanvas.style.scale = `${1 / devicePixelRatio}`;
 
-    document.addEventListener("DOMContentLoaded", this.render.bind(this));
+    document.addEventListener("DOMContentLoaded", this.queueRender.bind(this));
 
     this.addEventListener("change", this.queueRender.bind(this));
   }
@@ -114,7 +120,7 @@ export class Canvas2DCanvasElement extends standaloneChildren(Canvas2DElement) {
 
     this.#animating = true;
 
-    this.render();
+    this.queueRender();
   }
 
   get frame() {
@@ -126,11 +132,21 @@ export class Canvas2DCanvasElement extends standaloneChildren(Canvas2DElement) {
   }
 
   queueRender() {
-    if (this.#renderQueued) return;
+    if (this.#renderQueued || this.#waitFor.size) return;
 
     this.#renderQueued = true;
 
     requestAnimationFrame(this.render.bind(this));
+  }
+
+  waitFor(element: Element) {
+    this.#waitFor.add(element);
+
+    element.addEventListener("load", () => {
+      this.#waitFor.delete(element);
+
+      if (this.#waitFor.size === 0) this.queueRender();
+    });
   }
 
   get width() {
