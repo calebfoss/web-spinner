@@ -2,12 +2,12 @@ import { useFont } from "../../mixins/font";
 import { fillable } from "../../mixins/fill";
 import { strokeable } from "../../mixins/stroke";
 import { transformeable } from "../../mixins/transform";
-import { Canvas2DBaseRenderable } from "./renderable";
+import { Canvas2DStandaloneRenderable, changedEvent } from "./renderable";
 import { positioned } from "../../mixins/position";
 import { Canvas2DCanvasElement } from "./canvas";
 
 const Base = fillable(
-  strokeable(transformeable(positioned(useFont(Canvas2DBaseRenderable))))
+  strokeable(transformeable(positioned(useFont(Canvas2DStandaloneRenderable))))
 );
 
 export class Canvas2DText extends Base {
@@ -88,6 +88,8 @@ export class Canvas2DText extends Base {
   set textContent(value) {
     if (super.textContent === value) return;
 
-    this.registerChange("textContent", (super.textContent = value));
+    super.textContent = value;
+
+    this.dispatchEvent(changedEvent);
   }
 }
