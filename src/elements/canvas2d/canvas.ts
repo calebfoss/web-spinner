@@ -20,6 +20,7 @@ export class Canvas2DCanvasElement extends standaloneChildren(Canvas2DElement) {
   #frame = 0;
   #mouseTracker: MouseTracker;
   #clickTracker: ClickTracker;
+  #renderEvents = new Set<keyof HTMLElementEventMap>();
   #renderQueued = false;
 
   constructor() {
@@ -92,6 +93,10 @@ export class Canvas2DCanvasElement extends standaloneChildren(Canvas2DElement) {
 
   get clicked() {
     return this.#clickTracker.clicked;
+  }
+
+  get clickPosition() {
+    return this.#clickTracker;
   }
 
   get context() {
@@ -177,6 +182,18 @@ export class Canvas2DCanvasElement extends standaloneChildren(Canvas2DElement) {
 
     this.#renderQueued = false;
 
+    this.#clickTracker.advanceFrame();
+
+    this.#mouseTracker.advanceFrame();
+
     if (this.#animating) this.queueRender();
+  }
+
+  renderOn(eventName: keyof HTMLElementEventMap) {
+    if (this.#renderEvents.has(eventName)) return;
+
+    this.domCanvas.addEventListener(eventName, this.queueRender.bind(this));
+
+    this.#renderEvents.add(eventName);
   }
 }

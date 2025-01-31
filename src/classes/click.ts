@@ -1,4 +1,6 @@
-export class ClickData {
+import { Vector2D } from "./vector2d";
+
+export class ClickData extends Vector2D {
   #clicked = false;
 
   get clicked() {
@@ -11,11 +13,15 @@ export class ClickData {
 }
 
 export class ClickTracker extends ClickData {
-  constructor(target: HTMLElement | Window = window) {
+  constructor(target: HTMLElement) {
     super();
 
     target.addEventListener("click", (event) => {
       super.clicked = true;
+
+      super.x = event.x;
+
+      super.y = event.y;
     });
   }
 
