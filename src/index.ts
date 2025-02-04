@@ -3,13 +3,13 @@ import {
   Canvas2DRectangle,
   Canvas2DShapeRectangle,
 } from "./elements/canvas2d/rectangle";
-import { Color as ColorImport } from "./classes/color";
-import { Vector2D as Vector2DImport } from "./classes/vector2d";
-import { Angle as AngleImport } from "./classes/angle";
+import { Color } from "./classes/color";
+import { Vector2D } from "./classes/vector2d";
+import { Angle } from "./classes/angle";
 import { Canvas2DText } from "./elements/canvas2d/text";
 import { createCustomCanvas2D } from "./utlities/createCustomElement";
 import { Units } from "./classes/units";
-import { State as StateImport, depend as dependImport } from "./classes/state";
+import { State, createState } from "./classes/state";
 import { Canvas2DLine, Canvas2DShapeLine } from "./elements/canvas2d/line";
 import { Canvas2DShape } from "./elements/canvas2d/shape";
 import {
@@ -115,7 +115,7 @@ defineCustom("c2d-text", Canvas2DText);
 
 defineCustom("c2d-video", Canvas2DVideo);
 
-export function createCanvas(options?: Partial<Canvas2DCanvasElement>) {
+function createCanvas(options?: Partial<Canvas2DCanvasElement>) {
   const element = createCustomCanvas2D("c2d-canvas");
 
   Object.assign(element, options);
@@ -123,32 +123,18 @@ export function createCanvas(options?: Partial<Canvas2DCanvasElement>) {
   return element;
 }
 
-export const Color = ColorImport;
-
-export const Vector2D = Vector2DImport;
-
-export const Angle = AngleImport;
-
-export const State = StateImport;
-
-export const depend = dependImport;
-
-const webSpinner = {
+export default {
   createCanvas,
   createMultiple,
   Color,
   Vector2D,
   Angle,
   State,
-  depend,
-} as const;
+  createState,
+};
 
-export default webSpinner;
-
-window.webSpinner = webSpinner;
-
-declare global {
-  interface Window {
-    webSpinner: typeof webSpinner;
-  }
-}
+// declare global {
+//   interface Window {
+//     webSpinner: typeof webSpinner;
+//   }
+// }

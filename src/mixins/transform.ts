@@ -53,9 +53,16 @@ export function transformeable<B extends typeof Canvas2DBaseRenderable>(
     }
 
     set anchor(value) {
-      if (this.#anchor.equals(value)) return;
+      if (this.#anchor.equals(value)) {
+        if (this.#anchor !== value) this.#anchor = value;
+
+        value.onChange((newValue) => this.registerChange("anchor", newValue));
+        return;
+      }
 
       this.registerChange("anchor", (this.#anchor = value));
+
+      value.onChange((newValue) => this.registerChange("anchor", newValue));
     }
 
     attributeChangedCallback(

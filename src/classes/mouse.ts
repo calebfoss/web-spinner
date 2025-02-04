@@ -74,23 +74,23 @@ export class MouseTracker extends MouseData {
     return super.over;
   }
 
-  get position(): Vector2D {
-    if (this.#target instanceof Window) return this;
-
-    const boundingRect = this.#target.getBoundingClientRect();
-
-    return Vector2D.xy(super.x - boundingRect.x, super.y - boundingRect.y);
-  }
-
   get previous() {
     return this.#previous;
   }
 
   get x() {
-    return this.position.x;
+    if (this.#target instanceof Window) return super.x;
+
+    const boundingRect = this.#target.getBoundingClientRect();
+
+    return super.x - boundingRect.x;
   }
 
   get y() {
-    return this.position.y;
+    if (this.#target instanceof Window) return super.y;
+
+    const boundingRect = this.#target.getBoundingClientRect();
+
+    return super.y - boundingRect.y;
   }
 }

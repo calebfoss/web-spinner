@@ -1,4 +1,4 @@
-import { Vector2D } from "..";
+import { Vector2D } from "../classes/vector2d";
 import { Canvas2DBaseRenderable } from "../elements/canvas2d/renderable";
 import { attributeParser } from "../utlities/attributeParser";
 

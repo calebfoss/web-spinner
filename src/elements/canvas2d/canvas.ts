@@ -1,4 +1,4 @@
-import { Vector2D } from "../..";
+import { Vector2D } from "../../classes/vector2d";
 import { ClickTracker } from "../../classes/click";
 import { Color } from "../../classes/color";
 import { KeyboardTracker } from "../../classes/keyboard";

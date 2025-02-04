@@ -1,4 +1,4 @@
-import { Angle } from "../..";
+import { Angle } from "../../classes/angle";
 import { fillable } from "../../mixins/fill";
 import { hasRectangleBounds } from "../../mixins/rectangleBounds";
 import { strokeable } from "../../mixins/stroke";

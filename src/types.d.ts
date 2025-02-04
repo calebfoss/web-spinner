@@ -17,3 +17,5 @@ type CSSLengthUnit =
 type TypedEventListener<E extends keyof HTMLElementEventMap> = (
   event: HTMLElementEventMap[E]
 ) => void;
+
+type ChangeListener<T> = (newValue: T) => void;

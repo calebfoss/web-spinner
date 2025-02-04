@@ -1,62 +1,75 @@
-type StateCallback<T> = (updatedValue: T) => StateCallback<T> | boolean;
+type StateListener<T> = (updatedValue: T) => void;
 
 export class State<T> {
-  #callbacks: StateCallback<T>[] = [];
+  #listeners = new Set<StateListener<T>>();
   #value: T;
 
   constructor(initialValue: T) {
     this.#value = initialValue;
   }
 
-  depend(callback: StateCallback<T>) {
-    this.#callbacks.push(callback);
+  addChangeListener(listener: StateListener<T>) {
+    this.#listeners.add(listener);
+
+    return Array.from(this.#listeners);
+  }
+
+  removeChangeListener(listener: StateListener<T>) {
+    this.#listeners.delete(listener);
+
+    return Array.from(this.#listeners);
+  }
+
+  handleChange() {
+    for (const listener of this.#listeners) {
+      listener(this.#value);
+    }
   }
 
   get value() {
     return this.#value;
   }
 
-  set value(value) {
-    if (this.#value === value) return;
+  set value(newValue) {
+    if (this.#value === newValue) return;
 
-    this.#value = value;
+    this.#value = newValue;
 
-    this.#callbacks = this.#callbacks.reduce<StateCallback<T>[]>(
-      (updatedCallbacks, callback) => {
-        const updatedCallback = callback(value);
-
-        if (updatedCallback === true) return updatedCallbacks.concat(callback);
-
-        if (updatedCallback === false) return updatedCallbacks;
-
-        return updatedCallbacks.concat(updatedCallback);
-      },
-      []
-    );
+    this.handleChange();
   }
 }
 
-type StateArray<T extends any[]> = {
-  [Index in keyof T]: Index extends number ? State<T[Index]> : T[Index];
+type ObjectState<T extends object> = {
+  [Key in keyof T]: T[Key] extends object ? ObjectState<T[Key]> : State<T[Key]>;
 };
 
-type MultiStateCallback<T extends any[]> = (...updatedValues: T) => void;
-
-export function depend<T extends any[]>(
-  ...args: [...StateArray<T>, MultiStateCallback<T>]
-) {
-  const dependencies = args.slice(0, args.length - 1) as StateArray<T>;
-  const callback = args[args.length - 1] as MultiStateCallback<T>;
-
-  const initialValues = dependencies.map((dependency) => dependency.value) as T;
-
-  for (const [index, state] of dependencies.entries()) {
-    state.depend((updatedValue) => {
-      initialValues[index] = updatedValue;
-
-      callback(...initialValues);
-
-      return true;
-    });
-  }
+function deepState<T extends object>(target: T): ObjectState<T> {
+  return Object.fromEntries(
+    Object.entries(target).map(([propertyKey, propertyValue]) => [
+      propertyKey as keyof T,
+      typeof propertyValue === "object" && propertyValue !== null
+        ? deepState(propertyValue)
+        : new State(propertyValue),
+    ])
+  ) as ObjectState<T>;
 }
+
+export function createState<
+  T,
+  R extends T extends object ? ObjectState<T> : State<T>
+>(target: T): R {
+  if (typeof target === "object" && target !== null)
+    return deepState(target) as R;
+
+  return new State(target) as R;
+}
+
+const test = createState({
+  foo: 123,
+  bar: {
+    a: true,
+    b: "false",
+  },
+});
+
+test.bar.a;

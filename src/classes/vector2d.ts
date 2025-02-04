@@ -1,4 +1,5 @@
 export class Vector2D {
+  #changeLisners = new Set<ChangeListener<Vector2D>>();
   #x: number;
   #y: number;
 
@@ -15,6 +16,20 @@ export class Vector2D {
     return Vector2D.xy(-this.x, -this.y);
   }
 
+  onChange(listener: ChangeListener<Vector2D>) {
+    this.#changeLisners.add(listener);
+  }
+
+  cancelOnChange(listener: ChangeListener<Vector2D>) {
+    this.#changeLisners.delete(listener);
+  }
+
+  #handleChange() {
+    for (const listener of this.#changeLisners) {
+      listener(this);
+    }
+  }
+
   static get one() {
     return new Vector2D(1);
   }
@@ -24,7 +39,7 @@ export class Vector2D {
   }
 
   toString() {
-    return `${this.#x}, ${this.#y}`;
+    return `${this.x}, ${this.y}`;
   }
 
   static xy(x: number, y: number) {
@@ -36,7 +51,11 @@ export class Vector2D {
   }
 
   set x(value) {
+    if (this.#x === value) return;
+
     this.#x = value;
+
+    this.#handleChange();
   }
 
   get y() {
@@ -44,7 +63,11 @@ export class Vector2D {
   }
 
   set y(value) {
+    if (this.#y === value) return;
+
     this.#y = value;
+
+    this.#handleChange();
   }
 
   static get zero() {
