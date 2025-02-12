@@ -50,7 +50,7 @@ export class MouseTracker extends MouseData {
       super.over = false;
     });
 
-    (target as HTMLElement).addEventListener("mousemove", (event) => {
+    window.addEventListener("mousemove", (event) => {
       super.x = event.x;
       super.y = event.y;
     });

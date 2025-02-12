@@ -1,3 +1,4 @@
+import { LinearGradient } from "../../classes/gradient";
 import { fillable } from "../../mixins/fill";
 import { hasRectangleBounds } from "../../mixins/rectangleBounds";
 import { strokeable } from "../../mixins/stroke";
@@ -25,6 +26,19 @@ function renderCanvasRectangle<B extends typeof Canvas2DBaseRenderable>(
       canvas2D.context.rect(x, y, width, height);
 
       this.afterRender(canvas2D);
+    }
+
+    renderLinearGradient(
+      context: CanvasRenderingContext2D,
+      gradient: LinearGradient
+    ): CanvasGradient {
+      const { x: x0, y: y0 } = this.position;
+
+      const x1 = x0 + this.width;
+
+      const y1 = y0 + this.height;
+
+      return gradient.render(context, x0, y0, x1, y1);
     }
   };
 }

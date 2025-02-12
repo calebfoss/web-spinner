@@ -1,11 +1,10 @@
-export class Vector2D {
+import { State } from "./state";
+
+export class Vector2D extends State<{ x: number; y: number }> {
   #changeLisners = new Set<ChangeListener<Vector2D>>();
-  #x: number;
-  #y: number;
 
   constructor(x = 0, y = x) {
-    this.#x = x;
-    this.#y = y;
+    super({ x, y });
   }
 
   equals(other: Vector2D) {
@@ -14,20 +13,6 @@ export class Vector2D {
 
   get inverse() {
     return Vector2D.xy(-this.x, -this.y);
-  }
-
-  onChange(listener: ChangeListener<Vector2D>) {
-    this.#changeLisners.add(listener);
-  }
-
-  cancelOnChange(listener: ChangeListener<Vector2D>) {
-    this.#changeLisners.delete(listener);
-  }
-
-  #handleChange() {
-    for (const listener of this.#changeLisners) {
-      listener(this);
-    }
   }
 
   static get one() {
@@ -47,27 +32,27 @@ export class Vector2D {
   }
 
   get x() {
-    return this.#x;
+    return this.value.x;
   }
 
   set x(value) {
-    if (this.#x === value) return;
+    if (this.value.x === value) return;
 
-    this.#x = value;
+    this.value.x = value;
 
-    this.#handleChange();
+    this.handleChange();
   }
 
   get y() {
-    return this.#y;
+    return this.value.y;
   }
 
   set y(value) {
-    if (this.#y === value) return;
+    if (this.value.y === value) return;
 
-    this.#y = value;
+    this.value.y = value;
 
-    this.#handleChange();
+    this.handleChange();
   }
 
   static get zero() {

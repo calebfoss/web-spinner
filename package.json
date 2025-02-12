@@ -8,6 +8,8 @@
   "name": "web-spinner",
   "version": "0.0.0",
   "module": "src/index.ts",
+  "main": "dist/webSpinner.js",
+  "types": "dist/types/index.d.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

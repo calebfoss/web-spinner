@@ -52,17 +52,25 @@ export function transformeable<B extends typeof Canvas2DBaseRenderable>(
       return this.#anchor;
     }
 
+    #anchorChangeListener: ChangeListener<Vector2D> = (newValue) => {
+      this.registerChange("anchor", Vector2D.xy(newValue.x, newValue.y));
+    };
+
     set anchor(value) {
       if (this.#anchor.equals(value)) {
         if (this.#anchor !== value) this.#anchor = value;
 
-        value.onChange((newValue) => this.registerChange("anchor", newValue));
+        value.addChangeListener((newValue) =>
+          this.registerChange("anchor", Vector2D.xy(newValue.x, newValue.y))
+        );
         return;
       }
 
       this.registerChange("anchor", (this.#anchor = value));
 
-      value.onChange((newValue) => this.registerChange("anchor", newValue));
+      value.addChangeListener((newValue) =>
+        this.registerChange("anchor", Vector2D.xy(newValue.x, newValue.y))
+      );
     }
 
     attributeChangedCallback(

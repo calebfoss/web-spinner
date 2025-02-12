@@ -1,5 +1,6 @@
-import { NONE } from "..";
+import { LinearGradient, NONE } from "..";
 import { Color } from "../classes/color";
+import { DrawStyle } from "../classes/gradient";
 import { MouseTracker } from "../classes/mouse";
 import { Canvas2DCanvasElement } from "../elements/canvas2d/canvas";
 import { Canvas2DBaseRenderable } from "../elements/canvas2d/renderable";
@@ -12,7 +13,7 @@ export function strokeable<B extends typeof Canvas2DBaseRenderable>(Base: B) {
       "stroke",
     ];
 
-    #stroke: Color | None | null = null;
+    #stroke: DrawStyle | null = null;
     #lineWidth: number | null = null;
 
     get lineWidth() {
@@ -47,8 +48,16 @@ export function strokeable<B extends typeof Canvas2DBaseRenderable>(Base: B) {
 
       const { context } = canvas2D;
 
-      if (this.#stroke !== "none" && this.#stroke !== null)
-        context.strokeStyle = this.#stroke.toString();
+      if (this.#stroke !== "none" && this.#stroke !== null) {
+        if (this.#stroke instanceof Color)
+          context.strokeStyle = this.#stroke.toString();
+        else if (this.#stroke instanceof LinearGradient)
+          context.strokeStyle = this.renderLinearGradient(
+            context,
+            this.#stroke
+          );
+      }
+
       if (this.#lineWidth !== null) context.lineWidth = this.#lineWidth;
     }
 
@@ -63,20 +72,24 @@ export function strokeable<B extends typeof Canvas2DBaseRenderable>(Base: B) {
       oldValue: string | null,
       newValue: string | null
     ) {
-      switch (name) {
-        case "stroke":
-          this.stroke =
-            newValue === null
-              ? NONE
-              : attributeParser.FillStrokeStyle(newValue);
-          break;
-        case "line-width":
-          this.lineWidth =
-            newValue === null ? null : attributeParser.number(newValue);
-          break;
-      }
+      if (newValue !== null) {
+        switch (name) {
+          case "stroke": {
+            {
+              const strokeValue = attributeParser.FillStrokeStyle(newValue);
+              if (strokeValue !== "gradient") this.stroke = strokeValue;
+            }
+            break;
+          }
 
-      super.attributeChangedCallback(name, oldValue, newValue);
+          case "line-width":
+            this.lineWidth =
+              newValue === null ? null : attributeParser.number(newValue);
+            break;
+        }
+
+        super.attributeChangedCallback(name, oldValue, newValue);
+      }
     }
   };
 }

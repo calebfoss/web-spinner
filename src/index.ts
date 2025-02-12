@@ -22,6 +22,7 @@ import {
 } from "./elements/canvas2d/bezier";
 import { Canvas2DImage } from "./elements/canvas2d/image";
 import { Canvas2DVideo } from "./elements/canvas2d/video";
+import { LinearGradient } from "./classes/gradient";
 
 export type Canvas2DClass = {
   ["c2d-bezier"]: typeof Canvas2DBezier;
@@ -75,7 +76,7 @@ function range(arg1: number, arg2?: number): IterableIterator<number> {
   };
 }
 
-export function createMultiple<R extends Node>(
+function createMultiple<R extends Node>(
   count: number,
   generator: (index: number) => R
 ) {
@@ -123,13 +124,14 @@ function createCanvas(options?: Partial<Canvas2DCanvasElement>) {
   return element;
 }
 
-export default {
+export {
   createCanvas,
   createMultiple,
   Color,
   Vector2D,
   Angle,
   State,
+  LinearGradient,
   createState,
 };
 

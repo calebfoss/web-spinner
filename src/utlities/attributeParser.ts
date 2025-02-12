@@ -1,12 +1,13 @@
 import { NONE } from "..";
 import { Angle, AngleUnit } from "../classes/angle";
 import { Color } from "../classes/color";
+import { DrawStyle } from "../classes/gradient";
 import { Vector2D } from "../classes/vector2d";
 
 type AttributeTypeMap = {
   number: number;
   Color: Color;
-  FillStrokeStyle: Color | None;
+  FillStrokeStyle: DrawStyle;
   Vector2D: Vector2D;
   Angle: Angle;
 };
@@ -48,7 +49,7 @@ export const attributeParser: AttributeTypeParser = {
     }
   },
   FillStrokeStyle(stringValue) {
-    if (stringValue === NONE) return stringValue;
+    if (stringValue === NONE || stringValue === "gradient") return stringValue;
 
     return attributeParser.Color(stringValue);
   },

@@ -1,4 +1,9 @@
 {
   "include": ["./dist/types", "*.js"],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules"],
+  "compilerOptions": {
+    "paths": {
+      "webSpinner": ["./dist/types/index.d.ts"]
+    }
+  }
 }

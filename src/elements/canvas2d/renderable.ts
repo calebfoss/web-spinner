@@ -1,4 +1,5 @@
 import { ClickData } from "../../classes/click";
+import { LinearGradient } from "../../classes/gradient";
 import { MouseTracker, MouseData } from "../../classes/mouse";
 import { partChildren, standaloneChildren } from "../../mixins/children";
 import { Canvas2DCanvasElement } from "./canvas";
@@ -51,6 +52,14 @@ export class Canvas2DBaseRenderable extends Canvas2DElement {
     }
 
     super.addEventListener(type, listener, options);
+  }
+
+  renderLinearGradient(
+    context: CanvasRenderingContext2D,
+    gradient: LinearGradient
+  ) {
+    const { width, height } = this.canvas;
+    return gradient.render(context, 0, 0, width, height);
   }
 
   removeEventListener(

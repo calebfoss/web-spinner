@@ -1,4 +1,5 @@
 import { Angle } from "../../classes/angle";
+import { LinearGradient } from "../../classes/gradient";
 import { fillable } from "../../mixins/fill";
 import { hasRectangleBounds } from "../../mixins/rectangleBounds";
 import { strokeable } from "../../mixins/stroke";
@@ -33,6 +34,18 @@ function renderEllipse<B extends typeof Canvas2DBaseRenderable>(Base: B) {
       this.afterRender(canvas2D);
     }
 
+    renderLinearGradient(
+      context: CanvasRenderingContext2D,
+      gradient: LinearGradient
+    ): CanvasGradient {
+      const { x: centerX, y: centerY } = this.position;
+
+      const x0 = centerX - this.width / 2;
+      const y0 = centerX - this.height / 2;
+
+      return gradient.render(context, x0, y0, this.width, this.height);
+    }
+
     get startAngle() {
       return this.#startAngle;
     }
@@ -55,8 +68,8 @@ function renderEllipse<B extends typeof Canvas2DBaseRenderable>(Base: B) {
   };
 }
 
-export class Canvas2DEllipse extends strokeable(
-  fillable(renderEllipse(Canvas2DStandaloneRenderable))
+export class Canvas2DEllipse extends renderEllipse(
+  strokeable(fillable(Canvas2DStandaloneRenderable))
 ) {}
 
 export class Canvas2DShapeEllipse extends renderEllipse(
