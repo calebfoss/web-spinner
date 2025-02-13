@@ -1,4 +1,4 @@
-import { LinearGradient } from "../../classes/gradient";
+import { LinearGradient, RadialGradient } from "../../classes/gradient";
 import { fillable } from "../../mixins/fill";
 import { hasRectangleBounds } from "../../mixins/rectangleBounds";
 import { strokeable } from "../../mixins/stroke";
@@ -39,6 +39,20 @@ function renderCanvasRectangle<B extends typeof Canvas2DBaseRenderable>(
       const y1 = y0 + this.height;
 
       return gradient.render(context, x0, y0, x1, y1);
+    }
+
+    renderRadialGradient(
+      context: CanvasRenderingContext2D,
+      gradient: RadialGradient
+    ): CanvasGradient {
+      const { x, y } = this.position;
+
+      const centerX = x + this.width / 2;
+      const centerY = y + this.height / 2;
+
+      const radius = Math.max(this.width, this.height) / 2;
+
+      return gradient.render(context, centerX, centerY, radius);
     }
   };
 }

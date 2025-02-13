@@ -1,6 +1,6 @@
 import { LinearGradient, NONE } from "..";
 import { Color } from "../classes/color";
-import { DrawStyle } from "../classes/gradient";
+import { DrawStyle, RadialGradient } from "../classes/gradient";
 import { MouseTracker } from "../classes/mouse";
 import { Canvas2DCanvasElement } from "../elements/canvas2d/canvas";
 import { Canvas2DBaseRenderable } from "../elements/canvas2d/renderable";
@@ -53,6 +53,11 @@ export function strokeable<B extends typeof Canvas2DBaseRenderable>(Base: B) {
           context.strokeStyle = this.#stroke.toString();
         else if (this.#stroke instanceof LinearGradient)
           context.strokeStyle = this.renderLinearGradient(
+            context,
+            this.#stroke
+          );
+        else if (this.#stroke instanceof RadialGradient)
+          context.strokeStyle = this.renderRadialGradient(
             context,
             this.#stroke
           );

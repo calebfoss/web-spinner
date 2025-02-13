@@ -1,5 +1,5 @@
 import { ClickData } from "../../classes/click";
-import { LinearGradient } from "../../classes/gradient";
+import { LinearGradient, RadialGradient } from "../../classes/gradient";
 import { MouseTracker, MouseData } from "../../classes/mouse";
 import { partChildren, standaloneChildren } from "../../mixins/children";
 import { Canvas2DCanvasElement } from "./canvas";
@@ -60,6 +60,16 @@ export class Canvas2DBaseRenderable extends Canvas2DElement {
   ) {
     const { width, height } = this.canvas;
     return gradient.render(context, 0, 0, width, height);
+  }
+
+  renderRadialGradient(
+    context: CanvasRenderingContext2D,
+    gradient: RadialGradient
+  ) {
+    const { center, width, height } = this.canvas;
+    const canvasRadius = Math.max(width, height) / 2;
+
+    return gradient.render(context, center.x, center.y, canvasRadius);
   }
 
   removeEventListener(

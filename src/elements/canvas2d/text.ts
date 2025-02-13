@@ -5,7 +5,7 @@ import { transformeable } from "../../mixins/transform";
 import { Canvas2DStandaloneRenderable, changedEvent } from "./renderable";
 import { positioned } from "../../mixins/position";
 import { Canvas2DCanvasElement } from "./canvas";
-import { LinearGradient } from "../../classes/gradient";
+import { LinearGradient, RadialGradient } from "../../classes/gradient";
 
 const Base = fillable(
   strokeable(transformeable(positioned(useFont(Canvas2DStandaloneRenderable))))
@@ -101,6 +101,32 @@ export class Canvas2DText extends Base {
     const height = actualBoundingBoxDescent + actualBoundingBoxAscent;
 
     return gradient.render(context, x, y, width, height);
+  }
+
+  renderRadialGradient(
+    context: CanvasRenderingContext2D,
+    gradient: RadialGradient
+  ): CanvasGradient {
+    const textToMeasure = this.textContent ?? "";
+
+    const measurements = context.measureText(textToMeasure);
+
+    const {
+      actualBoundingBoxAscent,
+      actualBoundingBoxDescent,
+      actualBoundingBoxLeft,
+      actualBoundingBoxRight,
+      width,
+    } = measurements;
+
+    const height = actualBoundingBoxAscent + actualBoundingBoxDescent;
+
+    const radius = Math.max(height, width) / 2;
+
+    const centerX = actualBoundingBoxLeft + width / 2;
+    const centerY = actualBoundingBoxRight + height / 2;
+
+    return gradient.render(context, centerX, centerY, radius);
   }
 
   get textContent() {

@@ -80,4 +80,52 @@ export class LinearGradient extends Gradient {
   }
 }
 
+export class RadialGradient extends Gradient {
+  #startX: number;
+  #startY: number;
+  #startRadius: number;
+  #endX: number;
+  #endY: number;
+  #endRadius: number;
+
+  constructor(
+    startX = 0,
+    startY = 0,
+    startRadius = 0,
+    endX = 0,
+    endY = 0,
+    endRadius = 1
+  ) {
+    super();
+
+    this.#startX = startX;
+    this.#startY = startY;
+    this.#startRadius = startRadius;
+    this.#endX = endX;
+    this.#endY = endY;
+    this.#endRadius = endRadius;
+  }
+
+  render(
+    context: CanvasRenderingContext2D,
+    boundsX: number,
+    boundsY: number,
+    boundsRadius: number
+  ): CanvasGradient {
+    const x0 = boundsX + this.#startX * boundsRadius;
+    const y0 = boundsY + this.#startY * boundsRadius;
+    const r0 = boundsRadius * this.#startRadius;
+
+    const x1 = boundsX + this.#endX * boundsRadius;
+    const y1 = boundsY + this.#endY * boundsRadius;
+    const r1 = boundsRadius * this.#endRadius;
+
+    const gradient = context.createRadialGradient(x0, y0, r0, x1, y1, r1);
+
+    this.applyStops(gradient);
+
+    return gradient;
+  }
+}
+
 export type DrawStyle = Color | string | CanvasGradient | None;

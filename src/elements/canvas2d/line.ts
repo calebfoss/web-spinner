@@ -7,7 +7,7 @@ import {
   Canvas2DStandaloneRenderable,
 } from "./renderable";
 import { Canvas2DCanvasElement } from "./canvas";
-import { LinearGradient } from "../../classes/gradient";
+import { LinearGradient, RadialGradient } from "../../classes/gradient";
 
 export class Canvas2DShapeLine extends hasTo(Canvas2DShapePartRenderable) {
   render(canvas2D: Canvas2DCanvasElement): void {
@@ -46,5 +46,19 @@ export class Canvas2DLine extends strokeable(
     const height = this.to.y - y;
 
     return gradient.render(context, x, y, width, height);
+  }
+
+  renderRadialGradient(
+    context: CanvasRenderingContext2D,
+    gradient: RadialGradient
+  ): CanvasGradient {
+    const width = this.to.x - this.from.x;
+    const height = this.to.y - this.from.y;
+    const radius = Math.max(width, height) / 2;
+
+    const centerX = this.from.x + width / 2;
+    const centerY = this.from.y + height / 2;
+
+    return gradient.render(context, centerX, centerY, radius);
   }
 }

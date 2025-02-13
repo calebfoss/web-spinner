@@ -1,5 +1,5 @@
 import { Angle } from "../../classes/angle";
-import { LinearGradient } from "../../classes/gradient";
+import { LinearGradient, RadialGradient } from "../../classes/gradient";
 import { fillable } from "../../mixins/fill";
 import { hasRectangleBounds } from "../../mixins/rectangleBounds";
 import { strokeable } from "../../mixins/stroke";
@@ -41,9 +41,24 @@ function renderEllipse<B extends typeof Canvas2DBaseRenderable>(Base: B) {
       const { x: centerX, y: centerY } = this.position;
 
       const x0 = centerX - this.width / 2;
-      const y0 = centerX - this.height / 2;
+      const y0 = centerY - this.height / 2;
 
       return gradient.render(context, x0, y0, this.width, this.height);
+    }
+
+    renderRadialGradient(
+      context: CanvasRenderingContext2D,
+      gradient: RadialGradient
+    ): CanvasGradient {
+      const {
+        position: { x, y },
+        width,
+        height,
+      } = this;
+
+      const radius = Math.max(width, height) / 2;
+
+      return gradient.render(context, x, y, radius);
     }
 
     get startAngle() {

@@ -1,6 +1,6 @@
 import { NONE } from "..";
 import { Color } from "../classes/color";
-import { DrawStyle, LinearGradient } from "../classes/gradient";
+import { DrawStyle, LinearGradient, RadialGradient } from "../classes/gradient";
 import { Canvas2DCanvasElement } from "../elements/canvas2d/canvas";
 import { Canvas2DBaseRenderable } from "../elements/canvas2d/renderable";
 import { attributeParser } from "../utlities/attributeParser";
@@ -31,13 +31,19 @@ export function fillable<B extends typeof Canvas2DBaseRenderable>(Base: B) {
     render(canvas2D: Canvas2DCanvasElement): void {
       super.render(canvas2D);
 
-      if (this.#fill instanceof LinearGradient) {
+      if (this.#fill instanceof Color)
+        canvas2D.context.fillStyle = this.#fill.toString();
+      else if (this.#fill instanceof LinearGradient) {
         canvas2D.context.fillStyle = this.renderLinearGradient(
           canvas2D.context,
           this.#fill
         );
-      } else if (this.#fill !== "none" && this.#fill !== null)
-        canvas2D.context.fillStyle = this.#fill.toString();
+      } else if (this.#fill instanceof RadialGradient) {
+        canvas2D.context.fillStyle = this.renderRadialGradient(
+          canvas2D.context,
+          this.#fill
+        );
+      }
     }
 
     afterRender(canvas2D: Canvas2DCanvasElement): void {

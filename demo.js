@@ -5,6 +5,7 @@ import {
   Angle,
   createState,
   LinearGradient,
+  RadialGradient,
 } from "webSpinner";
 
 const canvas = createCanvas({
@@ -19,7 +20,7 @@ const state = createState({
 
 const test = canvas.mouse;
 
-const gradient = new LinearGradient(0, 0, 1, 0);
+const gradient = new RadialGradient();
 
 gradient.addColorStop(0, Color.rgb(255, 100, 100));
 
@@ -29,7 +30,7 @@ const rectangle = canvas.rectangle({
   position: test,
   fill: gradient,
   width: 100,
-  height: 100,
+  height: 400,
 });
 
 // state.counter.addChangeListener((updatedValue) => {
@@ -40,9 +41,9 @@ const rectangle = canvas.rectangle({
 //   state.counter.value++;
 // });
 
-// canvas.ellipse({ fill: gradient, anchor: canvas.mouse });
+canvas.ellipse({ fill: gradient, anchor: canvas.mouse });
 
-canvas.line({ stroke: gradient, lineWidth: 5 });
+canvas.line({ stroke: gradient, lineWidth: 5, to: Vector2D.xy(100, 400) });
 
 const text = canvas.text({
   size: 50,
