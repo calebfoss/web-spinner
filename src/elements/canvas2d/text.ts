@@ -21,6 +21,10 @@ export class Canvas2DText extends Base {
     "stretch",
   ];
 
+  static get tag() {
+    return "c2d-text";
+  }
+
   #align: CanvasTextAlign | null = null;
   #baseline: CanvasTextBaseline | null = null;
 
@@ -141,3 +145,5 @@ export class Canvas2DText extends Base {
     this.dispatchEvent(changedEvent);
   }
 }
+
+customElements.define("c2d-text", Canvas2DText);

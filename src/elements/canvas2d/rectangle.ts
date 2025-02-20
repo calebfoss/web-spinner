@@ -60,8 +60,20 @@ function renderCanvasRectangle<B extends typeof Canvas2DBaseRenderable>(
 
 export class Canvas2DRectangle extends renderCanvasRectangle(
   strokeable(fillable(Canvas2DStandaloneRenderable))
-) {}
+) {
+  static get tag() {
+    return "c2d-rectangle";
+  }
+}
+
+customElements.define("c2d-rectangle", Canvas2DRectangle);
 
 export class Canvas2DShapeRectangle extends renderCanvasRectangle(
   Canvas2DShapePartRenderable
-) {}
+) {
+  static get tag() {
+    return "c2d-shape-rectangle";
+  }
+}
+
+customElements.define("c2d-shape-rectangle", Canvas2DShapeRectangle);

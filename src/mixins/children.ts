@@ -1,64 +1,77 @@
+import {
+  Canvas2DBezier,
+  Canvas2DShapeBezier,
+} from "../elements/canvas2d/bezier";
 import { Canvas2DElement } from "../elements/canvas2d/element";
-import { Canvas2DRectangle } from "../elements/canvas2d/rectangle";
+import {
+  Canvas2DEllipse,
+  Canvas2DShapeEllipse,
+} from "../elements/canvas2d/ellipse";
+import { Canvas2DImage } from "../elements/canvas2d/image";
+import { Canvas2DLine, Canvas2DShapeLine } from "../elements/canvas2d/line";
+import {
+  Canvas2DRectangle,
+  Canvas2DShapeRectangle,
+} from "../elements/canvas2d/rectangle";
 import { Canvas2DShape } from "../elements/canvas2d/shape";
 import { Canvas2DText } from "../elements/canvas2d/text";
-
-export type ChildCreator<E extends Canvas2DElement> = (
-  options?: Partial<E>
-) => E;
+import { Canvas2DVideo } from "../elements/canvas2d/video";
 
 export function standaloneChildren<B extends typeof Canvas2DElement>(Base: B) {
   return class extends Base {
-    get bezier() {
-      return this.createChild("c2d-bezier");
+    /**
+     * Creates a `<c2d-bezier>` child element and returns it.
+     */
+    bezier(options?: WriteableOptions<Canvas2DBezier>): Canvas2DBezier {
+      return this.createChild(Canvas2DBezier, options);
     }
 
-    get ellipse() {
-      return this.createChild("c2d-ellipse");
+    ellipse(options?: WriteableOptions<Canvas2DEllipse>) {
+      return this.createChild(Canvas2DEllipse, options);
     }
 
-    get image() {
-      return this.createChild("c2d-image");
+    image(options?: WriteableOptions<Canvas2DImage>) {
+      return this.createChild(Canvas2DImage, options);
     }
 
-    get line() {
-      return this.createChild("c2d-line");
+    line(options?: WriteableOptions<Canvas2DLine>) {
+      return this.createChild(Canvas2DLine, options);
     }
 
-    get rectangle(): ChildCreator<Canvas2DRectangle> {
-      return this.createChild("c2d-rectangle");
+    rectangle(options?: WriteableOptions<Canvas2DRectangle>) {
+      return this.createChild(Canvas2DRectangle, options);
     }
 
-    get shape(): ChildCreator<Canvas2DShape> {
-      return this.createChild("c2d-shape");
+    shape(options?: WriteableOptions<Canvas2DShape>) {
+      return this.createChild(Canvas2DShape, options);
     }
 
-    get text(): ChildCreator<Canvas2DText> {
-      return this.createChild("c2d-text");
+    text(options?: WriteableOptions<Canvas2DText>) {
+      return this.createChild(Canvas2DText, options);
     }
 
-    get video() {
-      return this.createChild("c2d-video");
+    video(options?: WriteableOptions<Canvas2DVideo>) {
+      return this.createChild(Canvas2DVideo, options);
     }
   };
 }
 
 export function partChildren<B extends typeof Canvas2DElement>(Base: B) {
   return class extends Base {
-    get bezier() {
-      return this.createChild("c2d-shape-bezier");
+    bezier(options?: WriteableOptions<Canvas2DShapeBezier>) {
+      return this.createChild(Canvas2DShapeBezier, options);
     }
 
-    get ellipse() {
-      return this.createChild("c2d-shape-ellipse");
+    ellipse(options?: WriteableOptions<Canvas2DShapeEllipse>) {
+      return this.createChild(Canvas2DShapeEllipse, options);
     }
 
-    get line() {
-      return this.createChild("c2d-shape-line");
+    line(options?: WriteableOptions<Canvas2DShapeLine>) {
+      return this.createChild(Canvas2DShapeLine, options);
     }
 
-    get rectangle() {
-      return this.createChild("c2d-shape-rectangle");
+    rectangle(options?: WriteableOptions<Canvas2DShapeRectangle>) {
+      return this.createChild(Canvas2DShapeRectangle, options);
     }
   };
 }

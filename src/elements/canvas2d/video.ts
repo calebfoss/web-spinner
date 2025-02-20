@@ -5,6 +5,10 @@ export class Canvas2DVideo extends rendersVisualMedia(
   Canvas2DStandaloneRenderable,
   "video"
 ) {
+  static get tag() {
+    return "c2d-video";
+  }
+
   #frameCallbackId = -1;
 
   connectedCallback(): void {
@@ -42,3 +46,5 @@ export class Canvas2DVideo extends rendersVisualMedia(
     else this.pause();
   }
 }
+
+customElements.define("c2d-video", Canvas2DVideo);

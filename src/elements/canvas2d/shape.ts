@@ -9,6 +9,10 @@ import { Canvas2DShapePartRenderable } from "./renderable";
 export class Canvas2DShape extends fillable(
   strokeable(transformeable(positioned(Canvas2DShapePartRenderable)))
 ) {
+  static get tag() {
+    return "c2d-shape";
+  }
+
   #close = false;
 
   get close() {
@@ -35,3 +39,5 @@ export class Canvas2DShape extends fillable(
     this.afterRender(canvas2D);
   }
 }
+
+customElements.define("c2d-shape", Canvas2DShape);

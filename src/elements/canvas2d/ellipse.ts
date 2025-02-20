@@ -91,8 +91,20 @@ function renderEllipse<B extends typeof Canvas2DBaseRenderable>(Base: B) {
 
 export class Canvas2DEllipse extends renderEllipse(
   strokeable(fillable(Canvas2DStandaloneRenderable))
-) {}
+) {
+  static get tag() {
+    return "c2d-ellipse";
+  }
+}
+
+customElements.define("c2d-ellipse", Canvas2DEllipse);
 
 export class Canvas2DShapeEllipse extends renderEllipse(
   Canvas2DShapePartRenderable
-) {}
+) {
+  static get tag() {
+    return "c2d-shape-ellipse";
+  }
+}
+
+customElements.define("c2d-shape-ellipse", Canvas2DShapeEllipse);

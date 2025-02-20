@@ -14,6 +14,10 @@ import {
 } from "../../classes/gradient";
 
 export class Canvas2DShapeLine extends hasTo(Canvas2DShapePartRenderable) {
+  static get tag() {
+    return "c2d-shape-line";
+  }
+
   render(canvas2D: Canvas2DCanvasElement): void {
     super.render(canvas2D);
 
@@ -25,9 +29,15 @@ export class Canvas2DShapeLine extends hasTo(Canvas2DShapePartRenderable) {
   }
 }
 
+customElements.define("c2d-shape-line", Canvas2DShapeLine);
+
 export class Canvas2DLine extends strokeable(
   hasTo(hasFrom(Canvas2DStandaloneRenderable))
 ) {
+  static get tag() {
+    return "c2d-line";
+  }
+
   get center() {
     const width = this.to.x - this.from.x;
     const height = this.to.y - this.from.y;
@@ -79,3 +89,5 @@ export class Canvas2DLine extends strokeable(
     return gradient.render(context, x, y, radius);
   }
 }
+
+customElements.define("c2d-line", Canvas2DLine);

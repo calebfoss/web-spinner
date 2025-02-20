@@ -19,3 +19,9 @@ type TypedEventListener<E extends keyof HTMLElementEventMap> = (
 ) => void;
 
 type ChangeListener<T> = (newValue: T) => void;
+
+type Writeable<T> = {
+  -readonly [Key in keyof T]: T[Key];
+};
+
+type WriteableOptions<T> = Partial<Writeable<T>>;

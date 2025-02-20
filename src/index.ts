@@ -7,7 +7,6 @@ import { Color } from "./classes/color";
 import { Vector2D } from "./classes/vector2d";
 import { Angle } from "./classes/angle";
 import { Canvas2DText } from "./elements/canvas2d/text";
-import { createCustomCanvas2D } from "./utlities/createCustomElement";
 import { Units } from "./classes/units";
 import { State, createState } from "./classes/state";
 import { Canvas2DLine, Canvas2DShapeLine } from "./elements/canvas2d/line";
@@ -27,26 +26,7 @@ import {
   LinearGradient,
   RadialGradient,
 } from "./classes/gradient";
-
-export type Canvas2DClass = {
-  ["c2d-bezier"]: typeof Canvas2DBezier;
-  ["c2d-canvas"]: typeof Canvas2DCanvasElement;
-  ["c2d-ellipse"]: typeof Canvas2DEllipse;
-  ["c2d-image"]: typeof Canvas2DImage;
-  ["c2d-line"]: typeof Canvas2DLine;
-  ["c2d-rectangle"]: typeof Canvas2DRectangle;
-  ["c2d-shape"]: typeof Canvas2DShape;
-  ["c2d-shape-bezier"]: typeof Canvas2DShapeBezier;
-  ["c2d-shape-ellipse"]: typeof Canvas2DShapeEllipse;
-  ["c2d-shape-line"]: typeof Canvas2DShapeLine;
-  ["c2d-shape-rectangle"]: typeof Canvas2DShapeRectangle;
-  ["c2d-text"]: typeof Canvas2DText;
-  ["c2d-video"]: typeof Canvas2DVideo;
-};
-
-export type Canvas2DElementTagMap = {
-  [Tag in keyof Canvas2DClass]: InstanceType<Canvas2DClass[Tag]>;
-};
+import { Canvas2DElement } from "./elements/canvas2d/element";
 
 export type CSSLengthUnit = (typeof Units.size)[keyof typeof Units.size];
 
@@ -87,45 +67,60 @@ function createMultiple<R extends Node>(
   return new Array(count).fill(0).map((_, index) => generator(index));
 }
 
-function defineCustom<T extends keyof Canvas2DClass>(
-  tag: T,
-  ElementClass: Canvas2DClass[T]
-) {
-  return customElements.define(tag, ElementClass);
+declare global {
+  interface CustomElementRegistry {
+    define<E extends typeof Canvas2DElement>(
+      tag: E["tag"],
+      ElementClass: E
+    ): void;
+  }
 }
 
-defineCustom("c2d-bezier", Canvas2DBezier);
-
-defineCustom("c2d-canvas", Canvas2DCanvasElement);
-
-defineCustom("c2d-ellipse", Canvas2DEllipse);
-
-defineCustom("c2d-image", Canvas2DImage);
-
-defineCustom("c2d-line", Canvas2DLine);
-
-defineCustom("c2d-rectangle", Canvas2DRectangle);
-
-defineCustom("c2d-shape", Canvas2DShape);
-
-defineCustom("c2d-shape-bezier", Canvas2DShapeBezier);
-
-defineCustom("c2d-shape-ellipse", Canvas2DShapeEllipse);
-
-defineCustom("c2d-shape-line", Canvas2DShapeLine);
-
-defineCustom("c2d-shape-rectangle", Canvas2DShapeRectangle);
-
-defineCustom("c2d-text", Canvas2DText);
-
-defineCustom("c2d-video", Canvas2DVideo);
-
-function createCanvas(options?: Partial<Canvas2DCanvasElement>) {
-  const element = createCustomCanvas2D("c2d-canvas");
+export function createCustomElement<
+  E extends typeof HTMLElement & { tag: string }
+>(ElementClass: E, options?: WriteableOptions<InstanceType<E>>) {
+  const element = document.createElement(ElementClass.tag) as InstanceType<E>;
 
   Object.assign(element, options);
 
   return element;
+}
+
+const elementClasses = [
+  Canvas2DBezier,
+  Canvas2DCanvasElement,
+  Canvas2DEllipse,
+  Canvas2DImage,
+  Canvas2DLine,
+  Canvas2DRectangle,
+  Canvas2DShape,
+  Canvas2DShapeBezier,
+  Canvas2DShapeEllipse,
+  Canvas2DShapeLine,
+  Canvas2DShapeRectangle,
+  Canvas2DText,
+  Canvas2DVideo,
+];
+
+for (const elementClass of elementClasses) {
+  const tag = customElements.getName(elementClass);
+  const ctor = customElements.get(elementClass.tag);
+
+  if (tag === null || ctor === undefined) {
+    throw new Error(
+      `Constructor ${elementClass.name} has not been registered.`
+    );
+  } else if (tag !== elementClass.tag) {
+    throw new Error(
+      `Tag mismatch detected. Constructor's tag: ${elementClass.tag} Registered tag: ${tag}.`
+    );
+  } else if (ctor !== elementClass) {
+    throw new Error(`Constructor mismatch.`);
+  }
+}
+
+function createCanvas(options?: Partial<Canvas2DCanvasElement>) {
+  return createCustomElement(Canvas2DCanvasElement, options);
 }
 
 export {

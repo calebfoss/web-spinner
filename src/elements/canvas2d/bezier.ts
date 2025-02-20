@@ -7,7 +7,6 @@ import {
   Canvas2DShapePartRenderable,
   Canvas2DStandaloneRenderable,
 } from "./renderable";
-import { MouseTracker } from "../../classes/mouse";
 import { Canvas2DCanvasElement } from "./canvas";
 
 function hasControlPoints<B extends typeof Canvas2DBaseRenderable>(Base: B) {
@@ -40,6 +39,10 @@ function hasControlPoints<B extends typeof Canvas2DBaseRenderable>(Base: B) {
 export class Canvas2DShapeBezier extends hasControlPoints(
   Canvas2DShapePartRenderable
 ) {
+  static get tag() {
+    return "c2d-shape-bezier" as const;
+  }
+
   render(canvas2D: Canvas2DCanvasElement): void {
     super.render(canvas2D);
 
@@ -58,9 +61,15 @@ export class Canvas2DShapeBezier extends hasControlPoints(
   }
 }
 
+customElements.define("c2d-shape-bezier", Canvas2DShapeBezier);
+
 export class Canvas2DBezier extends strokeable(
   fillable(hasFrom(hasControlPoints(Canvas2DStandaloneRenderable)))
 ) {
+  static get tag() {
+    return "c2d-bezier";
+  }
+
   render(canvas2D: Canvas2DCanvasElement): void {
     super.render(canvas2D);
 
@@ -80,3 +89,5 @@ export class Canvas2DBezier extends strokeable(
     this.afterRender(canvas2D);
   }
 }
+
+customElements.define("c2d-bezier", Canvas2DBezier);

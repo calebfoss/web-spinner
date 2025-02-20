@@ -1,10 +1,9 @@
-import { Canvas2DElementTagMap } from "../..";
-import { ChildCreator } from "../../mixins/children";
-import { createCustomCanvas2D } from "../../utlities/createCustomElement";
+import { createCustomElement } from "../..";
 import { Canvas2DCanvasElement } from "./canvas";
 
 export class Canvas2DElement extends HTMLElement {
   static observedAttributes: string[] = [];
+  static tag: string;
 
   constructor(...args: any[]) {
     super();
@@ -48,20 +47,15 @@ export class Canvas2DElement extends HTMLElement {
     return parentElement.canvas;
   }
 
-  createChild<T extends keyof Canvas2DElementTagMap>(
-    tag: T
-  ): ChildCreator<Canvas2DElementTagMap[T]> {
-    const parentElement = this;
+  createChild<E extends typeof Canvas2DElement>(
+    ElementClass: E,
+    options?: WriteableOptions<InstanceType<E>>
+  ) {
+    const element = createCustomElement(ElementClass, options);
 
-    return function (options) {
-      const element = createCustomCanvas2D(tag);
+    this.appendChild(element);
 
-      parentElement.appendChild(element);
-
-      Object.assign(element, options);
-
-      return element;
-    };
+    return element;
   }
 
   get everyFrame() {

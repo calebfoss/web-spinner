@@ -15,6 +15,9 @@ export class Canvas2DCanvasElement extends standaloneChildren(Canvas2DElement) {
     "height",
     "background",
   ];
+  static get tag() {
+    return "c2d-canvas";
+  }
 
   #animating = false;
   #background: Color | None = "none";
@@ -246,3 +249,5 @@ export class Canvas2DCanvasElement extends standaloneChildren(Canvas2DElement) {
     });
   }
 }
+
+customElements.define("c2d-canvas", Canvas2DCanvasElement);

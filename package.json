@@ -1,5 +1,7 @@
 {
   "devDependencies": {
+    "@custom-elements-manifest/analyzer": "^0.10.4",
+    "api-viewer-element": "^1.0.0-pre.10",
     "ts-loader": "^9.5.2",
     "typescript-declaration-webpack-plugin": "^0.3.0",
     "webpack": "^5.97.1",
