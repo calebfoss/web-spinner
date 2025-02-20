@@ -4,6 +4,7 @@ import {
   Vector2D,
   Angle,
   createState,
+  ConicalGradient,
   LinearGradient,
   RadialGradient,
 } from "webSpinner";
@@ -20,7 +21,7 @@ const state = createState({
 
 const test = canvas.mouse;
 
-const gradient = new RadialGradient();
+const gradient = new ConicalGradient();
 
 gradient.addColorStop(0, Color.rgb(255, 100, 100));
 

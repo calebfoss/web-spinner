@@ -22,7 +22,11 @@ import {
 } from "./elements/canvas2d/bezier";
 import { Canvas2DImage } from "./elements/canvas2d/image";
 import { Canvas2DVideo } from "./elements/canvas2d/video";
-import { LinearGradient, RadialGradient } from "./classes/gradient";
+import {
+  ConicalGradient,
+  LinearGradient,
+  RadialGradient,
+} from "./classes/gradient";
 
 export type Canvas2DClass = {
   ["c2d-bezier"]: typeof Canvas2DBezier;
@@ -131,6 +135,7 @@ export {
   Vector2D,
   Angle,
   State,
+  ConicalGradient,
   LinearGradient,
   RadialGradient,
   createState,

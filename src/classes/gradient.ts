@@ -1,5 +1,7 @@
 import { Canvas2DElement } from "../elements/canvas2d/element";
+import { Angle } from "./angle";
 import { Color } from "./color";
+import { Vector2D } from "./vector2d";
 
 class ColorStop {
   #offset: number;
@@ -121,6 +123,36 @@ export class RadialGradient extends Gradient {
     const r1 = boundsRadius * this.#endRadius;
 
     const gradient = context.createRadialGradient(x0, y0, r0, x1, y1, r1);
+
+    this.applyStops(gradient);
+
+    return gradient;
+  }
+}
+
+export class ConicalGradient extends Gradient {
+  #startAngle: Angle;
+  #offset: Vector2D;
+
+  constructor(
+    startAngle: Angle = Angle.zero,
+    offset: Vector2D = Vector2D.zero
+  ) {
+    super();
+
+    this.#startAngle = startAngle;
+    this.#offset = offset;
+  }
+
+  render(context: CanvasRenderingContext2D, center: Vector2D): CanvasGradient {
+    const x = center.x + this.#offset.x;
+    const y = center.y + this.#offset.y;
+
+    const gradient = context.createConicGradient(
+      this.#startAngle.radians,
+      x,
+      y
+    );
 
     this.applyStops(gradient);
 

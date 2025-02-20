@@ -16,6 +16,12 @@ function renderEllipse<B extends typeof Canvas2DBaseRenderable>(Base: B) {
     #startAngle = Angle.zero;
     #endAngle = Angle.radians(Math.PI * 2);
 
+    constructor(...args: any[]) {
+      super(...args);
+
+      this.origin = "center";
+    }
+
     render(canvas2D: Canvas2DCanvasElement): void {
       super.render(canvas2D);
 

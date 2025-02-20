@@ -1,5 +1,9 @@
 import { ClickData } from "../../classes/click";
-import { LinearGradient, RadialGradient } from "../../classes/gradient";
+import {
+  ConicalGradient,
+  LinearGradient,
+  RadialGradient,
+} from "../../classes/gradient";
 import { MouseTracker, MouseData } from "../../classes/mouse";
 import { partChildren, standaloneChildren } from "../../mixins/children";
 import { Canvas2DCanvasElement } from "./canvas";
@@ -52,6 +56,13 @@ export class Canvas2DBaseRenderable extends Canvas2DElement {
     }
 
     super.addEventListener(type, listener, options);
+  }
+
+  renderConicalGradient(
+    context: CanvasRenderingContext2D,
+    gradient: ConicalGradient
+  ) {
+    return gradient.render(context, this.canvas.center);
   }
 
   renderLinearGradient(

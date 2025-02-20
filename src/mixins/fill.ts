@@ -1,6 +1,12 @@
 import { NONE } from "..";
 import { Color } from "../classes/color";
-import { DrawStyle, LinearGradient, RadialGradient } from "../classes/gradient";
+import {
+  ConicalGradient,
+  DrawStyle,
+  Gradient,
+  LinearGradient,
+  RadialGradient,
+} from "../classes/gradient";
 import { Canvas2DCanvasElement } from "../elements/canvas2d/canvas";
 import { Canvas2DBaseRenderable } from "../elements/canvas2d/renderable";
 import { attributeParser } from "../utlities/attributeParser";
@@ -31,18 +37,18 @@ export function fillable<B extends typeof Canvas2DBaseRenderable>(Base: B) {
     render(canvas2D: Canvas2DCanvasElement): void {
       super.render(canvas2D);
 
+      const { context } = canvas2D;
+
       if (this.#fill instanceof Color)
-        canvas2D.context.fillStyle = this.#fill.toString();
-      else if (this.#fill instanceof LinearGradient) {
-        canvas2D.context.fillStyle = this.renderLinearGradient(
-          canvas2D.context,
-          this.#fill
-        );
-      } else if (this.#fill instanceof RadialGradient) {
-        canvas2D.context.fillStyle = this.renderRadialGradient(
-          canvas2D.context,
-          this.#fill
-        );
+        context.fillStyle = this.#fill.toString();
+      else if (this.#fill instanceof Gradient) {
+        if (this.#fill instanceof ConicalGradient) {
+          context.fillStyle = this.renderConicalGradient(context, this.#fill);
+        } else if (this.#fill instanceof LinearGradient) {
+          context.fillStyle = this.renderLinearGradient(context, this.#fill);
+        } else if (this.#fill instanceof RadialGradient) {
+          context.fillStyle = this.renderRadialGradient(context, this.#fill);
+        }
       }
     }
 

@@ -7,7 +7,11 @@ import {
   Canvas2DStandaloneRenderable,
 } from "./renderable";
 import { Canvas2DCanvasElement } from "./canvas";
-import { LinearGradient, RadialGradient } from "../../classes/gradient";
+import {
+  ConicalGradient,
+  LinearGradient,
+  RadialGradient,
+} from "../../classes/gradient";
 
 export class Canvas2DShapeLine extends hasTo(Canvas2DShapePartRenderable) {
   render(canvas2D: Canvas2DCanvasElement): void {
@@ -24,6 +28,13 @@ export class Canvas2DShapeLine extends hasTo(Canvas2DShapePartRenderable) {
 export class Canvas2DLine extends strokeable(
   hasTo(hasFrom(Canvas2DStandaloneRenderable))
 ) {
+  get center() {
+    const width = this.to.x - this.from.x;
+    const height = this.to.y - this.from.y;
+
+    return Vector2D.xy(this.from.x + width / 2, this.from.y + height / 2);
+  }
+
   render(canvas2D: Canvas2DCanvasElement): void {
     super.render(canvas2D);
 
@@ -34,6 +45,13 @@ export class Canvas2DLine extends strokeable(
     canvas2D.context.lineTo(to.x, to.y);
 
     this.afterRender(canvas2D);
+  }
+
+  renderConicalGradient(
+    context: CanvasRenderingContext2D,
+    gradient: ConicalGradient
+  ): CanvasGradient {
+    return gradient.render(context, this.center);
   }
 
   renderLinearGradient(
@@ -56,9 +74,8 @@ export class Canvas2DLine extends strokeable(
     const height = this.to.y - this.from.y;
     const radius = Math.max(width, height) / 2;
 
-    const centerX = this.from.x + width / 2;
-    const centerY = this.from.y + height / 2;
+    const { x, y } = this.center;
 
-    return gradient.render(context, centerX, centerY, radius);
+    return gradient.render(context, x, y, radius);
   }
 }

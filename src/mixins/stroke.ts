@@ -1,6 +1,11 @@
 import { LinearGradient, NONE } from "..";
 import { Color } from "../classes/color";
-import { DrawStyle, RadialGradient } from "../classes/gradient";
+import {
+  ConicalGradient,
+  DrawStyle,
+  Gradient,
+  RadialGradient,
+} from "../classes/gradient";
 import { MouseTracker } from "../classes/mouse";
 import { Canvas2DCanvasElement } from "../elements/canvas2d/canvas";
 import { Canvas2DBaseRenderable } from "../elements/canvas2d/renderable";
@@ -51,16 +56,23 @@ export function strokeable<B extends typeof Canvas2DBaseRenderable>(Base: B) {
       if (this.#stroke !== "none" && this.#stroke !== null) {
         if (this.#stroke instanceof Color)
           context.strokeStyle = this.#stroke.toString();
-        else if (this.#stroke instanceof LinearGradient)
-          context.strokeStyle = this.renderLinearGradient(
-            context,
-            this.#stroke
-          );
-        else if (this.#stroke instanceof RadialGradient)
-          context.strokeStyle = this.renderRadialGradient(
-            context,
-            this.#stroke
-          );
+        else if (this.#stroke instanceof Gradient) {
+          if (this.#stroke instanceof ConicalGradient) {
+            context.strokeStyle = this.renderConicalGradient(
+              context,
+              this.#stroke
+            );
+          } else if (this.#stroke instanceof LinearGradient)
+            context.strokeStyle = this.renderLinearGradient(
+              context,
+              this.#stroke
+            );
+          else if (this.#stroke instanceof RadialGradient)
+            context.strokeStyle = this.renderRadialGradient(
+              context,
+              this.#stroke
+            );
+        }
       }
 
       if (this.#lineWidth !== null) context.lineWidth = this.#lineWidth;

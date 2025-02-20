@@ -19,8 +19,20 @@ export class Vector2D extends State<{ x: number; y: number }> {
     return new Vector2D(1);
   }
 
-  plus(other: Vector2D) {
-    return Vector2D.xy(this.x + other.x, this.y + other.y);
+  minus(x: number, y: number): Vector2D;
+  minus(other: Vector2D): Vector2D;
+  minus(arg1: Vector2D | number, arg2?: number) {
+    if (typeof arg1 === "number")
+      return Vector2D.xy(this.x - arg1, this.y - (arg2 ?? arg1));
+    return Vector2D.xy(this.x - arg1.x, this.y - arg1.y);
+  }
+
+  plus(x: number, y: number): Vector2D;
+  plus(other: Vector2D): Vector2D;
+  plus(arg1: Vector2D | number, arg2?: number) {
+    if (typeof arg1 === "number")
+      return Vector2D.xy(this.x + arg1, this.y + (arg2 ?? arg1));
+    return Vector2D.xy(this.x + arg1.x, this.y + arg1.y);
   }
 
   toString() {
