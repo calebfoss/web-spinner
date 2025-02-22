@@ -24,4 +24,4 @@ type Writeable<T> = {
   -readonly [Key in keyof T]: T[Key];
 };
 
-type WriteableOptions<T> = Partial<Writeable<T>>;
+type Options<T> = Partial<Writeable<T>>;

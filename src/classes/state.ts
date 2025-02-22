@@ -1,20 +1,18 @@
-type StateListener<T> = (updatedValue: T) => void;
-
 export class State<T> {
-  #listeners = new Set<StateListener<T>>();
+  #listeners = new Set<ChangeListener<T>>();
   #value: T;
 
   constructor(initialValue: T) {
     this.#value = initialValue;
   }
 
-  addChangeListener(listener: StateListener<T>) {
+  addChangeListener(listener: ChangeListener<T>) {
     this.#listeners.add(listener);
 
     return Array.from(this.#listeners);
   }
 
-  removeChangeListener(listener: StateListener<T>) {
+  removeChangeListener(listener: ChangeListener<T>) {
     this.#listeners.delete(listener);
 
     return Array.from(this.#listeners);

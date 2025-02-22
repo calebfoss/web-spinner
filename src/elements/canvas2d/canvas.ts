@@ -23,6 +23,7 @@ export class Canvas2DCanvasElement extends standaloneChildren(Canvas2DElement) {
   #background: Color | None = "none";
   #clickTracker: ClickTracker;
   #context: CanvasRenderingContext2D;
+  #devicePixelRatio: number;
   #frame = 0;
   #keyboardTracker = new KeyboardTracker();
   #mouseTracker: MouseTracker;
@@ -48,6 +49,8 @@ export class Canvas2DCanvasElement extends standaloneChildren(Canvas2DElement) {
     this.#mouseTracker = new MouseTracker(this.domCanvas);
 
     this.#clickTracker = new ClickTracker(this.domCanvas);
+
+    this.#devicePixelRatio = window.devicePixelRatio;
   }
 
   addEventListener(
@@ -106,7 +109,13 @@ export class Canvas2DCanvasElement extends standaloneChildren(Canvas2DElement) {
   }
 
   connectedCallback() {
-    this.domCanvas.style.scale = `${1 / devicePixelRatio}`;
+    const pixelRatioQuery = `(resolution: ${window.devicePixelRatio}dppx)`;
+
+    const media = matchMedia(pixelRatioQuery);
+
+    media.addEventListener("change", this.#updateScale.bind(this));
+
+    this.#updateScale();
 
     document.addEventListener("DOMContentLoaded", this.queueRender.bind(this));
 
@@ -180,7 +189,13 @@ export class Canvas2DCanvasElement extends standaloneChildren(Canvas2DElement) {
   }
 
   set width(value) {
+    const { devicePixelRatio } = window;
+
+    if (value === this.domCanvas.width / devicePixelRatio) return;
+
     this.domCanvas.width = value * devicePixelRatio;
+
+    this.queueRender();
   }
 
   get height() {
@@ -188,7 +203,13 @@ export class Canvas2DCanvasElement extends standaloneChildren(Canvas2DElement) {
   }
 
   set height(value) {
+    const { devicePixelRatio } = window;
+
+    if (value === this.domCanvas.height / devicePixelRatio) return;
+
     this.domCanvas.height = value * devicePixelRatio;
+
+    this.queueRender();
   }
 
   render() {
@@ -237,6 +258,21 @@ export class Canvas2DCanvasElement extends standaloneChildren(Canvas2DElement) {
     this.domCanvas.addEventListener(eventName, this.queueRender.bind(this));
 
     this.#renderEvents.add(eventName);
+  }
+
+  #updateScale() {
+    const { devicePixelRatio: newPixelRatio } = window;
+
+    const scaleRatio = newPixelRatio / this.#devicePixelRatio;
+
+    this.domCanvas.width *= scaleRatio;
+    this.domCanvas.height *= scaleRatio;
+
+    this.domCanvas.style.scale = `${1 / newPixelRatio}`;
+
+    this.#devicePixelRatio = newPixelRatio;
+
+    this.queueRender();
   }
 
   waitFor(element: Element, eventName: keyof HTMLElementEventMap = "load") {

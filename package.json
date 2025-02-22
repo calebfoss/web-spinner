@@ -17,5 +17,8 @@
   },
   "author": "Caleb Foss",
   "license": "ISC",
-  "description": ""
+  "description": "",
+  "dependencies": {
+    "web-spinner": "file:dist"
+  }
 }

@@ -78,7 +78,7 @@ declare global {
 
 export function createCustomElement<
   E extends typeof HTMLElement & { tag: string }
->(ElementClass: E, options?: WriteableOptions<InstanceType<E>>) {
+>(ElementClass: E, options?: Options<InstanceType<E>>) {
   const element = document.createElement(ElementClass.tag) as InstanceType<E>;
 
   Object.assign(element, options);
@@ -87,8 +87,8 @@ export function createCustomElement<
 }
 
 const elementClasses = [
-  Canvas2DBezier,
   Canvas2DCanvasElement,
+  Canvas2DBezier,
   Canvas2DEllipse,
   Canvas2DImage,
   Canvas2DLine,

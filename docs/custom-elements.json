@@ -216,7 +216,7 @@
               "name": "options",
               "optional": true,
               "type": {
-                "text": "WriteableOptions<InstanceType<E>>"
+                "text": "Options<InstanceType<E>>"
               }
             }
           ]
@@ -2815,7 +2815,7 @@
                   "name": "options",
                   "optional": true,
                   "type": {
-                    "text": "WriteableOptions<Canvas2DBezier>"
+                    "text": "Options<Canvas2DBezier>"
                   }
                 }
               ],
@@ -2824,12 +2824,17 @@
             {
               "kind": "method",
               "name": "ellipse",
+              "return": {
+                "type": {
+                  "text": "Canvas2DEllipse"
+                }
+              },
               "parameters": [
                 {
                   "name": "options",
                   "optional": true,
                   "type": {
-                    "text": "WriteableOptions<Canvas2DEllipse>"
+                    "text": "Options<Canvas2DEllipse>"
                   }
                 }
               ]
@@ -2837,12 +2842,17 @@
             {
               "kind": "method",
               "name": "image",
+              "return": {
+                "type": {
+                  "text": "Canvas2DImage"
+                }
+              },
               "parameters": [
                 {
                   "name": "options",
                   "optional": true,
                   "type": {
-                    "text": "WriteableOptions<Canvas2DImage>"
+                    "text": "Options<Canvas2DImage>"
                   }
                 }
               ]
@@ -2850,12 +2860,17 @@
             {
               "kind": "method",
               "name": "line",
+              "return": {
+                "type": {
+                  "text": "Canvas2DLine"
+                }
+              },
               "parameters": [
                 {
                   "name": "options",
                   "optional": true,
                   "type": {
-                    "text": "WriteableOptions<Canvas2DLine>"
+                    "text": "Options<Canvas2DLine>"
                   }
                 }
               ]
@@ -2863,12 +2878,17 @@
             {
               "kind": "method",
               "name": "rectangle",
+              "return": {
+                "type": {
+                  "text": "Canvas2DRectangle"
+                }
+              },
               "parameters": [
                 {
                   "name": "options",
                   "optional": true,
                   "type": {
-                    "text": "WriteableOptions<Canvas2DRectangle>"
+                    "text": "Options<Canvas2DRectangle>"
                   }
                 }
               ]
@@ -2876,12 +2896,17 @@
             {
               "kind": "method",
               "name": "shape",
+              "return": {
+                "type": {
+                  "text": "Canvas2DShape"
+                }
+              },
               "parameters": [
                 {
                   "name": "options",
                   "optional": true,
                   "type": {
-                    "text": "WriteableOptions<Canvas2DShape>"
+                    "text": "Options<Canvas2DShape>"
                   }
                 }
               ]
@@ -2889,12 +2914,17 @@
             {
               "kind": "method",
               "name": "text",
+              "return": {
+                "type": {
+                  "text": "Canvas2DText"
+                }
+              },
               "parameters": [
                 {
                   "name": "options",
                   "optional": true,
                   "type": {
-                    "text": "WriteableOptions<Canvas2DText>"
+                    "text": "Options<Canvas2DText>"
                   }
                 }
               ]
@@ -2902,12 +2932,17 @@
             {
               "kind": "method",
               "name": "video",
+              "return": {
+                "type": {
+                  "text": "Canvas2DVideo"
+                }
+              },
               "parameters": [
                 {
                   "name": "options",
                   "optional": true,
                   "type": {
-                    "text": "WriteableOptions<Canvas2DVideo>"
+                    "text": "Options<Canvas2DVideo>"
                   }
                 }
               ]
@@ -2935,7 +2970,7 @@
                   "name": "options",
                   "optional": true,
                   "type": {
-                    "text": "WriteableOptions<Canvas2DShapeBezier>"
+                    "text": "Options<Canvas2DShapeBezier>"
                   }
                 }
               ]
@@ -2948,7 +2983,7 @@
                   "name": "options",
                   "optional": true,
                   "type": {
-                    "text": "WriteableOptions<Canvas2DShapeEllipse>"
+                    "text": "Options<Canvas2DShapeEllipse>"
                   }
                 }
               ]
@@ -2961,7 +2996,7 @@
                   "name": "options",
                   "optional": true,
                   "type": {
-                    "text": "WriteableOptions<Canvas2DShapeLine>"
+                    "text": "Options<Canvas2DShapeLine>"
                   }
                 }
               ]
@@ -2974,7 +3009,7 @@
                   "name": "options",
                   "optional": true,
                   "type": {
-                    "text": "WriteableOptions<Canvas2DShapeRectangle>"
+                    "text": "Options<Canvas2DShapeRectangle>"
                   }
                 }
               ]
@@ -4992,7 +5027,7 @@
                   "name": "options",
                   "optional": true,
                   "type": {
-                    "text": "WriteableOptions<Canvas2DShapeBezier>"
+                    "text": "Options<Canvas2DShapeBezier>"
                   }
                 }
               ],
@@ -5009,7 +5044,7 @@
                   "name": "options",
                   "optional": true,
                   "type": {
-                    "text": "WriteableOptions<Canvas2DShapeEllipse>"
+                    "text": "Options<Canvas2DShapeEllipse>"
                   }
                 }
               ],
@@ -5026,7 +5061,7 @@
                   "name": "options",
                   "optional": true,
                   "type": {
-                    "text": "WriteableOptions<Canvas2DShapeLine>"
+                    "text": "Options<Canvas2DShapeLine>"
                   }
                 }
               ],
@@ -5043,7 +5078,7 @@
                   "name": "options",
                   "optional": true,
                   "type": {
-                    "text": "WriteableOptions<Canvas2DShapeRectangle>"
+                    "text": "Options<Canvas2DShapeRectangle>"
                   }
                 }
               ],
@@ -5358,7 +5393,7 @@
                   "name": "options",
                   "optional": true,
                   "type": {
-                    "text": "WriteableOptions<InstanceType<E>>"
+                    "text": "Options<InstanceType<E>>"
                   }
                 }
               ],
@@ -5395,7 +5430,7 @@
             "name": "Canvas2DShapePartRenderable",
             "module": "/src/elements/canvas2d/renderable"
           },
-          "tagName": "ct2-shape-bezier",
+          "tagName": "c2d-shape-bezier",
           "customElement": true,
           "attributes": [
             {
@@ -5870,7 +5905,7 @@
                   "name": "options",
                   "optional": true,
                   "type": {
-                    "text": "WriteableOptions<Canvas2DBezier>"
+                    "text": "Options<Canvas2DBezier>"
                   }
                 }
               ],
@@ -5883,12 +5918,17 @@
             {
               "kind": "method",
               "name": "ellipse",
+              "return": {
+                "type": {
+                  "text": "Canvas2DEllipse"
+                }
+              },
               "parameters": [
                 {
                   "name": "options",
                   "optional": true,
                   "type": {
-                    "text": "WriteableOptions<Canvas2DEllipse>"
+                    "text": "Options<Canvas2DEllipse>"
                   }
                 }
               ],
@@ -5900,12 +5940,17 @@
             {
               "kind": "method",
               "name": "image",
+              "return": {
+                "type": {
+                  "text": "Canvas2DImage"
+                }
+              },
               "parameters": [
                 {
                   "name": "options",
                   "optional": true,
                   "type": {
-                    "text": "WriteableOptions<Canvas2DImage>"
+                    "text": "Options<Canvas2DImage>"
                   }
                 }
               ],
@@ -5917,12 +5962,17 @@
             {
               "kind": "method",
               "name": "line",
+              "return": {
+                "type": {
+                  "text": "Canvas2DLine"
+                }
+              },
               "parameters": [
                 {
                   "name": "options",
                   "optional": true,
                   "type": {
-                    "text": "WriteableOptions<Canvas2DLine>"
+                    "text": "Options<Canvas2DLine>"
                   }
                 }
               ],
@@ -5934,12 +5984,17 @@
             {
               "kind": "method",
               "name": "rectangle",
+              "return": {
+                "type": {
+                  "text": "Canvas2DRectangle"
+                }
+              },
               "parameters": [
                 {
                   "name": "options",
                   "optional": true,
                   "type": {
-                    "text": "WriteableOptions<Canvas2DRectangle>"
+                    "text": "Options<Canvas2DRectangle>"
                   }
                 }
               ],
@@ -5951,12 +6006,17 @@
             {
               "kind": "method",
               "name": "shape",
+              "return": {
+                "type": {
+                  "text": "Canvas2DShape"
+                }
+              },
               "parameters": [
                 {
                   "name": "options",
                   "optional": true,
                   "type": {
-                    "text": "WriteableOptions<Canvas2DShape>"
+                    "text": "Options<Canvas2DShape>"
                   }
                 }
               ],
@@ -5968,12 +6028,17 @@
             {
               "kind": "method",
               "name": "text",
+              "return": {
+                "type": {
+                  "text": "Canvas2DText"
+                }
+              },
               "parameters": [
                 {
                   "name": "options",
                   "optional": true,
                   "type": {
-                    "text": "WriteableOptions<Canvas2DText>"
+                    "text": "Options<Canvas2DText>"
                   }
                 }
               ],
@@ -5985,12 +6050,17 @@
             {
               "kind": "method",
               "name": "video",
+              "return": {
+                "type": {
+                  "text": "Canvas2DVideo"
+                }
+              },
               "parameters": [
                 {
                   "name": "options",
                   "optional": true,
                   "type": {
-                    "text": "WriteableOptions<Canvas2DVideo>"
+                    "text": "Options<Canvas2DVideo>"
                   }
                 }
               ],
@@ -6305,7 +6375,7 @@
                   "name": "options",
                   "optional": true,
                   "type": {
-                    "text": "WriteableOptions<InstanceType<E>>"
+                    "text": "Options<InstanceType<E>>"
                   }
                 }
               ],
@@ -6354,7 +6424,7 @@
             "name": "Canvas2DStandaloneRenderable",
             "module": "/src/elements/canvas2d/renderable"
           },
-          "tagName": "c2d-shape-bezier",
+          "tagName": "c2d-bezier",
           "customElement": true,
           "attributes": [
             {
@@ -6506,7 +6576,7 @@
         },
         {
           "kind": "custom-element-definition",
-          "name": "ct2-shape-bezier",
+          "name": "c2d-shape-bezier",
           "declaration": {
             "name": "Canvas2DShapeBezier",
             "module": "src/elements/canvas2d/bezier.ts"
@@ -6522,7 +6592,7 @@
         },
         {
           "kind": "custom-element-definition",
-          "name": "c2d-shape-bezier",
+          "name": "c2d-bezier",
           "declaration": {
             "name": "Canvas2DBezier",
             "module": "src/elements/canvas2d/bezier.ts"
@@ -6809,7 +6879,7 @@
                   "name": "options",
                   "optional": true,
                   "type": {
-                    "text": "WriteableOptions<Canvas2DBezier>"
+                    "text": "Options<Canvas2DBezier>"
                   }
                 }
               ],
@@ -6822,12 +6892,17 @@
             {
               "kind": "method",
               "name": "ellipse",
+              "return": {
+                "type": {
+                  "text": "Canvas2DEllipse"
+                }
+              },
               "parameters": [
                 {
                   "name": "options",
                   "optional": true,
                   "type": {
-                    "text": "WriteableOptions<Canvas2DEllipse>"
+                    "text": "Options<Canvas2DEllipse>"
                   }
                 }
               ],
@@ -6839,12 +6914,17 @@
             {
               "kind": "method",
               "name": "image",
+              "return": {
+                "type": {
+                  "text": "Canvas2DImage"
+                }
+              },
               "parameters": [
                 {
                   "name": "options",
                   "optional": true,
                   "type": {
-                    "text": "WriteableOptions<Canvas2DImage>"
+                    "text": "Options<Canvas2DImage>"
                   }
                 }
               ],
@@ -6856,12 +6936,17 @@
             {
               "kind": "method",
               "name": "line",
+              "return": {
+                "type": {
+                  "text": "Canvas2DLine"
+                }
+              },
               "parameters": [
                 {
                   "name": "options",
                   "optional": true,
                   "type": {
-                    "text": "WriteableOptions<Canvas2DLine>"
+                    "text": "Options<Canvas2DLine>"
                   }
                 }
               ],
@@ -6873,12 +6958,17 @@
             {
               "kind": "method",
               "name": "rectangle",
+              "return": {
+                "type": {
+                  "text": "Canvas2DRectangle"
+                }
+              },
               "parameters": [
                 {
                   "name": "options",
                   "optional": true,
                   "type": {
-                    "text": "WriteableOptions<Canvas2DRectangle>"
+                    "text": "Options<Canvas2DRectangle>"
                   }
                 }
               ],
@@ -6890,12 +6980,17 @@
             {
               "kind": "method",
               "name": "shape",
+              "return": {
+                "type": {
+                  "text": "Canvas2DShape"
+                }
+              },
               "parameters": [
                 {
                   "name": "options",
                   "optional": true,
                   "type": {
-                    "text": "WriteableOptions<Canvas2DShape>"
+                    "text": "Options<Canvas2DShape>"
                   }
                 }
               ],
@@ -6907,12 +7002,17 @@
             {
               "kind": "method",
               "name": "text",
+              "return": {
+                "type": {
+                  "text": "Canvas2DText"
+                }
+              },
               "parameters": [
                 {
                   "name": "options",
                   "optional": true,
                   "type": {
-                    "text": "WriteableOptions<Canvas2DText>"
+                    "text": "Options<Canvas2DText>"
                   }
                 }
               ],
@@ -6924,12 +7024,17 @@
             {
               "kind": "method",
               "name": "video",
+              "return": {
+                "type": {
+                  "text": "Canvas2DVideo"
+                }
+              },
               "parameters": [
                 {
                   "name": "options",
                   "optional": true,
                   "type": {
-                    "text": "WriteableOptions<Canvas2DVideo>"
+                    "text": "Options<Canvas2DVideo>"
                   }
                 }
               ],
@@ -6986,7 +7091,7 @@
                   "name": "options",
                   "optional": true,
                   "type": {
-                    "text": "WriteableOptions<InstanceType<E>>"
+                    "text": "Options<InstanceType<E>>"
                   }
                 }
               ],
@@ -7102,7 +7207,7 @@
                   "name": "options",
                   "optional": true,
                   "type": {
-                    "text": "WriteableOptions<InstanceType<E>>"
+                    "text": "Options<InstanceType<E>>"
                   }
                 }
               ]
@@ -7693,7 +7798,7 @@
                   "name": "options",
                   "optional": true,
                   "type": {
-                    "text": "WriteableOptions<Canvas2DBezier>"
+                    "text": "Options<Canvas2DBezier>"
                   }
                 }
               ],
@@ -7706,12 +7811,17 @@
             {
               "kind": "method",
               "name": "ellipse",
+              "return": {
+                "type": {
+                  "text": "Canvas2DEllipse"
+                }
+              },
               "parameters": [
                 {
                   "name": "options",
                   "optional": true,
                   "type": {
-                    "text": "WriteableOptions<Canvas2DEllipse>"
+                    "text": "Options<Canvas2DEllipse>"
                   }
                 }
               ],
@@ -7723,12 +7833,17 @@
             {
               "kind": "method",
               "name": "image",
+              "return": {
+                "type": {
+                  "text": "Canvas2DImage"
+                }
+              },
               "parameters": [
                 {
                   "name": "options",
                   "optional": true,
                   "type": {
-                    "text": "WriteableOptions<Canvas2DImage>"
+                    "text": "Options<Canvas2DImage>"
                   }
                 }
               ],
@@ -7740,12 +7855,17 @@
             {
               "kind": "method",
               "name": "line",
+              "return": {
+                "type": {
+                  "text": "Canvas2DLine"
+                }
+              },
               "parameters": [
                 {
                   "name": "options",
                   "optional": true,
                   "type": {
-                    "text": "WriteableOptions<Canvas2DLine>"
+                    "text": "Options<Canvas2DLine>"
                   }
                 }
               ],
@@ -7757,12 +7877,17 @@
             {
               "kind": "method",
               "name": "rectangle",
+              "return": {
+                "type": {
+                  "text": "Canvas2DRectangle"
+                }
+              },
               "parameters": [
                 {
                   "name": "options",
                   "optional": true,
                   "type": {
-                    "text": "WriteableOptions<Canvas2DRectangle>"
+                    "text": "Options<Canvas2DRectangle>"
                   }
                 }
               ],
@@ -7774,12 +7899,17 @@
             {
               "kind": "method",
               "name": "shape",
+              "return": {
+                "type": {
+                  "text": "Canvas2DShape"
+                }
+              },
               "parameters": [
                 {
                   "name": "options",
                   "optional": true,
                   "type": {
-                    "text": "WriteableOptions<Canvas2DShape>"
+                    "text": "Options<Canvas2DShape>"
                   }
                 }
               ],
@@ -7791,12 +7921,17 @@
             {
               "kind": "method",
               "name": "text",
+              "return": {
+                "type": {
+                  "text": "Canvas2DText"
+                }
+              },
               "parameters": [
                 {
                   "name": "options",
                   "optional": true,
                   "type": {
-                    "text": "WriteableOptions<Canvas2DText>"
+                    "text": "Options<Canvas2DText>"
                   }
                 }
               ],
@@ -7808,12 +7943,17 @@
             {
               "kind": "method",
               "name": "video",
+              "return": {
+                "type": {
+                  "text": "Canvas2DVideo"
+                }
+              },
               "parameters": [
                 {
                   "name": "options",
                   "optional": true,
                   "type": {
-                    "text": "WriteableOptions<Canvas2DVideo>"
+                    "text": "Options<Canvas2DVideo>"
                   }
                 }
               ],
@@ -8062,7 +8202,7 @@
                   "name": "options",
                   "optional": true,
                   "type": {
-                    "text": "WriteableOptions<InstanceType<E>>"
+                    "text": "Options<InstanceType<E>>"
                   }
                 }
               ],
@@ -8727,7 +8867,7 @@
                   "name": "options",
                   "optional": true,
                   "type": {
-                    "text": "WriteableOptions<Canvas2DShapeBezier>"
+                    "text": "Options<Canvas2DShapeBezier>"
                   }
                 }
               ],
@@ -8744,7 +8884,7 @@
                   "name": "options",
                   "optional": true,
                   "type": {
-                    "text": "WriteableOptions<Canvas2DShapeEllipse>"
+                    "text": "Options<Canvas2DShapeEllipse>"
                   }
                 }
               ],
@@ -8761,7 +8901,7 @@
                   "name": "options",
                   "optional": true,
                   "type": {
-                    "text": "WriteableOptions<Canvas2DShapeLine>"
+                    "text": "Options<Canvas2DShapeLine>"
                   }
                 }
               ],
@@ -8778,7 +8918,7 @@
                   "name": "options",
                   "optional": true,
                   "type": {
-                    "text": "WriteableOptions<Canvas2DShapeRectangle>"
+                    "text": "Options<Canvas2DShapeRectangle>"
                   }
                 }
               ],
@@ -9027,7 +9167,7 @@
                   "name": "options",
                   "optional": true,
                   "type": {
-                    "text": "WriteableOptions<InstanceType<E>>"
+                    "text": "Options<InstanceType<E>>"
                   }
                 }
               ],
@@ -9696,7 +9836,7 @@
                   "name": "options",
                   "optional": true,
                   "type": {
-                    "text": "WriteableOptions<Canvas2DBezier>"
+                    "text": "Options<Canvas2DBezier>"
                   }
                 }
               ],
@@ -9709,12 +9849,17 @@
             {
               "kind": "method",
               "name": "ellipse",
+              "return": {
+                "type": {
+                  "text": "Canvas2DEllipse"
+                }
+              },
               "parameters": [
                 {
                   "name": "options",
                   "optional": true,
                   "type": {
-                    "text": "WriteableOptions<Canvas2DEllipse>"
+                    "text": "Options<Canvas2DEllipse>"
                   }
                 }
               ],
@@ -9726,12 +9871,17 @@
             {
               "kind": "method",
               "name": "image",
+              "return": {
+                "type": {
+                  "text": "Canvas2DImage"
+                }
+              },
               "parameters": [
                 {
                   "name": "options",
                   "optional": true,
                   "type": {
-                    "text": "WriteableOptions<Canvas2DImage>"
+                    "text": "Options<Canvas2DImage>"
                   }
                 }
               ],
@@ -9743,12 +9893,17 @@
             {
               "kind": "method",
               "name": "line",
+              "return": {
+                "type": {
+                  "text": "Canvas2DLine"
+                }
+              },
               "parameters": [
                 {
                   "name": "options",
                   "optional": true,
                   "type": {
-                    "text": "WriteableOptions<Canvas2DLine>"
+                    "text": "Options<Canvas2DLine>"
                   }
                 }
               ],
@@ -9760,12 +9915,17 @@
             {
               "kind": "method",
               "name": "rectangle",
+              "return": {
+                "type": {
+                  "text": "Canvas2DRectangle"
+                }
+              },
               "parameters": [
                 {
                   "name": "options",
                   "optional": true,
                   "type": {
-                    "text": "WriteableOptions<Canvas2DRectangle>"
+                    "text": "Options<Canvas2DRectangle>"
                   }
                 }
               ],
@@ -9777,12 +9937,17 @@
             {
               "kind": "method",
               "name": "shape",
+              "return": {
+                "type": {
+                  "text": "Canvas2DShape"
+                }
+              },
               "parameters": [
                 {
                   "name": "options",
                   "optional": true,
                   "type": {
-                    "text": "WriteableOptions<Canvas2DShape>"
+                    "text": "Options<Canvas2DShape>"
                   }
                 }
               ],
@@ -9794,12 +9959,17 @@
             {
               "kind": "method",
               "name": "text",
+              "return": {
+                "type": {
+                  "text": "Canvas2DText"
+                }
+              },
               "parameters": [
                 {
                   "name": "options",
                   "optional": true,
                   "type": {
-                    "text": "WriteableOptions<Canvas2DText>"
+                    "text": "Options<Canvas2DText>"
                   }
                 }
               ],
@@ -9811,12 +9981,17 @@
             {
               "kind": "method",
               "name": "video",
+              "return": {
+                "type": {
+                  "text": "Canvas2DVideo"
+                }
+              },
               "parameters": [
                 {
                   "name": "options",
                   "optional": true,
                   "type": {
-                    "text": "WriteableOptions<Canvas2DVideo>"
+                    "text": "Options<Canvas2DVideo>"
                   }
                 }
               ],
@@ -10109,7 +10284,7 @@
                   "name": "options",
                   "optional": true,
                   "type": {
-                    "text": "WriteableOptions<InstanceType<E>>"
+                    "text": "Options<InstanceType<E>>"
                   }
                 }
               ],
@@ -10526,7 +10701,7 @@
                   "name": "options",
                   "optional": true,
                   "type": {
-                    "text": "WriteableOptions<Canvas2DShapeBezier>"
+                    "text": "Options<Canvas2DShapeBezier>"
                   }
                 }
               ],
@@ -10543,7 +10718,7 @@
                   "name": "options",
                   "optional": true,
                   "type": {
-                    "text": "WriteableOptions<Canvas2DShapeEllipse>"
+                    "text": "Options<Canvas2DShapeEllipse>"
                   }
                 }
               ],
@@ -10560,7 +10735,7 @@
                   "name": "options",
                   "optional": true,
                   "type": {
-                    "text": "WriteableOptions<Canvas2DShapeLine>"
+                    "text": "Options<Canvas2DShapeLine>"
                   }
                 }
               ],
@@ -10577,7 +10752,7 @@
                   "name": "options",
                   "optional": true,
                   "type": {
-                    "text": "WriteableOptions<Canvas2DShapeRectangle>"
+                    "text": "Options<Canvas2DShapeRectangle>"
                   }
                 }
               ],
@@ -10892,7 +11067,7 @@
                   "name": "options",
                   "optional": true,
                   "type": {
-                    "text": "WriteableOptions<InstanceType<E>>"
+                    "text": "Options<InstanceType<E>>"
                   }
                 }
               ],
@@ -11435,7 +11610,7 @@
                   "name": "options",
                   "optional": true,
                   "type": {
-                    "text": "WriteableOptions<Canvas2DBezier>"
+                    "text": "Options<Canvas2DBezier>"
                   }
                 }
               ],
@@ -11448,12 +11623,17 @@
             {
               "kind": "method",
               "name": "ellipse",
+              "return": {
+                "type": {
+                  "text": "Canvas2DEllipse"
+                }
+              },
               "parameters": [
                 {
                   "name": "options",
                   "optional": true,
                   "type": {
-                    "text": "WriteableOptions<Canvas2DEllipse>"
+                    "text": "Options<Canvas2DEllipse>"
                   }
                 }
               ],
@@ -11465,12 +11645,17 @@
             {
               "kind": "method",
               "name": "image",
+              "return": {
+                "type": {
+                  "text": "Canvas2DImage"
+                }
+              },
               "parameters": [
                 {
                   "name": "options",
                   "optional": true,
                   "type": {
-                    "text": "WriteableOptions<Canvas2DImage>"
+                    "text": "Options<Canvas2DImage>"
                   }
                 }
               ],
@@ -11482,12 +11667,17 @@
             {
               "kind": "method",
               "name": "line",
+              "return": {
+                "type": {
+                  "text": "Canvas2DLine"
+                }
+              },
               "parameters": [
                 {
                   "name": "options",
                   "optional": true,
                   "type": {
-                    "text": "WriteableOptions<Canvas2DLine>"
+                    "text": "Options<Canvas2DLine>"
                   }
                 }
               ],
@@ -11499,12 +11689,17 @@
             {
               "kind": "method",
               "name": "rectangle",
+              "return": {
+                "type": {
+                  "text": "Canvas2DRectangle"
+                }
+              },
               "parameters": [
                 {
                   "name": "options",
                   "optional": true,
                   "type": {
-                    "text": "WriteableOptions<Canvas2DRectangle>"
+                    "text": "Options<Canvas2DRectangle>"
                   }
                 }
               ],
@@ -11516,12 +11711,17 @@
             {
               "kind": "method",
               "name": "shape",
+              "return": {
+                "type": {
+                  "text": "Canvas2DShape"
+                }
+              },
               "parameters": [
                 {
                   "name": "options",
                   "optional": true,
                   "type": {
-                    "text": "WriteableOptions<Canvas2DShape>"
+                    "text": "Options<Canvas2DShape>"
                   }
                 }
               ],
@@ -11533,12 +11733,17 @@
             {
               "kind": "method",
               "name": "text",
+              "return": {
+                "type": {
+                  "text": "Canvas2DText"
+                }
+              },
               "parameters": [
                 {
                   "name": "options",
                   "optional": true,
                   "type": {
-                    "text": "WriteableOptions<Canvas2DText>"
+                    "text": "Options<Canvas2DText>"
                   }
                 }
               ],
@@ -11550,12 +11755,17 @@
             {
               "kind": "method",
               "name": "video",
+              "return": {
+                "type": {
+                  "text": "Canvas2DVideo"
+                }
+              },
               "parameters": [
                 {
                   "name": "options",
                   "optional": true,
                   "type": {
-                    "text": "WriteableOptions<Canvas2DVideo>"
+                    "text": "Options<Canvas2DVideo>"
                   }
                 }
               ],
@@ -11804,7 +12014,7 @@
                   "name": "options",
                   "optional": true,
                   "type": {
-                    "text": "WriteableOptions<InstanceType<E>>"
+                    "text": "Options<InstanceType<E>>"
                   }
                 }
               ],
@@ -12539,7 +12749,7 @@
                   "name": "options",
                   "optional": true,
                   "type": {
-                    "text": "WriteableOptions<Canvas2DBezier>"
+                    "text": "Options<Canvas2DBezier>"
                   }
                 }
               ],
@@ -12552,12 +12762,17 @@
             {
               "kind": "method",
               "name": "ellipse",
+              "return": {
+                "type": {
+                  "text": "Canvas2DEllipse"
+                }
+              },
               "parameters": [
                 {
                   "name": "options",
                   "optional": true,
                   "type": {
-                    "text": "WriteableOptions<Canvas2DEllipse>"
+                    "text": "Options<Canvas2DEllipse>"
                   }
                 }
               ],
@@ -12569,12 +12784,17 @@
             {
               "kind": "method",
               "name": "image",
+              "return": {
+                "type": {
+                  "text": "Canvas2DImage"
+                }
+              },
               "parameters": [
                 {
                   "name": "options",
                   "optional": true,
                   "type": {
-                    "text": "WriteableOptions<Canvas2DImage>"
+                    "text": "Options<Canvas2DImage>"
                   }
                 }
               ],
@@ -12586,12 +12806,17 @@
             {
               "kind": "method",
               "name": "line",
+              "return": {
+                "type": {
+                  "text": "Canvas2DLine"
+                }
+              },
               "parameters": [
                 {
                   "name": "options",
                   "optional": true,
                   "type": {
-                    "text": "WriteableOptions<Canvas2DLine>"
+                    "text": "Options<Canvas2DLine>"
                   }
                 }
               ],
@@ -12603,12 +12828,17 @@
             {
               "kind": "method",
               "name": "rectangle",
+              "return": {
+                "type": {
+                  "text": "Canvas2DRectangle"
+                }
+              },
               "parameters": [
                 {
                   "name": "options",
                   "optional": true,
                   "type": {
-                    "text": "WriteableOptions<Canvas2DRectangle>"
+                    "text": "Options<Canvas2DRectangle>"
                   }
                 }
               ],
@@ -12620,12 +12850,17 @@
             {
               "kind": "method",
               "name": "shape",
+              "return": {
+                "type": {
+                  "text": "Canvas2DShape"
+                }
+              },
               "parameters": [
                 {
                   "name": "options",
                   "optional": true,
                   "type": {
-                    "text": "WriteableOptions<Canvas2DShape>"
+                    "text": "Options<Canvas2DShape>"
                   }
                 }
               ],
@@ -12637,12 +12872,17 @@
             {
               "kind": "method",
               "name": "text",
+              "return": {
+                "type": {
+                  "text": "Canvas2DText"
+                }
+              },
               "parameters": [
                 {
                   "name": "options",
                   "optional": true,
                   "type": {
-                    "text": "WriteableOptions<Canvas2DText>"
+                    "text": "Options<Canvas2DText>"
                   }
                 }
               ],
@@ -12654,12 +12894,17 @@
             {
               "kind": "method",
               "name": "video",
+              "return": {
+                "type": {
+                  "text": "Canvas2DVideo"
+                }
+              },
               "parameters": [
                 {
                   "name": "options",
                   "optional": true,
                   "type": {
-                    "text": "WriteableOptions<Canvas2DVideo>"
+                    "text": "Options<Canvas2DVideo>"
                   }
                 }
               ],
@@ -12908,7 +13153,7 @@
                   "name": "options",
                   "optional": true,
                   "type": {
-                    "text": "WriteableOptions<InstanceType<E>>"
+                    "text": "Options<InstanceType<E>>"
                   }
                 }
               ],
@@ -13535,7 +13780,7 @@
                   "name": "options",
                   "optional": true,
                   "type": {
-                    "text": "WriteableOptions<Canvas2DShapeBezier>"
+                    "text": "Options<Canvas2DShapeBezier>"
                   }
                 }
               ],
@@ -13552,7 +13797,7 @@
                   "name": "options",
                   "optional": true,
                   "type": {
-                    "text": "WriteableOptions<Canvas2DShapeEllipse>"
+                    "text": "Options<Canvas2DShapeEllipse>"
                   }
                 }
               ],
@@ -13569,7 +13814,7 @@
                   "name": "options",
                   "optional": true,
                   "type": {
-                    "text": "WriteableOptions<Canvas2DShapeLine>"
+                    "text": "Options<Canvas2DShapeLine>"
                   }
                 }
               ],
@@ -13586,7 +13831,7 @@
                   "name": "options",
                   "optional": true,
                   "type": {
-                    "text": "WriteableOptions<Canvas2DShapeRectangle>"
+                    "text": "Options<Canvas2DShapeRectangle>"
                   }
                 }
               ],
@@ -13835,7 +14080,7 @@
                   "name": "options",
                   "optional": true,
                   "type": {
-                    "text": "WriteableOptions<InstanceType<E>>"
+                    "text": "Options<InstanceType<E>>"
                   }
                 }
               ],
@@ -14327,7 +14572,7 @@
                   "name": "options",
                   "optional": true,
                   "type": {
-                    "text": "WriteableOptions<InstanceType<E>>"
+                    "text": "Options<InstanceType<E>>"
                   }
                 }
               ],
@@ -14437,7 +14682,7 @@
                   "name": "options",
                   "optional": true,
                   "type": {
-                    "text": "WriteableOptions<Canvas2DBezier>"
+                    "text": "Options<Canvas2DBezier>"
                   }
                 }
               ],
@@ -14450,12 +14695,17 @@
             {
               "kind": "method",
               "name": "ellipse",
+              "return": {
+                "type": {
+                  "text": "Canvas2DEllipse"
+                }
+              },
               "parameters": [
                 {
                   "name": "options",
                   "optional": true,
                   "type": {
-                    "text": "WriteableOptions<Canvas2DEllipse>"
+                    "text": "Options<Canvas2DEllipse>"
                   }
                 }
               ],
@@ -14467,12 +14717,17 @@
             {
               "kind": "method",
               "name": "image",
+              "return": {
+                "type": {
+                  "text": "Canvas2DImage"
+                }
+              },
               "parameters": [
                 {
                   "name": "options",
                   "optional": true,
                   "type": {
-                    "text": "WriteableOptions<Canvas2DImage>"
+                    "text": "Options<Canvas2DImage>"
                   }
                 }
               ],
@@ -14484,12 +14739,17 @@
             {
               "kind": "method",
               "name": "line",
+              "return": {
+                "type": {
+                  "text": "Canvas2DLine"
+                }
+              },
               "parameters": [
                 {
                   "name": "options",
                   "optional": true,
                   "type": {
-                    "text": "WriteableOptions<Canvas2DLine>"
+                    "text": "Options<Canvas2DLine>"
                   }
                 }
               ],
@@ -14501,12 +14761,17 @@
             {
               "kind": "method",
               "name": "rectangle",
+              "return": {
+                "type": {
+                  "text": "Canvas2DRectangle"
+                }
+              },
               "parameters": [
                 {
                   "name": "options",
                   "optional": true,
                   "type": {
-                    "text": "WriteableOptions<Canvas2DRectangle>"
+                    "text": "Options<Canvas2DRectangle>"
                   }
                 }
               ],
@@ -14518,12 +14783,17 @@
             {
               "kind": "method",
               "name": "shape",
+              "return": {
+                "type": {
+                  "text": "Canvas2DShape"
+                }
+              },
               "parameters": [
                 {
                   "name": "options",
                   "optional": true,
                   "type": {
-                    "text": "WriteableOptions<Canvas2DShape>"
+                    "text": "Options<Canvas2DShape>"
                   }
                 }
               ],
@@ -14535,12 +14805,17 @@
             {
               "kind": "method",
               "name": "text",
+              "return": {
+                "type": {
+                  "text": "Canvas2DText"
+                }
+              },
               "parameters": [
                 {
                   "name": "options",
                   "optional": true,
                   "type": {
-                    "text": "WriteableOptions<Canvas2DText>"
+                    "text": "Options<Canvas2DText>"
                   }
                 }
               ],
@@ -14552,12 +14827,17 @@
             {
               "kind": "method",
               "name": "video",
+              "return": {
+                "type": {
+                  "text": "Canvas2DVideo"
+                }
+              },
               "parameters": [
                 {
                   "name": "options",
                   "optional": true,
                   "type": {
-                    "text": "WriteableOptions<Canvas2DVideo>"
+                    "text": "Options<Canvas2DVideo>"
                   }
                 }
               ],
@@ -14900,7 +15180,7 @@
                   "name": "options",
                   "optional": true,
                   "type": {
-                    "text": "WriteableOptions<InstanceType<E>>"
+                    "text": "Options<InstanceType<E>>"
                   }
                 }
               ],
@@ -15033,7 +15313,7 @@
                   "name": "options",
                   "optional": true,
                   "type": {
-                    "text": "WriteableOptions<Canvas2DShapeBezier>"
+                    "text": "Options<Canvas2DShapeBezier>"
                   }
                 }
               ],
@@ -15050,7 +15330,7 @@
                   "name": "options",
                   "optional": true,
                   "type": {
-                    "text": "WriteableOptions<Canvas2DShapeEllipse>"
+                    "text": "Options<Canvas2DShapeEllipse>"
                   }
                 }
               ],
@@ -15067,7 +15347,7 @@
                   "name": "options",
                   "optional": true,
                   "type": {
-                    "text": "WriteableOptions<Canvas2DShapeLine>"
+                    "text": "Options<Canvas2DShapeLine>"
                   }
                 }
               ],
@@ -15084,7 +15364,7 @@
                   "name": "options",
                   "optional": true,
                   "type": {
-                    "text": "WriteableOptions<Canvas2DShapeRectangle>"
+                    "text": "Options<Canvas2DShapeRectangle>"
                   }
                 }
               ],
@@ -15443,7 +15723,7 @@
                   "name": "options",
                   "optional": true,
                   "type": {
-                    "text": "WriteableOptions<InstanceType<E>>"
+                    "text": "Options<InstanceType<E>>"
                   }
                 }
               ],
@@ -15919,7 +16199,7 @@
                   "name": "options",
                   "optional": true,
                   "type": {
-                    "text": "WriteableOptions<Canvas2DShapeBezier>"
+                    "text": "Options<Canvas2DShapeBezier>"
                   }
                 }
               ],
@@ -15936,7 +16216,7 @@
                   "name": "options",
                   "optional": true,
                   "type": {
-                    "text": "WriteableOptions<Canvas2DShapeEllipse>"
+                    "text": "Options<Canvas2DShapeEllipse>"
                   }
                 }
               ],
@@ -15953,7 +16233,7 @@
                   "name": "options",
                   "optional": true,
                   "type": {
-                    "text": "WriteableOptions<Canvas2DShapeLine>"
+                    "text": "Options<Canvas2DShapeLine>"
                   }
                 }
               ],
@@ -15970,7 +16250,7 @@
                   "name": "options",
                   "optional": true,
                   "type": {
-                    "text": "WriteableOptions<Canvas2DShapeRectangle>"
+                    "text": "Options<Canvas2DShapeRectangle>"
                   }
                 }
               ],
@@ -16285,7 +16565,7 @@
                   "name": "options",
                   "optional": true,
                   "type": {
-                    "text": "WriteableOptions<InstanceType<E>>"
+                    "text": "Options<InstanceType<E>>"
                   }
                 }
               ],
@@ -17148,7 +17428,7 @@
                   "name": "options",
                   "optional": true,
                   "type": {
-                    "text": "WriteableOptions<Canvas2DBezier>"
+                    "text": "Options<Canvas2DBezier>"
                   }
                 }
               ],
@@ -17161,12 +17441,17 @@
             {
               "kind": "method",
               "name": "ellipse",
+              "return": {
+                "type": {
+                  "text": "Canvas2DEllipse"
+                }
+              },
               "parameters": [
                 {
                   "name": "options",
                   "optional": true,
                   "type": {
-                    "text": "WriteableOptions<Canvas2DEllipse>"
+                    "text": "Options<Canvas2DEllipse>"
                   }
                 }
               ],
@@ -17178,12 +17463,17 @@
             {
               "kind": "method",
               "name": "image",
+              "return": {
+                "type": {
+                  "text": "Canvas2DImage"
+                }
+              },
               "parameters": [
                 {
                   "name": "options",
                   "optional": true,
                   "type": {
-                    "text": "WriteableOptions<Canvas2DImage>"
+                    "text": "Options<Canvas2DImage>"
                   }
                 }
               ],
@@ -17195,12 +17485,17 @@
             {
               "kind": "method",
               "name": "line",
+              "return": {
+                "type": {
+                  "text": "Canvas2DLine"
+                }
+              },
               "parameters": [
                 {
                   "name": "options",
                   "optional": true,
                   "type": {
-                    "text": "WriteableOptions<Canvas2DLine>"
+                    "text": "Options<Canvas2DLine>"
                   }
                 }
               ],
@@ -17212,12 +17507,17 @@
             {
               "kind": "method",
               "name": "rectangle",
+              "return": {
+                "type": {
+                  "text": "Canvas2DRectangle"
+                }
+              },
               "parameters": [
                 {
                   "name": "options",
                   "optional": true,
                   "type": {
-                    "text": "WriteableOptions<Canvas2DRectangle>"
+                    "text": "Options<Canvas2DRectangle>"
                   }
                 }
               ],
@@ -17229,12 +17529,17 @@
             {
               "kind": "method",
               "name": "shape",
+              "return": {
+                "type": {
+                  "text": "Canvas2DShape"
+                }
+              },
               "parameters": [
                 {
                   "name": "options",
                   "optional": true,
                   "type": {
-                    "text": "WriteableOptions<Canvas2DShape>"
+                    "text": "Options<Canvas2DShape>"
                   }
                 }
               ],
@@ -17246,12 +17551,17 @@
             {
               "kind": "method",
               "name": "text",
+              "return": {
+                "type": {
+                  "text": "Canvas2DText"
+                }
+              },
               "parameters": [
                 {
                   "name": "options",
                   "optional": true,
                   "type": {
-                    "text": "WriteableOptions<Canvas2DText>"
+                    "text": "Options<Canvas2DText>"
                   }
                 }
               ],
@@ -17263,12 +17573,17 @@
             {
               "kind": "method",
               "name": "video",
+              "return": {
+                "type": {
+                  "text": "Canvas2DVideo"
+                }
+              },
               "parameters": [
                 {
                   "name": "options",
                   "optional": true,
                   "type": {
-                    "text": "WriteableOptions<Canvas2DVideo>"
+                    "text": "Options<Canvas2DVideo>"
                   }
                 }
               ],
@@ -17561,7 +17876,7 @@
                   "name": "options",
                   "optional": true,
                   "type": {
-                    "text": "WriteableOptions<InstanceType<E>>"
+                    "text": "Options<InstanceType<E>>"
                   }
                 }
               ],

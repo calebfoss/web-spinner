@@ -49,7 +49,7 @@ export class Canvas2DElement extends HTMLElement {
 
   createChild<E extends typeof Canvas2DElement>(
     ElementClass: E,
-    options?: WriteableOptions<InstanceType<E>>
+    options?: Options<InstanceType<E>>
   ) {
     const element = createCustomElement(ElementClass, options);
 

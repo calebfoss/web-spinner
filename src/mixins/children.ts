@@ -22,35 +22,35 @@ export function standaloneChildren<B extends typeof Canvas2DElement>(Base: B) {
     /**
      * Creates a `<c2d-bezier>` child element and returns it.
      */
-    bezier(options?: WriteableOptions<Canvas2DBezier>): Canvas2DBezier {
+    bezier(options?: Options<Canvas2DBezier>): Canvas2DBezier {
       return this.createChild(Canvas2DBezier, options);
     }
 
-    ellipse(options?: WriteableOptions<Canvas2DEllipse>) {
+    ellipse(options?: Options<Canvas2DEllipse>): Canvas2DEllipse {
       return this.createChild(Canvas2DEllipse, options);
     }
 
-    image(options?: WriteableOptions<Canvas2DImage>) {
+    image(options?: Options<Canvas2DImage>): Canvas2DImage {
       return this.createChild(Canvas2DImage, options);
     }
 
-    line(options?: WriteableOptions<Canvas2DLine>) {
+    line(options?: Options<Canvas2DLine>): Canvas2DLine {
       return this.createChild(Canvas2DLine, options);
     }
 
-    rectangle(options?: WriteableOptions<Canvas2DRectangle>) {
+    rectangle(options?: Options<Canvas2DRectangle>): Canvas2DRectangle {
       return this.createChild(Canvas2DRectangle, options);
     }
 
-    shape(options?: WriteableOptions<Canvas2DShape>) {
+    shape(options?: Options<Canvas2DShape>): Canvas2DShape {
       return this.createChild(Canvas2DShape, options);
     }
 
-    text(options?: WriteableOptions<Canvas2DText>) {
+    text(options?: Options<Canvas2DText>): Canvas2DText {
       return this.createChild(Canvas2DText, options);
     }
 
-    video(options?: WriteableOptions<Canvas2DVideo>) {
+    video(options?: Options<Canvas2DVideo>): Canvas2DVideo {
       return this.createChild(Canvas2DVideo, options);
     }
   };
@@ -58,19 +58,19 @@ export function standaloneChildren<B extends typeof Canvas2DElement>(Base: B) {
 
 export function partChildren<B extends typeof Canvas2DElement>(Base: B) {
   return class extends Base {
-    bezier(options?: WriteableOptions<Canvas2DShapeBezier>) {
+    bezier(options?: Options<Canvas2DShapeBezier>) {
       return this.createChild(Canvas2DShapeBezier, options);
     }
 
-    ellipse(options?: WriteableOptions<Canvas2DShapeEllipse>) {
+    ellipse(options?: Options<Canvas2DShapeEllipse>) {
       return this.createChild(Canvas2DShapeEllipse, options);
     }
 
-    line(options?: WriteableOptions<Canvas2DShapeLine>) {
+    line(options?: Options<Canvas2DShapeLine>) {
       return this.createChild(Canvas2DShapeLine, options);
     }
 
-    rectangle(options?: WriteableOptions<Canvas2DShapeRectangle>) {
+    rectangle(options?: Options<Canvas2DShapeRectangle>) {
       return this.createChild(Canvas2DShapeRectangle, options);
     }
   };

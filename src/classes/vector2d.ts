@@ -1,10 +1,18 @@
-import { State } from "./state";
+import { createState, State } from "./state";
 
-export class Vector2D extends State<{ x: number; y: number }> {
+export class Vector2D {
   #changeLisners = new Set<ChangeListener<Vector2D>>();
+  #x: State<number>;
+  #y: State<number>;
 
   constructor(x = 0, y = x) {
-    super({ x, y });
+    this.#x = createState(x);
+    this.#y = createState(y);
+  }
+
+  addChangeListener(listener: ChangeListener<Vector2D>) {
+    this.#x.addChangeListener(() => listener(this));
+    this.#y.addChangeListener(() => listener(this));
   }
 
   equals(other: Vector2D) {
@@ -44,27 +52,27 @@ export class Vector2D extends State<{ x: number; y: number }> {
   }
 
   get x() {
-    return this.value.x;
+    return this.#x.value;
   }
 
   set x(value) {
-    if (this.value.x === value) return;
+    if (this.#x.value === value) return;
 
-    this.value.x = value;
+    this.#x.value = value;
 
-    this.handleChange();
+    this.#x.handleChange();
   }
 
   get y() {
-    return this.value.y;
+    return this.#y.value;
   }
 
   set y(value) {
-    if (this.value.y === value) return;
+    if (this.#y.value === value) return;
 
-    this.value.y = value;
+    this.#y.value = value;
 
-    this.handleChange();
+    this.#y.handleChange();
   }
 
   static get zero() {
