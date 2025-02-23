@@ -22,7 +22,7 @@ function renderCanvasRectangle<B extends typeof Canvas2DBaseRenderable>(
       super.render(canvas2D);
 
       const {
-        position: { x, y },
+        topLeft: { x, y },
         width,
         height,
       } = this;
@@ -36,11 +36,9 @@ function renderCanvasRectangle<B extends typeof Canvas2DBaseRenderable>(
       context: CanvasRenderingContext2D,
       gradient: LinearGradient
     ): CanvasGradient {
-      const { x: x0, y: y0 } = this.position;
+      const { x: x0, y: y0 } = this.topLeft;
 
-      const x1 = x0 + this.width;
-
-      const y1 = y0 + this.height;
+      const { x: x1, y: y1 } = this.bottomRight;
 
       return gradient.render(context, x0, y0, x1, y1);
     }

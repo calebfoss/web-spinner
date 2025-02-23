@@ -26,6 +26,8 @@ export class Gradient {
 
   addColorStop(offset: number, color: Color) {
     this.#stops.push(new ColorStop(offset, color));
+
+    return this;
   }
 
   protected applyStops(gradient: CanvasGradient) {
