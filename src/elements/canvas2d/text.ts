@@ -3,12 +3,12 @@ import { fillable } from "../../mixins/fill";
 import { strokeable } from "../../mixins/stroke";
 import { transformeable } from "../../mixins/transform";
 import { Canvas2DStandaloneRenderable, changedEvent } from "./renderable";
-import { positioned } from "../../mixins/position";
+import { offset } from "../../mixins/offset";
 import { Canvas2DCanvasElement } from "./canvas";
 import { LinearGradient, RadialGradient } from "../../classes/gradient";
 
 const Base = fillable(
-  strokeable(transformeable(positioned(useFont(Canvas2DStandaloneRenderable))))
+  strokeable(transformeable(offset(useFont(Canvas2DStandaloneRenderable))))
 );
 
 export class Canvas2DText extends Base {
@@ -76,10 +76,10 @@ export class Canvas2DText extends Base {
     if (this.#align !== null) context.textAlign = this.#align;
 
     if (this.fill !== "none" && this.textContent !== null)
-      context.fillText(this.textContent, this.position.x, this.position.y);
+      context.fillText(this.textContent, this.offset.x, this.offset.y);
 
     if (this.stroke !== "none" && this.textContent !== null)
-      context.strokeText(this.textContent, this.position.x, this.position.y);
+      context.strokeText(this.textContent, this.offset.x, this.offset.y);
 
     this.afterRender(canvas2D);
 

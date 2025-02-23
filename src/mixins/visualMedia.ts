@@ -64,15 +64,15 @@ export function rendersVisualMedia<
 
       canvas2D.context.drawImage(
         this.#mediaElement,
-        this.position.x,
-        this.position.y,
+        this.offset.x,
+        this.offset.y,
         this.width,
         this.height
       );
 
       canvas2D.context.rect(
-        this.position.x,
-        this.position.y,
+        this.offset.x,
+        this.offset.y,
         this.width,
         this.height
       );

@@ -181,7 +181,7 @@ export class Canvas2DCanvasElement extends standaloneChildren(Canvas2DElement) {
 
     this.#renderQueued = true;
 
-    requestAnimationFrame(this.render.bind(this));
+    requestAnimationFrame(this.#render.bind(this));
   }
 
   get width() {
@@ -212,7 +212,7 @@ export class Canvas2DCanvasElement extends standaloneChildren(Canvas2DElement) {
     this.queueRender();
   }
 
-  render() {
+  #render() {
     this.#frame++;
 
     const context = this.#context;
@@ -220,6 +220,8 @@ export class Canvas2DCanvasElement extends standaloneChildren(Canvas2DElement) {
     context.save();
 
     this.everyFrame?.(this.#frame);
+
+    this.#renderQueued = false;
 
     context.scale(devicePixelRatio, devicePixelRatio);
 
@@ -242,8 +244,6 @@ export class Canvas2DCanvasElement extends standaloneChildren(Canvas2DElement) {
     }
 
     context.restore();
-
-    this.#renderQueued = false;
 
     this.#clickTracker.advanceFrame();
 

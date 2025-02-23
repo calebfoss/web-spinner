@@ -4,6 +4,7 @@ import { Vector2D } from "../classes/vector2d";
 import { Canvas2DCanvasElement } from "../elements/canvas2d/canvas";
 import { Canvas2DBaseRenderable } from "../elements/canvas2d/renderable";
 import { attributeParser } from "../utlities/attributeParser";
+import { isReadOnly } from "../utlities/readOnly";
 
 const matchAngle = new RegExp(
   `(\d*)\s?(${Object.values(Angle.unit).join("|")})`
@@ -22,7 +23,7 @@ export function transformeable<B extends typeof Canvas2DBaseRenderable>(
       "velocity",
     ];
 
-    #anchor = new Vector2D(0, 0);
+    #anchor = Vector2D.zero;
     #angle = Angle.radians(0);
     #angularVelocity = Angle.radians(0);
     #scale = Vector2D.one;
@@ -53,24 +54,23 @@ export function transformeable<B extends typeof Canvas2DBaseRenderable>(
     }
 
     #anchorChangeListener: ChangeListener<Vector2D> = (newValue) => {
-      this.registerChange("anchor", Vector2D.xy(newValue.x, newValue.y));
+      this.registerChange("anchor", newValue);
     };
 
     set anchor(value) {
       if (this.#anchor.equals(value)) {
-        if (this.#anchor !== value) this.#anchor = value;
+        if (this.#anchor !== value) {
+          this.#anchor.removeChangeListener(this.#anchorChangeListener);
+          this.registerChange("anchor", (this.#anchor = value));
+        }
 
-        value.addChangeListener((newValue) =>
-          this.registerChange("anchor", Vector2D.xy(newValue.x, newValue.y))
-        );
+        value.addChangeListener(this.#anchorChangeListener);
         return;
       }
 
       this.registerChange("anchor", (this.#anchor = value));
 
-      value.addChangeListener((newValue) =>
-        this.registerChange("anchor", Vector2D.xy(newValue.x, newValue.y))
-      );
+      value.addChangeListener(this.#anchorChangeListener);
     }
 
     attributeChangedCallback(
@@ -87,10 +87,13 @@ export function transformeable<B extends typeof Canvas2DBaseRenderable>(
             this.angularVelocity = attributeParser.Angle(newValue);
             break;
           case "anchor":
-            this.anchor = attributeParser.Vector2D(newValue);
+            const newAnchor = attributeParser.Vector2D(newValue);
+            if (!this.#anchor.equals(newAnchor)) this.anchor = newAnchor;
             break;
           case "scale":
-            this.scale = attributeParser.Vector2D(newValue);
+            const { x: scaleX, y: scaleY } = attributeParser.Vector2D(newValue);
+            this.#scale.x = scaleX;
+            this.#scale.y = scaleY;
             break;
           case "velocity":
             this.velocity = attributeParser.Vector2D(newValue);
@@ -127,7 +130,9 @@ export function transformeable<B extends typeof Canvas2DBaseRenderable>(
         this.#angle.radians + this.#angularVelocity.radians
       );
 
-      this.anchor = this.#anchor.plus(this.#velocity);
+      if (!isReadOnly(this.#anchor, "x")) this.#anchor.x += this.#velocity.x;
+
+      if (!isReadOnly(this.#anchor, "y")) this.#anchor.y += this.#velocity.y;
     }
 
     rotateClockwise(angle: Angle) {

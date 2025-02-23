@@ -32,17 +32,6 @@ function renderCanvasRectangle<B extends typeof Canvas2DBaseRenderable>(
       this.afterRender(canvas2D);
     }
 
-    renderLinearGradient(
-      context: CanvasRenderingContext2D,
-      gradient: LinearGradient
-    ): CanvasGradient {
-      const { x: x0, y: y0 } = this.topLeft;
-
-      const { x: x1, y: y1 } = this.bottomRight;
-
-      return gradient.render(context, x0, y0, x1, y1);
-    }
-
     renderRadialGradient(
       context: CanvasRenderingContext2D,
       gradient: RadialGradient

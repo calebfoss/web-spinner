@@ -25,7 +25,7 @@ function renderEllipse<B extends typeof Canvas2DBaseRenderable>(Base: B) {
     render(canvas2D: Canvas2DCanvasElement): void {
       super.render(canvas2D);
 
-      const { position, width, height } = this;
+      const { offset: position, width, height } = this;
 
       canvas2D.context.ellipse(
         position.x,
@@ -40,24 +40,12 @@ function renderEllipse<B extends typeof Canvas2DBaseRenderable>(Base: B) {
       this.afterRender(canvas2D);
     }
 
-    renderLinearGradient(
-      context: CanvasRenderingContext2D,
-      gradient: LinearGradient
-    ): CanvasGradient {
-      const { x: centerX, y: centerY } = this.position;
-
-      const x0 = centerX - this.width / 2;
-      const y0 = centerY - this.height / 2;
-
-      return gradient.render(context, x0, y0, this.width, this.height);
-    }
-
     renderRadialGradient(
       context: CanvasRenderingContext2D,
       gradient: RadialGradient
     ): CanvasGradient {
       const {
-        position: { x, y },
+        offset: { x, y },
         width,
         height,
       } = this;

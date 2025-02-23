@@ -1,7 +1,7 @@
 import { createState, State } from "./state";
 
 export class Vector2D {
-  #changeLisners = new Set<ChangeListener<Vector2D>>();
+  #changeListenerMap = new Map<ChangeListener<Vector2D>, () => void>();
   #x: State<number>;
   #y: State<number>;
 
@@ -11,12 +11,32 @@ export class Vector2D {
   }
 
   addChangeListener(listener: ChangeListener<Vector2D>) {
-    this.#x.addChangeListener(() => listener(this));
-    this.#y.addChangeListener(() => listener(this));
+    if (this.#changeListenerMap.has(listener)) return;
+
+    const listenerCaller = () => listener(this);
+
+    this.#changeListenerMap.set(listener, listenerCaller);
+
+    this.#x.addChangeListener(listenerCaller);
+    this.#y.addChangeListener(listenerCaller);
   }
 
-  equals(other: Vector2D) {
-    return this.x === other.x && this.y === other.y;
+  removeChangeListener(listener: ChangeListener<Vector2D>) {
+    const bridge = this.#changeListenerMap.get(listener);
+
+    if (bridge === undefined) return;
+
+    this.#x.removeChangeListener(bridge);
+    this.#y.removeChangeListener(bridge);
+
+    this.#changeListenerMap.delete(listener);
+  }
+
+  equals(x: number, y: number): boolean;
+  equals(other: Vector2D): boolean;
+  equals(arg1: Vector2D | number, arg2?: number) {
+    if (typeof arg1 === "number") return this.x === arg1 && this.y === arg2;
+    return this.x === arg1.x && this.y === arg1.y;
   }
 
   get inverse() {

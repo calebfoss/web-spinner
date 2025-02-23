@@ -1,4 +1,5 @@
 import { createCustomElement } from "../..";
+import { Vector2D } from "../../classes/vector2d";
 import { Canvas2DCanvasElement } from "./canvas";
 
 export class Canvas2DElement extends HTMLElement {
@@ -68,5 +69,13 @@ export class Canvas2DElement extends HTMLElement {
 
   get listen() {
     return this.#eventProxy;
+  }
+
+  scaleByPixelRatio(vector: Vector2D) {
+    const point = new DOMPointReadOnly(vector.x, vector.y).matrixTransform(
+      new DOMMatrix().scale(devicePixelRatio, devicePixelRatio)
+    );
+
+    return Vector2D.xy(point.x, point.y);
   }
 }

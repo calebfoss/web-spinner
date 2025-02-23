@@ -5,6 +5,7 @@ import {
   RadialGradient,
 } from "../../classes/gradient";
 import { MouseTracker, MouseData } from "../../classes/mouse";
+import { Vector2D } from "../../classes/vector2d";
 import { partChildren, standaloneChildren } from "../../mixins/children";
 import { Canvas2DCanvasElement } from "./canvas";
 import { Canvas2DElement } from "./element";
@@ -110,9 +111,13 @@ export class Canvas2DBaseRenderable extends Canvas2DElement {
   }
 
   #handleClick(canvas2D: Canvas2DCanvasElement) {
-    const { context, clickPosition } = canvas2D;
+    const { context, clickPosition: canvasClick, clicked } = canvas2D;
 
-    const inPath = context.isPointInPath(clickPosition.x, clickPosition.y);
+    if (!clicked) return;
+
+    const elementClick = this.scaleByPixelRatio(canvasClick);
+
+    const inPath = context.isPointInPath(elementClick.x, elementClick.y);
 
     if (inPath) this.dispatchEvent(new PointerEvent("click"));
   }
