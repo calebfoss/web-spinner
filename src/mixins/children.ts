@@ -17,6 +17,8 @@ import { Canvas2DShape } from "../elements/canvas2d/shape";
 import { Canvas2DText } from "../elements/canvas2d/text";
 import { Canvas2DVideo } from "../elements/canvas2d/video";
 
+type MultipleCallback = (index: number) => Node | undefined;
+
 export function standaloneChildren<B extends typeof Canvas2DElement>(Base: B) {
   return class extends Base {
     /**
@@ -32,6 +34,37 @@ export function standaloneChildren<B extends typeof Canvas2DElement>(Base: B) {
 
     image(options?: Options<Canvas2DImage>): Canvas2DImage {
       return this.createChild(Canvas2DImage, options);
+    }
+
+    multiple(callback: MultipleCallback): Node[];
+    multiple(count: number, callback: (index: number) => Node): Node[];
+    multiple<
+      A1 extends number | MultipleCallback,
+      A2 extends A1 extends number ? (index: number) => Node : undefined
+    >(arg1: A1, arg2?: A2): Node[] {
+      if (typeof arg1 === "number") {
+        if (arg2 === undefined) throw new Error("Missing callback");
+
+        return new Array(arg1).fill(0).map((_, index) => {
+          const child = arg2(index);
+
+          this.appendChild(child);
+
+          return child;
+        });
+      }
+
+      const recurseChildren = (children: Node[], index: number) => {
+        const child = arg1(index);
+
+        if (child === undefined) return children;
+
+        this.appendChild(child);
+
+        return recurseChildren(children.concat(child), index + 1);
+      };
+
+      return recurseChildren([], 0);
     }
 
     line(options?: Options<Canvas2DLine>): Canvas2DLine {

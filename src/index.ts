@@ -119,7 +119,7 @@ for (const elementClass of elementClasses) {
   }
 }
 
-function createCanvas(options?: Partial<Canvas2DCanvasElement>) {
+function createCanvas(options?: Options<Canvas2DCanvasElement>) {
   return createCustomElement(Canvas2DCanvasElement, options);
 }
 
