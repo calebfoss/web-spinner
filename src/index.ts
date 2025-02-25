@@ -27,6 +27,7 @@ import {
   RadialGradient,
 } from "./classes/gradient";
 import { Canvas2DElement } from "./elements/canvas2d/element";
+import { Shadow } from "./classes/shadow";
 
 export type CSSLengthUnit = (typeof Units.size)[keyof typeof Units.size];
 
@@ -133,6 +134,7 @@ export {
   ConicalGradient,
   LinearGradient,
   RadialGradient,
+  Shadow,
   createState,
 };
 

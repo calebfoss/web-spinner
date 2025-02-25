@@ -5,6 +5,7 @@ import {
   RadialGradient,
 } from "../../classes/gradient";
 import { MouseTracker, MouseData } from "../../classes/mouse";
+import { Shadow } from "../../classes/shadow";
 import { Vector2D } from "../../classes/vector2d";
 import { partChildren, standaloneChildren } from "../../mixins/children";
 import { Canvas2DCanvasElement } from "./canvas";
@@ -25,6 +26,7 @@ export class Canvas2DBaseRenderable extends Canvas2DElement {
   #clickListeners = new Set<EventListenerOrEventListenerObject>();
   #localMouse = new MouseData();
   #mouseListeners = new Set<EventListenerOrEventListenerObject>();
+  #shadow: Shadow | null = null;
 
   constructor(...args: any[]) {
     super();
@@ -179,6 +181,10 @@ export class Canvas2DBaseRenderable extends Canvas2DElement {
     context.save();
 
     this.everyFrame?.(frame);
+
+    if (this.#shadow !== null) {
+      this.#shadow.render(context);
+    }
   }
 
   renderChildren(canvas2D: Canvas2DCanvasElement) {
@@ -197,6 +203,37 @@ export class Canvas2DBaseRenderable extends Canvas2DElement {
     this.renderChildren(canvas2D);
 
     canvas2D.context.restore();
+  }
+
+  #shadowChangeListener: ChangeListener<Shadow> = (newValue) => {
+    this.registerChange("shadow", (this.#shadow = newValue));
+  };
+
+  get shadow() {
+    return this.#shadow;
+  }
+
+  set shadow(value) {
+    if (this.#shadow === null) {
+      if (value === null) return;
+
+      value.addChangeListener(this.#shadowChangeListener);
+
+      this.#shadowChangeListener(value);
+      return;
+    } else if (value === null) {
+      this.#shadow.removeChangeListener(this.#shadowChangeListener);
+
+      this.registerChange("shadow", value);
+
+      return;
+    }
+
+    this.#shadow.removeChangeListener(this.#shadowChangeListener);
+
+    value.addChangeListener(this.#shadowChangeListener);
+
+    if (!this.#shadow.equals(value)) this.#shadowChangeListener(value);
   }
 }
 

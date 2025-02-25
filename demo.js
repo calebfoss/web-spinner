@@ -7,6 +7,7 @@ import {
   ConicalGradient,
   LinearGradient,
   RadialGradient,
+  Shadow,
 } from "webSpinner";
 
 const canvas = createCanvas({
@@ -14,6 +15,8 @@ const canvas = createCanvas({
   height: 500,
   background: Color.rgb(93, 172, 92),
 });
+
+const shadow = new Shadow({ offset: canvas.mouse, blur: 10 });
 
 canvas.multiple(10, (index) => {
   const circle = canvas.ellipse({
@@ -24,6 +27,7 @@ canvas.multiple(10, (index) => {
       Math.random() * 128 + 128
     ),
     stroke: "none",
+    shadow,
   });
 
   circle.everyFrame = () => {
