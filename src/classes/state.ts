@@ -24,6 +24,24 @@ export class State<T> {
     }
   }
 
+  equals(other: T | State<T>) {
+    return this.#value === other;
+  }
+
+  replace<O extends this>(other: O, changeListener: ChangeListener<T>) {
+    if (this.equals(other)) {
+      if (this === other) return other;
+
+      this.removeChangeListener(changeListener);
+    }
+
+    other.addChangeListener(changeListener);
+
+    changeListener(other.#value);
+
+    return other;
+  }
+
   get value() {
     return this.#value;
   }
@@ -37,37 +55,6 @@ export class State<T> {
   }
 }
 
-type ObjectState<T extends object> = {
-  [Key in keyof T]: T[Key] extends object ? ObjectState<T[Key]> : State<T[Key]>;
-};
-
-function deepState<T extends object>(target: T): ObjectState<T> {
-  return Object.fromEntries(
-    Object.entries(target).map(([propertyKey, propertyValue]) => [
-      propertyKey as keyof T,
-      typeof propertyValue === "object" && propertyValue !== null
-        ? deepState(propertyValue)
-        : new State(propertyValue),
-    ])
-  ) as ObjectState<T>;
+export function createState<T>(target: T) {
+  return new State(target);
 }
-
-export function createState<
-  T,
-  R extends T extends object ? ObjectState<T> : State<T>
->(target: T): R {
-  if (typeof target === "object" && target !== null)
-    return deepState(target) as R;
-
-  return new State(target) as R;
-}
-
-const test = createState({
-  foo: 123,
-  bar: {
-    a: true,
-    b: "false",
-  },
-});
-
-test.bar.a;

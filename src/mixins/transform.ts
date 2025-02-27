@@ -1,13 +1,13 @@
-import { Angle } from "../classes/angle";
-import { MouseTracker } from "../classes/mouse";
-import { Vector2D } from "../classes/vector2d";
-import { Canvas2DCanvasElement } from "../elements/canvas2d/canvas";
-import { Canvas2DBaseRenderable } from "../elements/canvas2d/renderable";
-import { attributeParser } from "../utlities/attributeParser";
-import { isReadOnly } from "../utlities/readOnly";
+import { Angle } from '../classes/angle';
+import { MouseTracker } from '../classes/mouse';
+import { Vector2D, Vector2DBase } from '../classes/vector2d';
+import { Canvas2DCanvasElement } from '../elements/canvas2d/canvas';
+import { Canvas2DBaseRenderable } from '../elements/canvas2d/renderable';
+import { attributeParser } from '../utlities/attributeParser';
+import { isReadOnly } from '../utlities/readOnly';
 
 const matchAngle = new RegExp(
-  `(\d*)\s?(${Object.values(Angle.unit).join("|")})`
+  `(\d*)\s?(${Object.values(Angle.unit).join('|')})`
 );
 
 export function transformeable<B extends typeof Canvas2DBaseRenderable>(
@@ -16,11 +16,11 @@ export function transformeable<B extends typeof Canvas2DBaseRenderable>(
   return class Transformed extends Base {
     static observedAttributes: string[] = [
       ...Base.observedAttributes,
-      "angle",
-      "angular-velocity",
-      "anchor",
-      "scale",
-      "velocity",
+      'angle',
+      'angular-velocity',
+      'anchor',
+      'scale',
+      'velocity',
     ];
 
     #anchor = Vector2D.zero;
@@ -29,14 +29,22 @@ export function transformeable<B extends typeof Canvas2DBaseRenderable>(
     #scale = Vector2D.one;
     #velocity = Vector2D.zero;
 
+    constructor(...args: any[]) {
+      super(...args);
+
+      this.#angle.addChangeListener(this.#angleChangeListener);
+    }
+
+    #angleChangeListener: ChangeListener<number> = () => {
+      this.registerChange('angle', this.#angle);
+    };
+
     get angle() {
       return this.#angle;
     }
 
     set angle(value) {
-      if (this.#angle.equals(value)) return;
-
-      this.registerChange("angle", (this.#angle = value));
+      this.#angle = this.#angle.replace(value, this.#angleChangeListener);
     }
 
     get angularVelocity() {
@@ -44,33 +52,23 @@ export function transformeable<B extends typeof Canvas2DBaseRenderable>(
     }
 
     set angularVelocity(value) {
-      if (this.#angularVelocity.equals(value)) return;
+      if (this.#angularVelocity.equals(value)) {
+        return;
+      }
 
-      this.registerChange("angularVelocity", (this.#angularVelocity = value));
+      this.registerChange('angularVelocity', (this.#angularVelocity = value));
     }
 
     get anchor() {
       return this.#anchor;
     }
 
-    #anchorChangeListener: ChangeListener<Vector2D> = (newValue) => {
-      this.registerChange("anchor", newValue);
+    #anchorChangeListener: ChangeListener<Vector2DBase> = () => {
+      this.registerChange('anchor', this.#anchor);
     };
 
     set anchor(value) {
-      if (this.#anchor.equals(value)) {
-        if (this.#anchor !== value) {
-          this.#anchor.removeChangeListener(this.#anchorChangeListener);
-          this.registerChange("anchor", (this.#anchor = value));
-        }
-
-        value.addChangeListener(this.#anchorChangeListener);
-        return;
-      }
-
-      this.registerChange("anchor", (this.#anchor = value));
-
-      value.addChangeListener(this.#anchorChangeListener);
+      this.#anchor = this.#anchor.replace(value, this.#anchorChangeListener);
     }
 
     attributeChangedCallback(
@@ -80,22 +78,24 @@ export function transformeable<B extends typeof Canvas2DBaseRenderable>(
     ): void {
       if (newValue !== null) {
         switch (name) {
-          case "angle":
+          case 'angle':
+            if (newValue === this.angle.toString()) return;
             this.angle = attributeParser.Angle(newValue);
             break;
-          case "angular-velocity":
+          case 'angular-velocity':
+            if (newValue === this.angularVelocity.toString()) return;
             this.angularVelocity = attributeParser.Angle(newValue);
             break;
-          case "anchor":
+          case 'anchor':
             const newAnchor = attributeParser.Vector2D(newValue);
             if (!this.#anchor.equals(newAnchor)) this.anchor = newAnchor;
             break;
-          case "scale":
+          case 'scale':
             const { x: scaleX, y: scaleY } = attributeParser.Vector2D(newValue);
             this.#scale.x = scaleX;
             this.#scale.y = scaleY;
             break;
-          case "velocity":
+          case 'velocity':
             this.velocity = attributeParser.Vector2D(newValue);
             break;
         }
@@ -110,7 +110,7 @@ export function transformeable<B extends typeof Canvas2DBaseRenderable>(
       this.#anchor.x += x;
       this.#anchor.y += y;
 
-      this.registerChange("anchor", this.#anchor);
+      this.registerChange('anchor', this.#anchor);
     }
 
     render(canvas2D: Canvas2DCanvasElement): void {
@@ -126,13 +126,11 @@ export function transformeable<B extends typeof Canvas2DBaseRenderable>(
     afterRender(canvas2D: Canvas2DCanvasElement): void {
       super.afterRender(canvas2D);
 
-      this.angle = Angle.radians(
-        this.#angle.radians + this.#angularVelocity.radians
-      );
+      this.angle.radians += this.#angularVelocity.radians;
 
-      if (!isReadOnly(this.#anchor, "x")) this.#anchor.x += this.#velocity.x;
+      if (!isReadOnly(this.#anchor, 'x')) this.#anchor.x += this.#velocity.x;
 
-      if (!isReadOnly(this.#anchor, "y")) this.#anchor.y += this.#velocity.y;
+      if (!isReadOnly(this.#anchor, 'y')) this.#anchor.y += this.#velocity.y;
     }
 
     rotateClockwise(angle: Angle) {
@@ -148,16 +146,16 @@ export function transformeable<B extends typeof Canvas2DBaseRenderable>(
     }
 
     set scale(value: Vector2D | number) {
-      if (typeof value === "number") {
+      if (typeof value === 'number') {
         const vectorValue = new Vector2D(value);
 
         if (this.#scale.equals(vectorValue)) return;
 
-        this.registerChange("scale", (this.#scale = vectorValue));
+        this.registerChange('scale', (this.#scale = vectorValue));
       } else if (this.#scale.equals(value)) {
         return;
       } else {
-        this.registerChange("scale", (this.#scale = value));
+        this.registerChange('scale', (this.#scale = value));
       }
     }
 
@@ -168,7 +166,7 @@ export function transformeable<B extends typeof Canvas2DBaseRenderable>(
     set velocity(value) {
       if (this.#velocity.equals(value)) return;
 
-      this.registerChange("velocity", (this.#velocity = value));
+      this.registerChange('velocity', (this.#velocity = value));
     }
   };
 }

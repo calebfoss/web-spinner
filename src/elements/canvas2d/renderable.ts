@@ -172,7 +172,13 @@ export class Canvas2DBaseRenderable extends Canvas2DElement {
 
     const attributeName = camelToKebabCase(propertyName as string);
 
-    this.setAttribute(attributeName, newValue as string);
+    const currentAttributeValue = this.getAttribute(attributeName);
+
+    const stringValue = String(newValue);
+
+    if(currentAttributeValue === stringValue) return;
+
+    this.setAttribute(attributeName, stringValue);
   }
 
   render(canvas2D: Canvas2DCanvasElement) {

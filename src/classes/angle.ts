@@ -1,44 +1,76 @@
-export type AngleUnit = (typeof Angle)["unit"][keyof (typeof Angle)["unit"]];
+import { State } from './state';
 
-export class Angle {
-  #degrees: number | null = null;
-  #radians: number | null = null;
+export type AngleUnit = (typeof Angle)['unit'][keyof (typeof Angle)['unit']];
+
+const unitsInCircle: {
+  [U in AngleUnit]: number;
+} = {
+  deg: 360,
+  rad: Math.PI * 2,
+  grad: 400,
+  turn: 1,
+};
+
+export class Angle extends State<number> {
+  #conversions = new Map<Exclude<AngleUnit, 'rad'>, number>();
 
   constructor(unit: AngleUnit, value: number) {
-    switch (unit) {
-      case Angle.unit.degrees:
-        this.#degrees = value;
-        break;
-      case Angle.unit.radians:
-        this.#radians = value;
-        break;
-    }
+    const radians = unit === 'rad' ? value : Angle.convert(value, unit, 'rad');
+
+    super(radians);
+  }
+
+  #getConverted(unit: Exclude<AngleUnit, 'rad'>) {
+    const cached = this.#conversions.get(unit);
+
+    if (cached !== undefined) return cached;
+
+    const conversion = Angle.convert(this.value, 'rad', unit);
+
+    this.#conversions.set(unit, conversion);
+
+    return conversion;
+  }
+
+  #setConverted(unit: Exclude<AngleUnit, 'rad'>, value: number) {
+    this.#conversions.set(unit, value);
+
+    this.value = Angle.convert(value, unit, 'rad');
+  }
+
+  get degrees() {
+    return this.#getConverted('deg');
+  }
+
+  set degrees(value) {
+    this.#setConverted('deg', value);
+  }
+
+  toString() {
+    const conversionCount = this.#conversions.size;
+
+    const [unit, value] =
+      conversionCount === 0
+        ? ['rad' as AngleUnit, this.value]
+        : Array.from(this.#conversions)[conversionCount - 1];
+
+    const valueString = Number.isInteger(value)
+      ? value.toString()
+      : value.toPrecision(2);
+
+    return valueString + unit;
+  }
+
+  static convert(value: number, unitFrom: AngleUnit, unitTo: AngleUnit) {
+    return value * (unitsInCircle[unitTo] / unitsInCircle[unitFrom]);
   }
 
   static degrees(value: number) {
     return new Angle(Angle.unit.degrees, value);
   }
 
-  get degrees() {
-    if (this.#degrees !== null) return this.#degrees;
-
-    if (this.#radians === null) throw new Error("Angle missing value");
-
-    this.#degrees = this.#radians * (180 / Math.PI);
-
-    return this.#degrees;
-  }
-
-  set degrees(value) {
-    this.#degrees = value;
-
-    if (this.#radians === null) return;
-
-    this.#radians = value * (Math.PI / 180);
-  }
-
   equals(other: Angle) {
-    return this.radians === other.radians;
+    return super.equals(other) || this.radians === other.radians;
   }
 
   static radians(value: number) {
@@ -46,34 +78,27 @@ export class Angle {
   }
 
   get radians() {
-    if (this.#radians !== null) return this.#radians;
-
-    if (this.#degrees === null) throw new Error("Angle missing value");
-
-    this.#radians = this.#degrees * (Math.PI / 180);
-
-    return this.#radians;
+    return this.value;
   }
 
-  set radians(value) {
-    this.#radians = value;
+  set radians(value: number) {
+    if (this.value === value) return;
 
-    if (this.#degrees === null) return;
+    this.#conversions.clear();
 
-    this.#degrees = value * (180 / Math.PI);
-  }
-
-  toString() {
-    if (this.#degrees !== null) return `${this.#degrees}deg`;
-    return `${this.radians}rad`;
+    this.value = value;
   }
 
   static unit = {
-    degrees: "deg",
-    radians: "rad",
-    gradians: "grad",
-    turn: "turn",
+    degrees: 'deg',
+    radians: 'rad',
+    gradians: 'grad',
+    turn: 'turn',
   } as const;
+
+  static get unitsInCircle() {
+    return unitsInCircle;
+  }
 
   static get zero() {
     return Angle.radians(0);
