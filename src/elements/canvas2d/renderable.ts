@@ -61,6 +61,9 @@ export class Canvas2DBaseRenderable extends Canvas2DElement {
     super.addEventListener(type, listener, options);
   }
 
+  /**
+   * @private
+   */
   renderConicalGradient(
     context: CanvasRenderingContext2D,
     gradient: ConicalGradient
@@ -68,6 +71,9 @@ export class Canvas2DBaseRenderable extends Canvas2DElement {
     return gradient.render(context, this.canvas.center);
   }
 
+  /**
+   * @private
+   */
   renderLinearGradient(
     context: CanvasRenderingContext2D,
     gradient: LinearGradient
@@ -76,6 +82,9 @@ export class Canvas2DBaseRenderable extends Canvas2DElement {
     return gradient.render(context, 0, 0, width, height);
   }
 
+  /**
+   * @private
+   */
   renderRadialGradient(
     context: CanvasRenderingContext2D,
     gradient: RadialGradient
@@ -108,6 +117,9 @@ export class Canvas2DBaseRenderable extends Canvas2DElement {
     super.removeEventListener(type, listener, options);
   }
 
+  /**
+   * @private
+   */
   get changedSinceRender() {
     return this.#changedSinceRender;
   }
@@ -161,6 +173,9 @@ export class Canvas2DBaseRenderable extends Canvas2DElement {
     }
   }
 
+  /**
+   * @private
+   */
   registerChange<P extends keyof this, V extends this[P]>(
     propertyName: P,
     newValue: V
@@ -176,11 +191,14 @@ export class Canvas2DBaseRenderable extends Canvas2DElement {
 
     const stringValue = String(newValue);
 
-    if(currentAttributeValue === stringValue) return;
+    if (currentAttributeValue === stringValue) return;
 
     this.setAttribute(attributeName, stringValue);
   }
 
+  /**
+   * @private
+   */
   render(canvas2D: Canvas2DCanvasElement) {
     const { context, frame } = canvas2D;
 
@@ -193,11 +211,18 @@ export class Canvas2DBaseRenderable extends Canvas2DElement {
     }
   }
 
+  /**
+   * @private
+   */
   renderChildren(canvas2D: Canvas2DCanvasElement) {
     for (const child of this.children) {
       if (child instanceof Canvas2DBaseRenderable) child.render(canvas2D);
     }
   }
+
+  /**
+   * @private
+   */
 
   afterRender(canvas2D: Canvas2DCanvasElement) {
     this.#changedSinceRender = false;

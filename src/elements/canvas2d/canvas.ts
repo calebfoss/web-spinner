@@ -285,5 +285,3 @@ export class Canvas2DCanvasElement extends standaloneChildren(Canvas2DElement) {
     });
   }
 }
-
-customElements.define("c2d-canvas", Canvas2DCanvasElement);

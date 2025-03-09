@@ -34,6 +34,10 @@ export class Canvas2DElement extends HTMLElement {
     newValue: string | null
   ) {}
 
+  /**
+   * The <c2d-canvas> element that is rendering this element. The <c2d-canvas>
+   * will be an ancestor of this element.
+   */
   get canvas(): Canvas2DCanvasElement {
     const { parentElement } = this;
 
@@ -48,6 +52,9 @@ export class Canvas2DElement extends HTMLElement {
     return parentElement.canvas;
   }
 
+  /**
+   * @private
+   */
   createChild<E extends typeof Canvas2DElement>(
     ElementClass: E,
     options?: Options<InstanceType<E>>
@@ -59,7 +66,7 @@ export class Canvas2DElement extends HTMLElement {
     return element;
   }
 
-  get everyFrame() {
+  get everyFrame(): Updater | null {
     return this.#everyFrame;
   }
 

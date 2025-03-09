@@ -4,7 +4,13 @@
   "modules": [
     {
       "kind": "javascript-module",
-      "path": "demo.js",
+      "path": "demo/demo.js",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "docs/script.ts",
       "declarations": [],
       "exports": []
     },
@@ -40,6 +46,11 @@
         {
           "kind": "variable",
           "name": "__webpack_exports__RadialGradient",
+          "description": "***"
+        },
+        {
+          "kind": "variable",
+          "name": "__webpack_exports__Shadow",
           "description": "***"
         },
         {
@@ -119,6 +130,14 @@
           "name": "RadialGradient",
           "declaration": {
             "name": "__webpack_exports__RadialGradient",
+            "module": "dist/webSpinner.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "Shadow",
+          "declaration": {
+            "name": "__webpack_exports__Shadow",
             "module": "dist/webSpinner.js"
           }
         },
@@ -229,7 +248,7 @@
               "name": "options",
               "optional": true,
               "type": {
-                "text": "Partial<Canvas2DCanvasElement>"
+                "text": "Options<Canvas2DCanvasElement>"
               }
             }
           ]
@@ -250,6 +269,14 @@
           "declaration": {
             "name": "createCustomElement",
             "module": "src/index.ts"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "c2d-canvas",
+          "declaration": {
+            "name": "Canvas2DCanvasElement",
+            "module": "/src/elements/canvas2d/canvas"
           }
         },
         {
@@ -326,6 +353,14 @@
         },
         {
           "kind": "js",
+          "name": "Shadow",
+          "declaration": {
+            "name": "Shadow",
+            "module": "src/index.ts"
+          }
+        },
+        {
+          "kind": "js",
           "name": "createState",
           "declaration": {
             "name": "createState",
@@ -345,21 +380,74 @@
           "members": [
             {
               "kind": "field",
-              "name": "#degrees",
+              "name": "#conversions",
               "privacy": "private",
-              "type": {
-                "text": "number | null"
-              },
-              "default": "null"
+              "default": "new Map<Exclude<AngleUnit, 'rad'>, number>()"
+            },
+            {
+              "kind": "method",
+              "name": "#getConverted",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "unit",
+                  "type": {
+                    "text": "Exclude<AngleUnit, 'rad'>"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#setConverted",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "unit",
+                  "type": {
+                    "text": "Exclude<AngleUnit, 'rad'>"
+                  }
+                },
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ]
             },
             {
               "kind": "field",
-              "name": "#radians",
-              "privacy": "private",
-              "type": {
-                "text": "number | null"
-              },
-              "default": "null"
+              "name": "degrees"
+            },
+            {
+              "kind": "method",
+              "name": "toString"
+            },
+            {
+              "kind": "method",
+              "name": "convert",
+              "static": true,
+              "parameters": [
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "unitFrom",
+                  "type": {
+                    "text": "AngleUnit"
+                  }
+                },
+                {
+                  "name": "unitTo",
+                  "type": {
+                    "text": "AngleUnit"
+                  }
+                }
+              ]
             },
             {
               "kind": "method",
@@ -375,10 +463,6 @@
               ]
             },
             {
-              "kind": "field",
-              "name": "degrees"
-            },
-            {
               "kind": "method",
               "name": "equals",
               "parameters": [
@@ -388,7 +472,11 @@
                     "text": "Angle"
                   }
                 }
-              ]
+              ],
+              "inheritedFrom": {
+                "name": "State",
+                "module": "src/classes/state.ts"
+              }
             },
             {
               "kind": "method",
@@ -408,25 +496,124 @@
               "name": "radians"
             },
             {
-              "kind": "method",
-              "name": "toString"
-            },
-            {
               "kind": "field",
               "name": "unit",
               "static": true,
-              "default": "{ degrees: \"deg\", radians: \"rad\", gradians: \"grad\", turn: \"turn\", }",
+              "default": "{ degrees: 'deg', radians: 'rad', gradians: 'grad', turn: 'turn', }",
               "type": {
-                "text": "{\r\n    degrees: \"deg\",\r\n    radians: \"rad\",\r\n    gradians: \"grad\",\r\n    turn: \"turn\",\r\n  }"
+                "text": "{\r\n    degrees: 'deg',\r\n    radians: 'rad',\r\n    gradians: 'grad',\r\n    turn: 'turn',\r\n  }"
               }
+            },
+            {
+              "kind": "field",
+              "name": "unitsInCircle",
+              "static": true,
+              "readonly": true
             },
             {
               "kind": "field",
               "name": "zero",
               "static": true,
               "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#listeners",
+              "privacy": "private",
+              "default": "new Set<ChangeListener<T>>()",
+              "inheritedFrom": {
+                "name": "State",
+                "module": "src/classes/state.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#value",
+              "privacy": "private",
+              "type": {
+                "text": "T"
+              },
+              "default": "initialValue",
+              "inheritedFrom": {
+                "name": "State",
+                "module": "src/classes/state.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "addChangeListener",
+              "parameters": [
+                {
+                  "name": "listener",
+                  "type": {
+                    "text": "ChangeListener<T>"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "State",
+                "module": "src/classes/state.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "removeChangeListener",
+              "parameters": [
+                {
+                  "name": "listener",
+                  "type": {
+                    "text": "ChangeListener<T>"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "State",
+                "module": "src/classes/state.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "handleChange",
+              "inheritedFrom": {
+                "name": "State",
+                "module": "src/classes/state.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "replace",
+              "parameters": [
+                {
+                  "name": "other",
+                  "type": {
+                    "text": "O"
+                  }
+                },
+                {
+                  "name": "changeListener",
+                  "type": {
+                    "text": "ChangeListener<T>"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "State",
+                "module": "src/classes/state.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "inheritedFrom": {
+                "name": "State",
+                "module": "src/classes/state.ts"
+              }
             }
-          ]
+          ],
+          "superclass": {
+            "name": "State",
+            "module": "/src/classes/state"
+          }
         }
       ],
       "exports": [
@@ -463,29 +650,30 @@
               "name": "clicked"
             },
             {
-              "kind": "field",
-              "name": "#changeLisners",
-              "privacy": "private",
-              "default": "new Set<ChangeListener<Vector2D>>()",
-              "inheritedFrom": {
-                "name": "Vector2D",
-                "module": "src/classes/vector2d.ts"
-              }
-            },
-            {
               "kind": "method",
               "name": "equals",
               "parameters": [
                 {
-                  "name": "other",
+                  "name": "x",
                   "type": {
-                    "text": "Vector2D"
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "y",
+                  "type": {
+                    "text": "number"
                   }
                 }
               ],
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
               "inheritedFrom": {
-                "name": "Vector2D",
-                "module": "src/classes/vector2d.ts"
+                "name": "State",
+                "module": "src/classes/state.ts"
               }
             },
             {
@@ -622,7 +810,7 @@
               "kind": "field",
               "name": "#listeners",
               "privacy": "private",
-              "default": "new Set<StateListener<T>>()",
+              "default": "new Set<ChangeListener<T>>()",
               "inheritedFrom": {
                 "name": "State",
                 "module": "src/classes/state.ts"
@@ -648,7 +836,7 @@
                 {
                   "name": "listener",
                   "type": {
-                    "text": "StateListener<T>"
+                    "text": "ChangeListener<T>"
                   }
                 }
               ],
@@ -664,7 +852,7 @@
                 {
                   "name": "listener",
                   "type": {
-                    "text": "StateListener<T>"
+                    "text": "ChangeListener<T>"
                   }
                 }
               ],
@@ -676,6 +864,28 @@
             {
               "kind": "method",
               "name": "handleChange",
+              "inheritedFrom": {
+                "name": "State",
+                "module": "src/classes/state.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "replace",
+              "parameters": [
+                {
+                  "name": "other",
+                  "type": {
+                    "text": "O"
+                  }
+                },
+                {
+                  "name": "changeListener",
+                  "type": {
+                    "text": "ChangeListener<T>"
+                  }
+                }
+              ],
               "inheritedFrom": {
                 "name": "State",
                 "module": "src/classes/state.ts"
@@ -762,29 +972,30 @@
               }
             },
             {
-              "kind": "field",
-              "name": "#changeLisners",
-              "privacy": "private",
-              "default": "new Set<ChangeListener<Vector2D>>()",
-              "inheritedFrom": {
-                "name": "Vector2D",
-                "module": "src/classes/vector2d.ts"
-              }
-            },
-            {
               "kind": "method",
               "name": "equals",
               "parameters": [
                 {
-                  "name": "other",
+                  "name": "x",
                   "type": {
-                    "text": "Vector2D"
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "y",
+                  "type": {
+                    "text": "number"
                   }
                 }
               ],
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
               "inheritedFrom": {
-                "name": "Vector2D",
-                "module": "src/classes/vector2d.ts"
+                "name": "State",
+                "module": "src/classes/state.ts"
               }
             },
             {
@@ -905,7 +1116,7 @@
               "kind": "field",
               "name": "#listeners",
               "privacy": "private",
-              "default": "new Set<StateListener<T>>()",
+              "default": "new Set<ChangeListener<T>>()",
               "inheritedFrom": {
                 "name": "State",
                 "module": "src/classes/state.ts"
@@ -931,7 +1142,7 @@
                 {
                   "name": "listener",
                   "type": {
-                    "text": "StateListener<T>"
+                    "text": "ChangeListener<T>"
                   }
                 }
               ],
@@ -947,7 +1158,7 @@
                 {
                   "name": "listener",
                   "type": {
-                    "text": "StateListener<T>"
+                    "text": "ChangeListener<T>"
                   }
                 }
               ],
@@ -959,6 +1170,28 @@
             {
               "kind": "method",
               "name": "handleChange",
+              "inheritedFrom": {
+                "name": "State",
+                "module": "src/classes/state.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "replace",
+              "parameters": [
+                {
+                  "name": "other",
+                  "type": {
+                    "text": "O"
+                  }
+                },
+                {
+                  "name": "changeListener",
+                  "type": {
+                    "text": "ChangeListener<T>"
+                  }
+                }
+              ],
               "inheritedFrom": {
                 "name": "State",
                 "module": "src/classes/state.ts"
@@ -1821,29 +2054,30 @@
               "name": "over"
             },
             {
-              "kind": "field",
-              "name": "#changeLisners",
-              "privacy": "private",
-              "default": "new Set<ChangeListener<Vector2D>>()",
-              "inheritedFrom": {
-                "name": "Vector2D",
-                "module": "src/classes/vector2d.ts"
-              }
-            },
-            {
               "kind": "method",
               "name": "equals",
               "parameters": [
                 {
-                  "name": "other",
+                  "name": "x",
                   "type": {
-                    "text": "Vector2D"
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "y",
+                  "type": {
+                    "text": "number"
                   }
                 }
               ],
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
               "inheritedFrom": {
-                "name": "Vector2D",
-                "module": "src/classes/vector2d.ts"
+                "name": "State",
+                "module": "src/classes/state.ts"
               }
             },
             {
@@ -1980,7 +2214,7 @@
               "kind": "field",
               "name": "#listeners",
               "privacy": "private",
-              "default": "new Set<StateListener<T>>()",
+              "default": "new Set<ChangeListener<T>>()",
               "inheritedFrom": {
                 "name": "State",
                 "module": "src/classes/state.ts"
@@ -2006,7 +2240,7 @@
                 {
                   "name": "listener",
                   "type": {
-                    "text": "StateListener<T>"
+                    "text": "ChangeListener<T>"
                   }
                 }
               ],
@@ -2022,7 +2256,7 @@
                 {
                   "name": "listener",
                   "type": {
-                    "text": "StateListener<T>"
+                    "text": "ChangeListener<T>"
                   }
                 }
               ],
@@ -2034,6 +2268,28 @@
             {
               "kind": "method",
               "name": "handleChange",
+              "inheritedFrom": {
+                "name": "State",
+                "module": "src/classes/state.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "replace",
+              "parameters": [
+                {
+                  "name": "other",
+                  "type": {
+                    "text": "O"
+                  }
+                },
+                {
+                  "name": "changeListener",
+                  "type": {
+                    "text": "ChangeListener<T>"
+                  }
+                }
+              ],
               "inheritedFrom": {
                 "name": "State",
                 "module": "src/classes/state.ts"
@@ -2148,29 +2404,30 @@
               }
             },
             {
-              "kind": "field",
-              "name": "#changeLisners",
-              "privacy": "private",
-              "default": "new Set<ChangeListener<Vector2D>>()",
-              "inheritedFrom": {
-                "name": "Vector2D",
-                "module": "src/classes/vector2d.ts"
-              }
-            },
-            {
               "kind": "method",
               "name": "equals",
               "parameters": [
                 {
-                  "name": "other",
+                  "name": "x",
                   "type": {
-                    "text": "Vector2D"
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "y",
+                  "type": {
+                    "text": "number"
                   }
                 }
               ],
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
               "inheritedFrom": {
-                "name": "Vector2D",
-                "module": "src/classes/vector2d.ts"
+                "name": "State",
+                "module": "src/classes/state.ts"
               }
             },
             {
@@ -2291,7 +2548,7 @@
               "kind": "field",
               "name": "#listeners",
               "privacy": "private",
-              "default": "new Set<StateListener<T>>()",
+              "default": "new Set<ChangeListener<T>>()",
               "inheritedFrom": {
                 "name": "State",
                 "module": "src/classes/state.ts"
@@ -2317,7 +2574,7 @@
                 {
                   "name": "listener",
                   "type": {
-                    "text": "StateListener<T>"
+                    "text": "ChangeListener<T>"
                   }
                 }
               ],
@@ -2333,7 +2590,7 @@
                 {
                   "name": "listener",
                   "type": {
-                    "text": "StateListener<T>"
+                    "text": "ChangeListener<T>"
                   }
                 }
               ],
@@ -2345,6 +2602,28 @@
             {
               "kind": "method",
               "name": "handleChange",
+              "inheritedFrom": {
+                "name": "State",
+                "module": "src/classes/state.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "replace",
+              "parameters": [
+                {
+                  "name": "other",
+                  "type": {
+                    "text": "O"
+                  }
+                },
+                {
+                  "name": "changeListener",
+                  "type": {
+                    "text": "ChangeListener<T>"
+                  }
+                }
+              ],
               "inheritedFrom": {
                 "name": "State",
                 "module": "src/classes/state.ts"
@@ -2386,6 +2665,120 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/classes/shadow.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "Shadow",
+          "members": [
+            {
+              "kind": "field",
+              "name": "#blur",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#color",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#offset",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#changeListenerMap",
+              "privacy": "private",
+              "default": "new Map<ChangeListener<Shadow>, () => void>()"
+            },
+            {
+              "kind": "method",
+              "name": "addChangeListener",
+              "parameters": [
+                {
+                  "name": "listener",
+                  "type": {
+                    "text": "(updatedValue: Shadow) => void"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "removeChangeListener",
+              "parameters": [
+                {
+                  "name": "listener",
+                  "type": {
+                    "text": "ChangeListener<Shadow>"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "#changeListener",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "#handleChange",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "blur"
+            },
+            {
+              "kind": "field",
+              "name": "color"
+            },
+            {
+              "kind": "method",
+              "name": "equals",
+              "parameters": [
+                {
+                  "name": "other",
+                  "type": {
+                    "text": "Shadow"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "offset"
+            },
+            {
+              "kind": "method",
+              "name": "render",
+              "parameters": [
+                {
+                  "name": "context",
+                  "type": {
+                    "text": "CanvasRenderingContext2D"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "Shadow",
+          "declaration": {
+            "name": "Shadow",
+            "module": "src/classes/shadow.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/classes/state.ts",
       "declarations": [
         {
@@ -2397,7 +2790,7 @@
               "kind": "field",
               "name": "#listeners",
               "privacy": "private",
-              "default": "new Set<StateListener<T>>()"
+              "default": "new Set<ChangeListener<T>>()"
             },
             {
               "kind": "field",
@@ -2415,7 +2808,7 @@
                 {
                   "name": "listener",
                   "type": {
-                    "text": "StateListener<T>"
+                    "text": "ChangeListener<T>"
                   }
                 }
               ]
@@ -2427,7 +2820,7 @@
                 {
                   "name": "listener",
                   "type": {
-                    "text": "StateListener<T>"
+                    "text": "ChangeListener<T>"
                   }
                 }
               ]
@@ -2435,6 +2828,36 @@
             {
               "kind": "method",
               "name": "handleChange"
+            },
+            {
+              "kind": "method",
+              "name": "equals",
+              "parameters": [
+                {
+                  "name": "other",
+                  "type": {
+                    "text": "T | State<T>"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "replace",
+              "parameters": [
+                {
+                  "name": "other",
+                  "type": {
+                    "text": "O"
+                  }
+                },
+                {
+                  "name": "changeListener",
+                  "type": {
+                    "text": "ChangeListener<T>"
+                  }
+                }
+              ]
             },
             {
               "kind": "field",
@@ -2445,11 +2868,6 @@
         {
           "kind": "function",
           "name": "createState",
-          "return": {
-            "type": {
-              "text": "R"
-            }
-          },
           "parameters": [
             {
               "name": "target",
@@ -2518,25 +2936,121 @@
         {
           "kind": "class",
           "description": "",
-          "name": "Vector2D",
+          "name": "Vector2DBase",
           "members": [
             {
               "kind": "field",
-              "name": "#changeLisners",
+              "name": "#x",
               "privacy": "private",
-              "default": "new Set<ChangeListener<Vector2D>>()"
+              "type": {
+                "text": "number"
+              },
+              "default": "x"
+            },
+            {
+              "kind": "field",
+              "name": "#y",
+              "privacy": "private",
+              "type": {
+                "text": "number"
+              },
+              "default": "y"
+            },
+            {
+              "kind": "field",
+              "name": "x"
+            },
+            {
+              "kind": "field",
+              "name": "y"
+            }
+          ]
+        },
+        {
+          "kind": "class",
+          "description": "",
+          "name": "Vector2D",
+          "members": [
+            {
+              "kind": "method",
+              "name": "equals",
+              "parameters": [
+                {
+                  "name": "x",
+                  "type": {
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "y",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ],
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "inheritedFrom": {
+                "name": "State",
+                "module": "src/classes/state.ts"
+              }
             },
             {
               "kind": "method",
               "name": "equals",
               "parameters": [
                 {
-                  "name": "other",
+                  "name": "x",
                   "type": {
-                    "text": "Vector2D"
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "y",
+                  "type": {
+                    "text": "number"
                   }
                 }
-              ]
+              ],
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "inheritedFrom": {
+                "name": "State",
+                "module": "src/classes/state.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "equals",
+              "parameters": [
+                {
+                  "name": "x",
+                  "type": {
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "y",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ],
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "inheritedFrom": {
+                "name": "State",
+                "module": "src/classes/state.ts"
+              }
             },
             {
               "kind": "field",
@@ -2708,7 +3222,7 @@
               "kind": "field",
               "name": "#listeners",
               "privacy": "private",
-              "default": "new Set<StateListener<T>>()",
+              "default": "new Set<ChangeListener<T>>()",
               "inheritedFrom": {
                 "name": "State",
                 "module": "src/classes/state.ts"
@@ -2734,7 +3248,7 @@
                 {
                   "name": "listener",
                   "type": {
-                    "text": "StateListener<T>"
+                    "text": "ChangeListener<T>"
                   }
                 }
               ],
@@ -2750,7 +3264,7 @@
                 {
                   "name": "listener",
                   "type": {
-                    "text": "StateListener<T>"
+                    "text": "ChangeListener<T>"
                   }
                 }
               ],
@@ -2762,6 +3276,28 @@
             {
               "kind": "method",
               "name": "handleChange",
+              "inheritedFrom": {
+                "name": "State",
+                "module": "src/classes/state.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "replace",
+              "parameters": [
+                {
+                  "name": "other",
+                  "type": {
+                    "text": "O"
+                  }
+                },
+                {
+                  "name": "changeListener",
+                  "type": {
+                    "text": "ChangeListener<T>"
+                  }
+                }
+              ],
               "inheritedFrom": {
                 "name": "State",
                 "module": "src/classes/state.ts"
@@ -2783,6 +3319,14 @@
         }
       ],
       "exports": [
+        {
+          "kind": "js",
+          "name": "Vector2DBase",
+          "declaration": {
+            "name": "Vector2DBase",
+            "module": "src/classes/vector2d.ts"
+          }
+        },
         {
           "kind": "js",
           "name": "Vector2D",
@@ -2853,6 +3397,70 @@
                   "optional": true,
                   "type": {
                     "text": "Options<Canvas2DImage>"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "multiple",
+              "return": {
+                "type": {
+                  "text": "Node[]"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "callback",
+                  "type": {
+                    "text": "MultipleCallback"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "multiple",
+              "return": {
+                "type": {
+                  "text": "Node[]"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "count",
+                  "type": {
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "callback",
+                  "type": {
+                    "text": "(index: number) => Node"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "multiple",
+              "return": {
+                "type": {
+                  "text": "Node[]"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "arg1",
+                  "type": {
+                    "text": "A1"
+                  }
+                },
+                {
+                  "name": "arg2",
+                  "optional": true,
+                  "type": {
+                    "text": "A2"
                   }
                 }
               ]
@@ -3121,7 +3729,13 @@
             },
             {
               "kind": "field",
-              "name": "fill"
+              "name": "fill",
+              "type": {
+                "text": "DrawStyle | null"
+              },
+              "description": "The rendering style inside the element. This may be a color or gradient.\r\nWhen set to null, the parent element's style is used. When\r\nset to \"none\", the inside will be transparent.",
+              "reflects": true,
+              "attribute": "fill"
             },
             {
               "kind": "method",
@@ -3160,7 +3774,12 @@
           ],
           "attributes": [
             {
-              "name": "fill"
+              "name": "fill",
+              "type": {
+                "text": "DrawStyle | null"
+              },
+              "description": "The rendering style inside the element. This may be a color or gradient.\r\nWhen set to null, the parent element's style is used. When\r\nset to \"none\", the inside will be transparent.",
+              "fieldName": "fill"
             }
           ],
           "parameters": [
@@ -3397,7 +4016,6 @@
               "kind": "field",
               "name": "#anchor",
               "privacy": "private",
-              "default": "new Vector2D(0, 0)",
               "inheritedFrom": {
                 "name": "transformeable",
                 "module": "src/mixins/transform.ts"
@@ -3441,6 +4059,18 @@
             },
             {
               "kind": "field",
+              "name": "#angleChangeListener",
+              "privacy": "private",
+              "type": {
+                "text": "ChangeListener<number>"
+              },
+              "inheritedFrom": {
+                "name": "transformeable",
+                "module": "src/mixins/transform.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "angle",
               "inheritedFrom": {
                 "name": "transformeable",
@@ -3468,7 +4098,7 @@
               "name": "#anchorChangeListener",
               "privacy": "private",
               "type": {
-                "text": "ChangeListener<Vector2D>"
+                "text": "ChangeListener<Vector2DBase>"
               },
               "inheritedFrom": {
                 "name": "transformeable",
@@ -3694,22 +4324,22 @@
     },
     {
       "kind": "javascript-module",
-      "path": "src/mixins/position.ts",
+      "path": "src/mixins/offset.ts",
       "declarations": [
         {
           "kind": "mixin",
           "description": "",
-          "name": "positioned",
+          "name": "offset",
           "members": [
             {
               "kind": "field",
-              "name": "#position",
+              "name": "#offset",
               "privacy": "private",
               "default": "new Vector2D(0, 0)"
             },
             {
               "kind": "method",
-              "name": "movePosition",
+              "name": "moveOffset",
               "parameters": [
                 {
                   "name": "x",
@@ -3727,12 +4357,25 @@
             },
             {
               "kind": "field",
-              "name": "position"
+              "name": "#offsetChangeListener",
+              "privacy": "private",
+              "type": {
+                "text": "ChangeListener<Vector2DBase>"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "offset",
+              "description": "Position of the element's origin relative to its anchor.",
+              "reflects": true,
+              "attribute": "offset"
             }
           ],
           "attributes": [
             {
-              "name": "position"
+              "name": "offset",
+              "description": "Position of the element's origin relative to its anchor.",
+              "fieldName": "offset"
             }
           ],
           "parameters": [
@@ -3748,10 +4391,10 @@
       "exports": [
         {
           "kind": "js",
-          "name": "positioned",
+          "name": "offset",
           "declaration": {
-            "name": "positioned",
-            "module": "src/mixins/position.ts"
+            "name": "offset",
+            "module": "src/mixins/offset.ts"
           }
         }
       ]
@@ -3827,6 +4470,29 @@
               ]
             },
             {
+              "kind": "method",
+              "name": "renderLinearGradient",
+              "return": {
+                "type": {
+                  "text": "CanvasGradient"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "context",
+                  "type": {
+                    "text": "CanvasRenderingContext2D"
+                  }
+                },
+                {
+                  "name": "gradient",
+                  "type": {
+                    "text": "LinearGradient"
+                  }
+                }
+              ]
+            },
+            {
               "kind": "field",
               "name": "#width",
               "privacy": "private",
@@ -3870,17 +4536,17 @@
             },
             {
               "kind": "field",
-              "name": "#position",
+              "name": "#offset",
               "privacy": "private",
               "default": "new Vector2D(0, 0)",
               "inheritedFrom": {
-                "name": "positioned",
-                "module": "src/mixins/position.ts"
+                "name": "offset",
+                "module": "src/mixins/offset.ts"
               }
             },
             {
               "kind": "method",
-              "name": "movePosition",
+              "name": "moveOffset",
               "parameters": [
                 {
                   "name": "x",
@@ -3896,16 +4562,31 @@
                 }
               ],
               "inheritedFrom": {
-                "name": "positioned",
-                "module": "src/mixins/position.ts"
+                "name": "offset",
+                "module": "src/mixins/offset.ts"
               }
             },
             {
               "kind": "field",
-              "name": "position",
+              "name": "#offsetChangeListener",
+              "privacy": "private",
+              "type": {
+                "text": "ChangeListener<Vector2DBase>"
+              },
               "inheritedFrom": {
-                "name": "positioned",
-                "module": "src/mixins/position.ts"
+                "name": "offset",
+                "module": "src/mixins/offset.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "offset",
+              "description": "Position of the element's origin relative to its anchor.",
+              "reflects": true,
+              "attribute": "offset",
+              "inheritedFrom": {
+                "name": "offset",
+                "module": "src/mixins/offset.ts"
               }
             }
           ],
@@ -3915,8 +4596,8 @@
               "module": "/src/mixins/dimensions"
             },
             {
-              "name": "positioned",
-              "module": "/src/mixins/position"
+              "name": "offset",
+              "module": "/src/mixins/offset"
             }
           ],
           "parameters": [
@@ -3929,10 +4610,12 @@
           ],
           "attributes": [
             {
-              "name": "position",
+              "name": "offset",
+              "description": "Position of the element's origin relative to its anchor.",
+              "fieldName": "offset",
               "inheritedFrom": {
-                "name": "positioned",
-                "module": "src/mixins/position.ts"
+                "name": "offset",
+                "module": "src/mixins/offset.ts"
               }
             }
           ]
@@ -3978,11 +4661,20 @@
             },
             {
               "kind": "field",
-              "name": "lineWidth"
+              "name": "lineWidth",
+              "description": "Width in pixels for drawing lines.",
+              "reflects": true,
+              "attribute": "line-width"
             },
             {
               "kind": "field",
-              "name": "stroke"
+              "name": "stroke",
+              "type": {
+                "text": "DrawStyle | null"
+              },
+              "description": "The rendering style for lines. This may be a color or gradient.\r\nWhen set to null, the parent element's style is used. When\r\nset to \"none\", no lines will be drawn.",
+              "reflects": true,
+              "attribute": "stroke"
             },
             {
               "kind": "method",
@@ -4021,7 +4713,17 @@
           ],
           "attributes": [
             {
-              "name": "stroke"
+              "name": "stroke",
+              "type": {
+                "text": "DrawStyle | null"
+              },
+              "description": "The rendering style for lines. This may be a color or gradient.\r\nWhen set to null, the parent element's style is used. When\r\nset to \"none\", no lines will be drawn.",
+              "fieldName": "stroke"
+            },
+            {
+              "name": "line-width",
+              "description": "Width in pixels for drawing lines.",
+              "fieldName": "lineWidth"
             }
           ],
           "parameters": [
@@ -4057,8 +4759,7 @@
             {
               "kind": "field",
               "name": "#anchor",
-              "privacy": "private",
-              "default": "new Vector2D(0, 0)"
+              "privacy": "private"
             },
             {
               "kind": "field",
@@ -4082,6 +4783,14 @@
             },
             {
               "kind": "field",
+              "name": "#angleChangeListener",
+              "privacy": "private",
+              "type": {
+                "text": "ChangeListener<number>"
+              }
+            },
+            {
+              "kind": "field",
               "name": "angle"
             },
             {
@@ -4097,7 +4806,7 @@
               "name": "#anchorChangeListener",
               "privacy": "private",
               "type": {
-                "text": "ChangeListener<Vector2D>"
+                "text": "ChangeListener<Vector2DBase>"
               }
             },
             {
@@ -4318,7 +5027,6 @@
               "kind": "field",
               "name": "#anchor",
               "privacy": "private",
-              "default": "new Vector2D(0, 0)",
               "inheritedFrom": {
                 "name": "transformeable",
                 "module": "src/mixins/transform.ts"
@@ -4362,6 +5070,18 @@
             },
             {
               "kind": "field",
+              "name": "#angleChangeListener",
+              "privacy": "private",
+              "type": {
+                "text": "ChangeListener<number>"
+              },
+              "inheritedFrom": {
+                "name": "transformeable",
+                "module": "src/mixins/transform.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "angle",
               "inheritedFrom": {
                 "name": "transformeable",
@@ -4389,7 +5109,7 @@
               "name": "#anchorChangeListener",
               "privacy": "private",
               "type": {
-                "text": "ChangeListener<Vector2D>"
+                "text": "ChangeListener<Vector2DBase>"
               },
               "inheritedFrom": {
                 "name": "transformeable",
@@ -4581,6 +5301,33 @@
               }
             },
             {
+              "kind": "method",
+              "name": "renderLinearGradient",
+              "return": {
+                "type": {
+                  "text": "CanvasGradient"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "context",
+                  "type": {
+                    "text": "CanvasRenderingContext2D"
+                  }
+                },
+                {
+                  "name": "gradient",
+                  "type": {
+                    "text": "LinearGradient"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "hasRectangleBounds",
+                "module": "src/mixins/rectangleBounds.ts"
+              }
+            },
+            {
               "kind": "field",
               "name": "#width",
               "privacy": "private",
@@ -4608,17 +5355,17 @@
             },
             {
               "kind": "field",
-              "name": "#position",
+              "name": "#offset",
               "privacy": "private",
               "default": "new Vector2D(0, 0)",
               "inheritedFrom": {
-                "name": "positioned",
-                "module": "src/mixins/position.ts"
+                "name": "offset",
+                "module": "src/mixins/offset.ts"
               }
             },
             {
               "kind": "method",
-              "name": "movePosition",
+              "name": "moveOffset",
               "parameters": [
                 {
                   "name": "x",
@@ -4634,16 +5381,31 @@
                 }
               ],
               "inheritedFrom": {
-                "name": "positioned",
-                "module": "src/mixins/position.ts"
+                "name": "offset",
+                "module": "src/mixins/offset.ts"
               }
             },
             {
               "kind": "field",
-              "name": "position",
+              "name": "#offsetChangeListener",
+              "privacy": "private",
+              "type": {
+                "text": "ChangeListener<Vector2DBase>"
+              },
               "inheritedFrom": {
-                "name": "positioned",
-                "module": "src/mixins/position.ts"
+                "name": "offset",
+                "module": "src/mixins/offset.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "offset",
+              "description": "Position of the element's origin relative to its anchor.",
+              "reflects": true,
+              "attribute": "offset",
+              "inheritedFrom": {
+                "name": "offset",
+                "module": "src/mixins/offset.ts"
               }
             }
           ],
@@ -4708,10 +5470,12 @@
               }
             },
             {
-              "name": "position",
+              "name": "offset",
+              "description": "Position of the element's origin relative to its anchor.",
+              "fieldName": "offset",
               "inheritedFrom": {
-                "name": "positioned",
-                "module": "src/mixins/position.ts"
+                "name": "offset",
+                "module": "src/mixins/offset.ts"
               }
             }
           ]
@@ -4754,6 +5518,40 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/utlities/readOnly.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "isReadOnly",
+          "parameters": [
+            {
+              "name": "obj",
+              "type": {
+                "text": "{}"
+              }
+            },
+            {
+              "name": "propertyKey",
+              "type": {
+                "text": "PropertyKey"
+              }
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "isReadOnly",
+          "declaration": {
+            "name": "isReadOnly",
+            "module": "src/utlities/readOnly.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/elements/canvas2d/bezier.ts",
       "declarations": [
         {
@@ -4785,6 +5583,7 @@
                   }
                 }
               ],
+              "privacy": "private",
               "return": {
                 "type": {
                   "text": "void"
@@ -4850,7 +5649,6 @@
               "kind": "field",
               "name": "#anchor",
               "privacy": "private",
-              "default": "new Vector2D(0, 0)",
               "inheritedFrom": {
                 "name": "transformeable",
                 "module": "src/mixins/transform.ts"
@@ -4894,6 +5692,18 @@
             },
             {
               "kind": "field",
+              "name": "#angleChangeListener",
+              "privacy": "private",
+              "type": {
+                "text": "ChangeListener<number>"
+              },
+              "inheritedFrom": {
+                "name": "transformeable",
+                "module": "src/mixins/transform.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "angle",
               "inheritedFrom": {
                 "name": "transformeable",
@@ -4921,7 +5731,7 @@
               "name": "#anchorChangeListener",
               "privacy": "private",
               "type": {
-                "text": "ChangeListener<Vector2D>"
+                "text": "ChangeListener<Vector2DBase>"
               },
               "inheritedFrom": {
                 "name": "transformeable",
@@ -4961,6 +5771,7 @@
                   }
                 }
               ],
+              "privacy": "private",
               "return": {
                 "type": {
                   "text": "void"
@@ -5131,6 +5942,19 @@
               }
             },
             {
+              "kind": "field",
+              "name": "#shadow",
+              "privacy": "private",
+              "type": {
+                "text": "Shadow | null"
+              },
+              "default": "null",
+              "inheritedFrom": {
+                "name": "Canvas2DBaseRenderable",
+                "module": "src/elements/canvas2d/renderable.ts"
+              }
+            },
+            {
               "kind": "method",
               "name": "addEventListener",
               "return": {
@@ -5181,6 +6005,7 @@
                   }
                 }
               ],
+              "privacy": "private",
               "inheritedFrom": {
                 "name": "Canvas2DBaseRenderable",
                 "module": "src/elements/canvas2d/renderable.ts"
@@ -5203,6 +6028,7 @@
                   }
                 }
               ],
+              "privacy": "private",
               "inheritedFrom": {
                 "name": "Canvas2DBaseRenderable",
                 "module": "src/elements/canvas2d/renderable.ts"
@@ -5225,6 +6051,7 @@
                   }
                 }
               ],
+              "privacy": "private",
               "inheritedFrom": {
                 "name": "Canvas2DBaseRenderable",
                 "module": "src/elements/canvas2d/renderable.ts"
@@ -5267,6 +6094,7 @@
             {
               "kind": "field",
               "name": "changedSinceRender",
+              "privacy": "private",
               "readonly": true,
               "inheritedFrom": {
                 "name": "Canvas2DBaseRenderable",
@@ -5324,6 +6152,7 @@
                   }
                 }
               ],
+              "privacy": "private",
               "inheritedFrom": {
                 "name": "Canvas2DBaseRenderable",
                 "module": "src/elements/canvas2d/renderable.ts"
@@ -5340,6 +6169,27 @@
                   }
                 }
               ],
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "Canvas2DBaseRenderable",
+                "module": "src/elements/canvas2d/renderable.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#shadowChangeListener",
+              "privacy": "private",
+              "type": {
+                "text": "ChangeListener<Shadow>"
+              },
+              "inheritedFrom": {
+                "name": "Canvas2DBaseRenderable",
+                "module": "src/elements/canvas2d/renderable.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "shadow",
               "inheritedFrom": {
                 "name": "Canvas2DBaseRenderable",
                 "module": "src/elements/canvas2d/renderable.ts"
@@ -5373,6 +6223,7 @@
               "type": {
                 "text": "Canvas2DCanvasElement"
               },
+              "description": "The <c2d-canvas> element that is rendering this element. The <c2d-canvas>\r\nwill be an ancestor of this element.",
               "readonly": true,
               "inheritedFrom": {
                 "name": "Canvas2DElement",
@@ -5397,6 +6248,7 @@
                   }
                 }
               ],
+              "privacy": "private",
               "inheritedFrom": {
                 "name": "Canvas2DElement",
                 "module": "src/elements/canvas2d/element.ts"
@@ -5405,6 +6257,9 @@
             {
               "kind": "field",
               "name": "everyFrame",
+              "type": {
+                "text": "Updater | null"
+              },
               "inheritedFrom": {
                 "name": "Canvas2DElement",
                 "module": "src/elements/canvas2d/element.ts"
@@ -5414,6 +6269,22 @@
               "kind": "field",
               "name": "listen",
               "readonly": true,
+              "inheritedFrom": {
+                "name": "Canvas2DElement",
+                "module": "src/elements/canvas2d/element.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "scaleByPixelRatio",
+              "parameters": [
+                {
+                  "name": "vector",
+                  "type": {
+                    "text": "Vector2D"
+                  }
+                }
+              ],
               "inheritedFrom": {
                 "name": "Canvas2DElement",
                 "module": "src/elements/canvas2d/element.ts"
@@ -5578,6 +6449,7 @@
                   }
                 }
               ],
+              "privacy": "private",
               "return": {
                 "type": {
                   "text": "void"
@@ -5617,6 +6489,9 @@
             {
               "kind": "field",
               "name": "lineWidth",
+              "description": "Width in pixels for drawing lines.",
+              "reflects": true,
+              "attribute": "line-width",
               "inheritedFrom": {
                 "name": "strokeable",
                 "module": "src/mixins/stroke.ts"
@@ -5625,6 +6500,12 @@
             {
               "kind": "field",
               "name": "stroke",
+              "type": {
+                "text": "DrawStyle | null"
+              },
+              "description": "The rendering style for lines. This may be a color or gradient.\r\nWhen set to null, the parent element's style is used. When\r\nset to \"none\", no lines will be drawn.",
+              "reflects": true,
+              "attribute": "stroke",
               "inheritedFrom": {
                 "name": "strokeable",
                 "module": "src/mixins/stroke.ts"
@@ -5641,6 +6522,7 @@
                   }
                 }
               ],
+              "privacy": "private",
               "return": {
                 "type": {
                   "text": "void"
@@ -5667,6 +6549,12 @@
             {
               "kind": "field",
               "name": "fill",
+              "type": {
+                "text": "DrawStyle | null"
+              },
+              "description": "The rendering style inside the element. This may be a color or gradient.\r\nWhen set to null, the parent element's style is used. When\r\nset to \"none\", the inside will be transparent.",
+              "reflects": true,
+              "attribute": "fill",
               "inheritedFrom": {
                 "name": "fillable",
                 "module": "src/mixins/fill.ts"
@@ -5744,7 +6632,6 @@
               "kind": "field",
               "name": "#anchor",
               "privacy": "private",
-              "default": "new Vector2D(0, 0)",
               "inheritedFrom": {
                 "name": "transformeable",
                 "module": "src/mixins/transform.ts"
@@ -5788,6 +6675,18 @@
             },
             {
               "kind": "field",
+              "name": "#angleChangeListener",
+              "privacy": "private",
+              "type": {
+                "text": "ChangeListener<number>"
+              },
+              "inheritedFrom": {
+                "name": "transformeable",
+                "module": "src/mixins/transform.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "angle",
               "inheritedFrom": {
                 "name": "transformeable",
@@ -5815,7 +6714,7 @@
               "name": "#anchorChangeListener",
               "privacy": "private",
               "type": {
-                "text": "ChangeListener<Vector2D>"
+                "text": "ChangeListener<Vector2DBase>"
               },
               "inheritedFrom": {
                 "name": "transformeable",
@@ -5951,6 +6850,27 @@
                   "optional": true,
                   "type": {
                     "text": "Options<Canvas2DImage>"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "standaloneChildren",
+                "module": "src/mixins/children.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "multiple",
+              "return": {
+                "type": {
+                  "text": "Node[]"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "callback",
+                  "type": {
+                    "text": "MultipleCallback"
                   }
                 }
               ],
@@ -6113,6 +7033,19 @@
               }
             },
             {
+              "kind": "field",
+              "name": "#shadow",
+              "privacy": "private",
+              "type": {
+                "text": "Shadow | null"
+              },
+              "default": "null",
+              "inheritedFrom": {
+                "name": "Canvas2DBaseRenderable",
+                "module": "src/elements/canvas2d/renderable.ts"
+              }
+            },
+            {
               "kind": "method",
               "name": "addEventListener",
               "return": {
@@ -6163,6 +7096,7 @@
                   }
                 }
               ],
+              "privacy": "private",
               "inheritedFrom": {
                 "name": "Canvas2DBaseRenderable",
                 "module": "src/elements/canvas2d/renderable.ts"
@@ -6185,6 +7119,7 @@
                   }
                 }
               ],
+              "privacy": "private",
               "inheritedFrom": {
                 "name": "Canvas2DBaseRenderable",
                 "module": "src/elements/canvas2d/renderable.ts"
@@ -6207,6 +7142,7 @@
                   }
                 }
               ],
+              "privacy": "private",
               "inheritedFrom": {
                 "name": "Canvas2DBaseRenderable",
                 "module": "src/elements/canvas2d/renderable.ts"
@@ -6249,6 +7185,7 @@
             {
               "kind": "field",
               "name": "changedSinceRender",
+              "privacy": "private",
               "readonly": true,
               "inheritedFrom": {
                 "name": "Canvas2DBaseRenderable",
@@ -6306,6 +7243,7 @@
                   }
                 }
               ],
+              "privacy": "private",
               "inheritedFrom": {
                 "name": "Canvas2DBaseRenderable",
                 "module": "src/elements/canvas2d/renderable.ts"
@@ -6322,6 +7260,27 @@
                   }
                 }
               ],
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "Canvas2DBaseRenderable",
+                "module": "src/elements/canvas2d/renderable.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#shadowChangeListener",
+              "privacy": "private",
+              "type": {
+                "text": "ChangeListener<Shadow>"
+              },
+              "inheritedFrom": {
+                "name": "Canvas2DBaseRenderable",
+                "module": "src/elements/canvas2d/renderable.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "shadow",
               "inheritedFrom": {
                 "name": "Canvas2DBaseRenderable",
                 "module": "src/elements/canvas2d/renderable.ts"
@@ -6355,6 +7314,7 @@
               "type": {
                 "text": "Canvas2DCanvasElement"
               },
+              "description": "The <c2d-canvas> element that is rendering this element. The <c2d-canvas>\r\nwill be an ancestor of this element.",
               "readonly": true,
               "inheritedFrom": {
                 "name": "Canvas2DElement",
@@ -6379,6 +7339,7 @@
                   }
                 }
               ],
+              "privacy": "private",
               "inheritedFrom": {
                 "name": "Canvas2DElement",
                 "module": "src/elements/canvas2d/element.ts"
@@ -6387,6 +7348,9 @@
             {
               "kind": "field",
               "name": "everyFrame",
+              "type": {
+                "text": "Updater | null"
+              },
               "inheritedFrom": {
                 "name": "Canvas2DElement",
                 "module": "src/elements/canvas2d/element.ts"
@@ -6396,6 +7360,22 @@
               "kind": "field",
               "name": "listen",
               "readonly": true,
+              "inheritedFrom": {
+                "name": "Canvas2DElement",
+                "module": "src/elements/canvas2d/element.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "scaleByPixelRatio",
+              "parameters": [
+                {
+                  "name": "vector",
+                  "type": {
+                    "text": "Vector2D"
+                  }
+                }
+              ],
               "inheritedFrom": {
                 "name": "Canvas2DElement",
                 "module": "src/elements/canvas2d/element.ts"
@@ -6429,6 +7409,20 @@
           "attributes": [
             {
               "name": "stroke",
+              "type": {
+                "text": "DrawStyle | null"
+              },
+              "description": "The rendering style for lines. This may be a color or gradient.\r\nWhen set to null, the parent element's style is used. When\r\nset to \"none\", no lines will be drawn.",
+              "fieldName": "stroke",
+              "inheritedFrom": {
+                "name": "strokeable",
+                "module": "src/mixins/stroke.ts"
+              }
+            },
+            {
+              "name": "line-width",
+              "description": "Width in pixels for drawing lines.",
+              "fieldName": "lineWidth",
               "inheritedFrom": {
                 "name": "strokeable",
                 "module": "src/mixins/stroke.ts"
@@ -6436,6 +7430,11 @@
             },
             {
               "name": "fill",
+              "type": {
+                "text": "DrawStyle | null"
+              },
+              "description": "The rendering style inside the element. This may be a color or gradient.\r\nWhen set to null, the parent element's style is used. When\r\nset to \"none\", the inside will be transparent.",
+              "fieldName": "fill",
               "inheritedFrom": {
                 "name": "fillable",
                 "module": "src/mixins/fill.ts"
@@ -6660,6 +7659,14 @@
             },
             {
               "kind": "field",
+              "name": "#devicePixelRatio",
+              "privacy": "private",
+              "type": {
+                "text": "number"
+              }
+            },
+            {
+              "kind": "field",
               "name": "#frame",
               "privacy": "private",
               "type": {
@@ -6775,6 +7782,9 @@
             {
               "kind": "field",
               "name": "everyFrame",
+              "type": {
+                "text": "Updater | null"
+              },
               "inheritedFrom": {
                 "name": "Canvas2DElement",
                 "module": "src/elements/canvas2d/element.ts"
@@ -6833,7 +7843,8 @@
             },
             {
               "kind": "method",
-              "name": "render"
+              "name": "#render",
+              "privacy": "private"
             },
             {
               "kind": "method",
@@ -6846,6 +7857,11 @@
                   }
                 }
               ]
+            },
+            {
+              "kind": "method",
+              "name": "#updateScale",
+              "privacy": "private"
             },
             {
               "kind": "method",
@@ -6925,6 +7941,27 @@
                   "optional": true,
                   "type": {
                     "text": "Options<Canvas2DImage>"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "standaloneChildren",
+                "module": "src/mixins/children.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "multiple",
+              "return": {
+                "type": {
+                  "text": "Node[]"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "callback",
+                  "type": {
+                    "text": "MultipleCallback"
                   }
                 }
               ],
@@ -7071,6 +8108,7 @@
               "type": {
                 "text": "Canvas2DCanvasElement"
               },
+              "description": "The <c2d-canvas> element that is rendering this element. The <c2d-canvas>\r\nwill be an ancestor of this element.",
               "readonly": true,
               "inheritedFrom": {
                 "name": "Canvas2DElement",
@@ -7095,6 +8133,7 @@
                   }
                 }
               ],
+              "privacy": "private",
               "inheritedFrom": {
                 "name": "Canvas2DElement",
                 "module": "src/elements/canvas2d/element.ts"
@@ -7104,6 +8143,22 @@
               "kind": "field",
               "name": "listen",
               "readonly": true,
+              "inheritedFrom": {
+                "name": "Canvas2DElement",
+                "module": "src/elements/canvas2d/element.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "scaleByPixelRatio",
+              "parameters": [
+                {
+                  "name": "vector",
+                  "type": {
+                    "text": "Vector2D"
+                  }
+                }
+              ],
               "inheritedFrom": {
                 "name": "Canvas2DElement",
                 "module": "src/elements/canvas2d/element.ts"
@@ -7139,14 +8194,6 @@
         {
           "kind": "js",
           "name": "Canvas2DCanvasElement",
-          "declaration": {
-            "name": "Canvas2DCanvasElement",
-            "module": "src/elements/canvas2d/canvas.ts"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "c2d-canvas",
           "declaration": {
             "name": "Canvas2DCanvasElement",
             "module": "src/elements/canvas2d/canvas.ts"
@@ -7191,6 +8238,7 @@
               "type": {
                 "text": "Canvas2DCanvasElement"
               },
+              "description": "The <c2d-canvas> element that is rendering this element. The <c2d-canvas>\r\nwill be an ancestor of this element.",
               "readonly": true
             },
             {
@@ -7210,16 +8258,32 @@
                     "text": "Options<InstanceType<E>>"
                   }
                 }
-              ]
+              ],
+              "privacy": "private"
             },
             {
               "kind": "field",
-              "name": "everyFrame"
+              "name": "everyFrame",
+              "type": {
+                "text": "Updater | null"
+              }
             },
             {
               "kind": "field",
               "name": "listen",
               "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "scaleByPixelRatio",
+              "parameters": [
+                {
+                  "name": "vector",
+                  "type": {
+                    "text": "Vector2D"
+                  }
+                }
+              ]
             }
           ],
           "superclass": {
@@ -7290,36 +8354,10 @@
                   }
                 }
               ],
+              "privacy": "private",
               "return": {
                 "type": {
                   "text": "void"
-                }
-              },
-              "inheritedFrom": {
-                "name": "Canvas2DBaseRenderable",
-                "module": "src/elements/canvas2d/renderable.ts"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "renderLinearGradient",
-              "parameters": [
-                {
-                  "name": "context",
-                  "type": {
-                    "text": "CanvasRenderingContext2D"
-                  }
-                },
-                {
-                  "name": "gradient",
-                  "type": {
-                    "text": "LinearGradient"
-                  }
-                }
-              ],
-              "return": {
-                "type": {
-                  "text": "CanvasGradient"
                 }
               },
               "inheritedFrom": {
@@ -7344,6 +8382,7 @@
                   }
                 }
               ],
+              "privacy": "private",
               "return": {
                 "type": {
                   "text": "CanvasGradient"
@@ -7386,7 +8425,6 @@
               "kind": "field",
               "name": "#anchor",
               "privacy": "private",
-              "default": "new Vector2D(0, 0)",
               "inheritedFrom": {
                 "name": "transformeable",
                 "module": "src/mixins/transform.ts"
@@ -7430,6 +8468,18 @@
             },
             {
               "kind": "field",
+              "name": "#angleChangeListener",
+              "privacy": "private",
+              "type": {
+                "text": "ChangeListener<number>"
+              },
+              "inheritedFrom": {
+                "name": "transformeable",
+                "module": "src/mixins/transform.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "angle",
               "inheritedFrom": {
                 "name": "transformeable",
@@ -7457,7 +8507,7 @@
               "name": "#anchorChangeListener",
               "privacy": "private",
               "type": {
-                "text": "ChangeListener<Vector2D>"
+                "text": "ChangeListener<Vector2DBase>"
               },
               "inheritedFrom": {
                 "name": "transformeable",
@@ -7497,6 +8547,7 @@
                   }
                 }
               ],
+              "privacy": "private",
               "return": {
                 "type": {
                   "text": "void"
@@ -7630,6 +8681,35 @@
                   }
                 }
               ],
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "CanvasGradient"
+                }
+              },
+              "inheritedFrom": {
+                "name": "Canvas2DBaseRenderable",
+                "module": "src/elements/canvas2d/renderable.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "renderLinearGradient",
+              "parameters": [
+                {
+                  "name": "context",
+                  "type": {
+                    "text": "CanvasRenderingContext2D"
+                  }
+                },
+                {
+                  "name": "gradient",
+                  "type": {
+                    "text": "LinearGradient"
+                  }
+                }
+              ],
+              "privacy": "private",
               "return": {
                 "type": {
                   "text": "CanvasGradient"
@@ -7684,17 +8764,17 @@
             },
             {
               "kind": "field",
-              "name": "#position",
+              "name": "#offset",
               "privacy": "private",
               "default": "new Vector2D(0, 0)",
               "inheritedFrom": {
-                "name": "positioned",
-                "module": "src/mixins/position.ts"
+                "name": "offset",
+                "module": "src/mixins/offset.ts"
               }
             },
             {
               "kind": "method",
-              "name": "movePosition",
+              "name": "moveOffset",
               "parameters": [
                 {
                   "name": "x",
@@ -7710,16 +8790,31 @@
                 }
               ],
               "inheritedFrom": {
-                "name": "positioned",
-                "module": "src/mixins/position.ts"
+                "name": "offset",
+                "module": "src/mixins/offset.ts"
               }
             },
             {
               "kind": "field",
-              "name": "position",
+              "name": "#offsetChangeListener",
+              "privacy": "private",
+              "type": {
+                "text": "ChangeListener<Vector2DBase>"
+              },
               "inheritedFrom": {
-                "name": "positioned",
-                "module": "src/mixins/position.ts"
+                "name": "offset",
+                "module": "src/mixins/offset.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "offset",
+              "description": "Position of the element's origin relative to its anchor.",
+              "reflects": true,
+              "attribute": "offset",
+              "inheritedFrom": {
+                "name": "offset",
+                "module": "src/mixins/offset.ts"
               }
             },
             {
@@ -7751,6 +8846,9 @@
             {
               "kind": "field",
               "name": "lineWidth",
+              "description": "Width in pixels for drawing lines.",
+              "reflects": true,
+              "attribute": "line-width",
               "inheritedFrom": {
                 "name": "strokeable",
                 "module": "src/mixins/stroke.ts"
@@ -7759,6 +8857,12 @@
             {
               "kind": "field",
               "name": "stroke",
+              "type": {
+                "text": "DrawStyle | null"
+              },
+              "description": "The rendering style for lines. This may be a color or gradient.\r\nWhen set to null, the parent element's style is used. When\r\nset to \"none\", no lines will be drawn.",
+              "reflects": true,
+              "attribute": "stroke",
               "inheritedFrom": {
                 "name": "strokeable",
                 "module": "src/mixins/stroke.ts"
@@ -7780,6 +8884,12 @@
             {
               "kind": "field",
               "name": "fill",
+              "type": {
+                "text": "DrawStyle | null"
+              },
+              "description": "The rendering style inside the element. This may be a color or gradient.\r\nWhen set to null, the parent element's style is used. When\r\nset to \"none\", the inside will be transparent.",
+              "reflects": true,
+              "attribute": "fill",
               "inheritedFrom": {
                 "name": "fillable",
                 "module": "src/mixins/fill.ts"
@@ -7844,6 +8954,27 @@
                   "optional": true,
                   "type": {
                     "text": "Options<Canvas2DImage>"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "standaloneChildren",
+                "module": "src/mixins/children.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "multiple",
+              "return": {
+                "type": {
+                  "text": "Node[]"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "callback",
+                  "type": {
+                    "text": "MultipleCallback"
                   }
                 }
               ],
@@ -8006,6 +9137,19 @@
               }
             },
             {
+              "kind": "field",
+              "name": "#shadow",
+              "privacy": "private",
+              "type": {
+                "text": "Shadow | null"
+              },
+              "default": "null",
+              "inheritedFrom": {
+                "name": "Canvas2DBaseRenderable",
+                "module": "src/elements/canvas2d/renderable.ts"
+              }
+            },
+            {
               "kind": "method",
               "name": "addEventListener",
               "return": {
@@ -8076,6 +9220,7 @@
             {
               "kind": "field",
               "name": "changedSinceRender",
+              "privacy": "private",
               "readonly": true,
               "inheritedFrom": {
                 "name": "Canvas2DBaseRenderable",
@@ -8133,6 +9278,7 @@
                   }
                 }
               ],
+              "privacy": "private",
               "inheritedFrom": {
                 "name": "Canvas2DBaseRenderable",
                 "module": "src/elements/canvas2d/renderable.ts"
@@ -8149,6 +9295,27 @@
                   }
                 }
               ],
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "Canvas2DBaseRenderable",
+                "module": "src/elements/canvas2d/renderable.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#shadowChangeListener",
+              "privacy": "private",
+              "type": {
+                "text": "ChangeListener<Shadow>"
+              },
+              "inheritedFrom": {
+                "name": "Canvas2DBaseRenderable",
+                "module": "src/elements/canvas2d/renderable.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "shadow",
               "inheritedFrom": {
                 "name": "Canvas2DBaseRenderable",
                 "module": "src/elements/canvas2d/renderable.ts"
@@ -8182,6 +9349,7 @@
               "type": {
                 "text": "Canvas2DCanvasElement"
               },
+              "description": "The <c2d-canvas> element that is rendering this element. The <c2d-canvas>\r\nwill be an ancestor of this element.",
               "readonly": true,
               "inheritedFrom": {
                 "name": "Canvas2DElement",
@@ -8206,6 +9374,7 @@
                   }
                 }
               ],
+              "privacy": "private",
               "inheritedFrom": {
                 "name": "Canvas2DElement",
                 "module": "src/elements/canvas2d/element.ts"
@@ -8214,6 +9383,9 @@
             {
               "kind": "field",
               "name": "everyFrame",
+              "type": {
+                "text": "Updater | null"
+              },
               "inheritedFrom": {
                 "name": "Canvas2DElement",
                 "module": "src/elements/canvas2d/element.ts"
@@ -8223,6 +9395,22 @@
               "kind": "field",
               "name": "listen",
               "readonly": true,
+              "inheritedFrom": {
+                "name": "Canvas2DElement",
+                "module": "src/elements/canvas2d/element.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "scaleByPixelRatio",
+              "parameters": [
+                {
+                  "name": "vector",
+                  "type": {
+                    "text": "Vector2D"
+                  }
+                }
+              ],
               "inheritedFrom": {
                 "name": "Canvas2DElement",
                 "module": "src/elements/canvas2d/element.ts"
@@ -8286,14 +9474,30 @@
               }
             },
             {
-              "name": "position",
+              "name": "offset",
+              "description": "Position of the element's origin relative to its anchor.",
+              "fieldName": "offset",
               "inheritedFrom": {
-                "name": "positioned",
-                "module": "src/mixins/position.ts"
+                "name": "offset",
+                "module": "src/mixins/offset.ts"
               }
             },
             {
               "name": "stroke",
+              "type": {
+                "text": "DrawStyle | null"
+              },
+              "description": "The rendering style for lines. This may be a color or gradient.\r\nWhen set to null, the parent element's style is used. When\r\nset to \"none\", no lines will be drawn.",
+              "fieldName": "stroke",
+              "inheritedFrom": {
+                "name": "strokeable",
+                "module": "src/mixins/stroke.ts"
+              }
+            },
+            {
+              "name": "line-width",
+              "description": "Width in pixels for drawing lines.",
+              "fieldName": "lineWidth",
               "inheritedFrom": {
                 "name": "strokeable",
                 "module": "src/mixins/stroke.ts"
@@ -8301,6 +9505,11 @@
             },
             {
               "name": "fill",
+              "type": {
+                "text": "DrawStyle | null"
+              },
+              "description": "The rendering style inside the element. This may be a color or gradient.\r\nWhen set to null, the parent element's style is used. When\r\nset to \"none\", the inside will be transparent.",
+              "fieldName": "fill",
               "inheritedFrom": {
                 "name": "fillable",
                 "module": "src/mixins/fill.ts"
@@ -8427,36 +9636,10 @@
                   }
                 }
               ],
+              "privacy": "private",
               "return": {
                 "type": {
                   "text": "void"
-                }
-              },
-              "inheritedFrom": {
-                "name": "Canvas2DBaseRenderable",
-                "module": "src/elements/canvas2d/renderable.ts"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "renderLinearGradient",
-              "parameters": [
-                {
-                  "name": "context",
-                  "type": {
-                    "text": "CanvasRenderingContext2D"
-                  }
-                },
-                {
-                  "name": "gradient",
-                  "type": {
-                    "text": "LinearGradient"
-                  }
-                }
-              ],
-              "return": {
-                "type": {
-                  "text": "CanvasGradient"
                 }
               },
               "inheritedFrom": {
@@ -8481,6 +9664,7 @@
                   }
                 }
               ],
+              "privacy": "private",
               "return": {
                 "type": {
                   "text": "CanvasGradient"
@@ -8523,7 +9707,6 @@
               "kind": "field",
               "name": "#anchor",
               "privacy": "private",
-              "default": "new Vector2D(0, 0)",
               "inheritedFrom": {
                 "name": "transformeable",
                 "module": "src/mixins/transform.ts"
@@ -8567,6 +9750,18 @@
             },
             {
               "kind": "field",
+              "name": "#angleChangeListener",
+              "privacy": "private",
+              "type": {
+                "text": "ChangeListener<number>"
+              },
+              "inheritedFrom": {
+                "name": "transformeable",
+                "module": "src/mixins/transform.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "angle",
               "inheritedFrom": {
                 "name": "transformeable",
@@ -8594,7 +9789,7 @@
               "name": "#anchorChangeListener",
               "privacy": "private",
               "type": {
-                "text": "ChangeListener<Vector2D>"
+                "text": "ChangeListener<Vector2DBase>"
               },
               "inheritedFrom": {
                 "name": "transformeable",
@@ -8634,6 +9829,7 @@
                   }
                 }
               ],
+              "privacy": "private",
               "return": {
                 "type": {
                   "text": "void"
@@ -8767,6 +9963,35 @@
                   }
                 }
               ],
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "CanvasGradient"
+                }
+              },
+              "inheritedFrom": {
+                "name": "Canvas2DBaseRenderable",
+                "module": "src/elements/canvas2d/renderable.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "renderLinearGradient",
+              "parameters": [
+                {
+                  "name": "context",
+                  "type": {
+                    "text": "CanvasRenderingContext2D"
+                  }
+                },
+                {
+                  "name": "gradient",
+                  "type": {
+                    "text": "LinearGradient"
+                  }
+                }
+              ],
+              "privacy": "private",
               "return": {
                 "type": {
                   "text": "CanvasGradient"
@@ -8821,17 +10046,17 @@
             },
             {
               "kind": "field",
-              "name": "#position",
+              "name": "#offset",
               "privacy": "private",
               "default": "new Vector2D(0, 0)",
               "inheritedFrom": {
-                "name": "positioned",
-                "module": "src/mixins/position.ts"
+                "name": "offset",
+                "module": "src/mixins/offset.ts"
               }
             },
             {
               "kind": "method",
-              "name": "movePosition",
+              "name": "moveOffset",
               "parameters": [
                 {
                   "name": "x",
@@ -8847,16 +10072,31 @@
                 }
               ],
               "inheritedFrom": {
-                "name": "positioned",
-                "module": "src/mixins/position.ts"
+                "name": "offset",
+                "module": "src/mixins/offset.ts"
               }
             },
             {
               "kind": "field",
-              "name": "position",
+              "name": "#offsetChangeListener",
+              "privacy": "private",
+              "type": {
+                "text": "ChangeListener<Vector2DBase>"
+              },
               "inheritedFrom": {
-                "name": "positioned",
-                "module": "src/mixins/position.ts"
+                "name": "offset",
+                "module": "src/mixins/offset.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "offset",
+              "description": "Position of the element's origin relative to its anchor.",
+              "reflects": true,
+              "attribute": "offset",
+              "inheritedFrom": {
+                "name": "offset",
+                "module": "src/mixins/offset.ts"
               }
             },
             {
@@ -8971,6 +10211,19 @@
               }
             },
             {
+              "kind": "field",
+              "name": "#shadow",
+              "privacy": "private",
+              "type": {
+                "text": "Shadow | null"
+              },
+              "default": "null",
+              "inheritedFrom": {
+                "name": "Canvas2DBaseRenderable",
+                "module": "src/elements/canvas2d/renderable.ts"
+              }
+            },
+            {
               "kind": "method",
               "name": "addEventListener",
               "return": {
@@ -9041,6 +10294,7 @@
             {
               "kind": "field",
               "name": "changedSinceRender",
+              "privacy": "private",
               "readonly": true,
               "inheritedFrom": {
                 "name": "Canvas2DBaseRenderable",
@@ -9098,6 +10352,7 @@
                   }
                 }
               ],
+              "privacy": "private",
               "inheritedFrom": {
                 "name": "Canvas2DBaseRenderable",
                 "module": "src/elements/canvas2d/renderable.ts"
@@ -9114,6 +10369,27 @@
                   }
                 }
               ],
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "Canvas2DBaseRenderable",
+                "module": "src/elements/canvas2d/renderable.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#shadowChangeListener",
+              "privacy": "private",
+              "type": {
+                "text": "ChangeListener<Shadow>"
+              },
+              "inheritedFrom": {
+                "name": "Canvas2DBaseRenderable",
+                "module": "src/elements/canvas2d/renderable.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "shadow",
               "inheritedFrom": {
                 "name": "Canvas2DBaseRenderable",
                 "module": "src/elements/canvas2d/renderable.ts"
@@ -9147,6 +10423,7 @@
               "type": {
                 "text": "Canvas2DCanvasElement"
               },
+              "description": "The <c2d-canvas> element that is rendering this element. The <c2d-canvas>\r\nwill be an ancestor of this element.",
               "readonly": true,
               "inheritedFrom": {
                 "name": "Canvas2DElement",
@@ -9171,6 +10448,7 @@
                   }
                 }
               ],
+              "privacy": "private",
               "inheritedFrom": {
                 "name": "Canvas2DElement",
                 "module": "src/elements/canvas2d/element.ts"
@@ -9179,6 +10457,9 @@
             {
               "kind": "field",
               "name": "everyFrame",
+              "type": {
+                "text": "Updater | null"
+              },
               "inheritedFrom": {
                 "name": "Canvas2DElement",
                 "module": "src/elements/canvas2d/element.ts"
@@ -9188,6 +10469,22 @@
               "kind": "field",
               "name": "listen",
               "readonly": true,
+              "inheritedFrom": {
+                "name": "Canvas2DElement",
+                "module": "src/elements/canvas2d/element.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "scaleByPixelRatio",
+              "parameters": [
+                {
+                  "name": "vector",
+                  "type": {
+                    "text": "Vector2D"
+                  }
+                }
+              ],
               "inheritedFrom": {
                 "name": "Canvas2DElement",
                 "module": "src/elements/canvas2d/element.ts"
@@ -9243,10 +10540,12 @@
               }
             },
             {
-              "name": "position",
+              "name": "offset",
+              "description": "Position of the element's origin relative to its anchor.",
+              "fieldName": "offset",
               "inheritedFrom": {
-                "name": "positioned",
-                "module": "src/mixins/position.ts"
+                "name": "offset",
+                "module": "src/mixins/offset.ts"
               }
             }
           ],
@@ -9447,6 +10746,7 @@
                   }
                 }
               ],
+              "privacy": "private",
               "return": {
                 "type": {
                   "text": "void"
@@ -9495,7 +10795,6 @@
               "kind": "field",
               "name": "#anchor",
               "privacy": "private",
-              "default": "new Vector2D(0, 0)",
               "inheritedFrom": {
                 "name": "transformeable",
                 "module": "src/mixins/transform.ts"
@@ -9539,6 +10838,18 @@
             },
             {
               "kind": "field",
+              "name": "#angleChangeListener",
+              "privacy": "private",
+              "type": {
+                "text": "ChangeListener<number>"
+              },
+              "inheritedFrom": {
+                "name": "transformeable",
+                "module": "src/mixins/transform.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "angle",
               "inheritedFrom": {
                 "name": "transformeable",
@@ -9566,7 +10877,7 @@
               "name": "#anchorChangeListener",
               "privacy": "private",
               "type": {
-                "text": "ChangeListener<Vector2D>"
+                "text": "ChangeListener<Vector2DBase>"
               },
               "inheritedFrom": {
                 "name": "transformeable",
@@ -9606,6 +10917,7 @@
                   }
                 }
               ],
+              "privacy": "private",
               "return": {
                 "type": {
                   "text": "void"
@@ -9747,6 +11059,35 @@
                   }
                 }
               ],
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "CanvasGradient"
+                }
+              },
+              "inheritedFrom": {
+                "name": "Canvas2DBaseRenderable",
+                "module": "src/elements/canvas2d/renderable.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "renderLinearGradient",
+              "parameters": [
+                {
+                  "name": "context",
+                  "type": {
+                    "text": "CanvasRenderingContext2D"
+                  }
+                },
+                {
+                  "name": "gradient",
+                  "type": {
+                    "text": "LinearGradient"
+                  }
+                }
+              ],
+              "privacy": "private",
               "return": {
                 "type": {
                   "text": "CanvasGradient"
@@ -9785,17 +11126,17 @@
             },
             {
               "kind": "field",
-              "name": "#position",
+              "name": "#offset",
               "privacy": "private",
               "default": "new Vector2D(0, 0)",
               "inheritedFrom": {
-                "name": "positioned",
-                "module": "src/mixins/position.ts"
+                "name": "offset",
+                "module": "src/mixins/offset.ts"
               }
             },
             {
               "kind": "method",
-              "name": "movePosition",
+              "name": "moveOffset",
               "parameters": [
                 {
                   "name": "x",
@@ -9811,16 +11152,31 @@
                 }
               ],
               "inheritedFrom": {
-                "name": "positioned",
-                "module": "src/mixins/position.ts"
+                "name": "offset",
+                "module": "src/mixins/offset.ts"
               }
             },
             {
               "kind": "field",
-              "name": "position",
+              "name": "#offsetChangeListener",
+              "privacy": "private",
+              "type": {
+                "text": "ChangeListener<Vector2DBase>"
+              },
               "inheritedFrom": {
-                "name": "positioned",
-                "module": "src/mixins/position.ts"
+                "name": "offset",
+                "module": "src/mixins/offset.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "offset",
+              "description": "Position of the element's origin relative to its anchor.",
+              "reflects": true,
+              "attribute": "offset",
+              "inheritedFrom": {
+                "name": "offset",
+                "module": "src/mixins/offset.ts"
               }
             },
             {
@@ -9882,6 +11238,27 @@
                   "optional": true,
                   "type": {
                     "text": "Options<Canvas2DImage>"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "standaloneChildren",
+                "module": "src/mixins/children.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "multiple",
+              "return": {
+                "type": {
+                  "text": "Node[]"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "callback",
+                  "type": {
+                    "text": "MultipleCallback"
                   }
                 }
               ],
@@ -10044,6 +11421,19 @@
               }
             },
             {
+              "kind": "field",
+              "name": "#shadow",
+              "privacy": "private",
+              "type": {
+                "text": "Shadow | null"
+              },
+              "default": "null",
+              "inheritedFrom": {
+                "name": "Canvas2DBaseRenderable",
+                "module": "src/elements/canvas2d/renderable.ts"
+              }
+            },
+            {
               "kind": "method",
               "name": "addEventListener",
               "return": {
@@ -10079,28 +11469,6 @@
             },
             {
               "kind": "method",
-              "name": "renderLinearGradient",
-              "parameters": [
-                {
-                  "name": "context",
-                  "type": {
-                    "text": "CanvasRenderingContext2D"
-                  }
-                },
-                {
-                  "name": "gradient",
-                  "type": {
-                    "text": "LinearGradient"
-                  }
-                }
-              ],
-              "inheritedFrom": {
-                "name": "Canvas2DBaseRenderable",
-                "module": "src/elements/canvas2d/renderable.ts"
-              }
-            },
-            {
-              "kind": "method",
               "name": "renderRadialGradient",
               "parameters": [
                 {
@@ -10116,6 +11484,7 @@
                   }
                 }
               ],
+              "privacy": "private",
               "inheritedFrom": {
                 "name": "Canvas2DBaseRenderable",
                 "module": "src/elements/canvas2d/renderable.ts"
@@ -10158,6 +11527,7 @@
             {
               "kind": "field",
               "name": "changedSinceRender",
+              "privacy": "private",
               "readonly": true,
               "inheritedFrom": {
                 "name": "Canvas2DBaseRenderable",
@@ -10215,6 +11585,7 @@
                   }
                 }
               ],
+              "privacy": "private",
               "inheritedFrom": {
                 "name": "Canvas2DBaseRenderable",
                 "module": "src/elements/canvas2d/renderable.ts"
@@ -10231,6 +11602,27 @@
                   }
                 }
               ],
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "Canvas2DBaseRenderable",
+                "module": "src/elements/canvas2d/renderable.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#shadowChangeListener",
+              "privacy": "private",
+              "type": {
+                "text": "ChangeListener<Shadow>"
+              },
+              "inheritedFrom": {
+                "name": "Canvas2DBaseRenderable",
+                "module": "src/elements/canvas2d/renderable.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "shadow",
               "inheritedFrom": {
                 "name": "Canvas2DBaseRenderable",
                 "module": "src/elements/canvas2d/renderable.ts"
@@ -10264,6 +11656,7 @@
               "type": {
                 "text": "Canvas2DCanvasElement"
               },
+              "description": "The <c2d-canvas> element that is rendering this element. The <c2d-canvas>\r\nwill be an ancestor of this element.",
               "readonly": true,
               "inheritedFrom": {
                 "name": "Canvas2DElement",
@@ -10288,6 +11681,7 @@
                   }
                 }
               ],
+              "privacy": "private",
               "inheritedFrom": {
                 "name": "Canvas2DElement",
                 "module": "src/elements/canvas2d/element.ts"
@@ -10296,6 +11690,9 @@
             {
               "kind": "field",
               "name": "everyFrame",
+              "type": {
+                "text": "Updater | null"
+              },
               "inheritedFrom": {
                 "name": "Canvas2DElement",
                 "module": "src/elements/canvas2d/element.ts"
@@ -10305,6 +11702,22 @@
               "kind": "field",
               "name": "listen",
               "readonly": true,
+              "inheritedFrom": {
+                "name": "Canvas2DElement",
+                "module": "src/elements/canvas2d/element.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "scaleByPixelRatio",
+              "parameters": [
+                {
+                  "name": "vector",
+                  "type": {
+                    "text": "Vector2D"
+                  }
+                }
+              ],
               "inheritedFrom": {
                 "name": "Canvas2DElement",
                 "module": "src/elements/canvas2d/element.ts"
@@ -10360,10 +11773,12 @@
               }
             },
             {
-              "name": "position",
+              "name": "offset",
+              "description": "Position of the element's origin relative to its anchor.",
+              "fieldName": "offset",
               "inheritedFrom": {
-                "name": "positioned",
-                "module": "src/mixins/position.ts"
+                "name": "offset",
+                "module": "src/mixins/offset.ts"
               }
             }
           ],
@@ -10493,6 +11908,7 @@
                   }
                 }
               ],
+              "privacy": "private",
               "return": {
                 "type": {
                   "text": "void"
@@ -10524,7 +11940,6 @@
               "kind": "field",
               "name": "#anchor",
               "privacy": "private",
-              "default": "new Vector2D(0, 0)",
               "inheritedFrom": {
                 "name": "transformeable",
                 "module": "src/mixins/transform.ts"
@@ -10568,6 +11983,18 @@
             },
             {
               "kind": "field",
+              "name": "#angleChangeListener",
+              "privacy": "private",
+              "type": {
+                "text": "ChangeListener<number>"
+              },
+              "inheritedFrom": {
+                "name": "transformeable",
+                "module": "src/mixins/transform.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "angle",
               "inheritedFrom": {
                 "name": "transformeable",
@@ -10595,7 +12022,7 @@
               "name": "#anchorChangeListener",
               "privacy": "private",
               "type": {
-                "text": "ChangeListener<Vector2D>"
+                "text": "ChangeListener<Vector2DBase>"
               },
               "inheritedFrom": {
                 "name": "transformeable",
@@ -10635,6 +12062,7 @@
                   }
                 }
               ],
+              "privacy": "private",
               "return": {
                 "type": {
                   "text": "void"
@@ -10805,6 +12233,19 @@
               }
             },
             {
+              "kind": "field",
+              "name": "#shadow",
+              "privacy": "private",
+              "type": {
+                "text": "Shadow | null"
+              },
+              "default": "null",
+              "inheritedFrom": {
+                "name": "Canvas2DBaseRenderable",
+                "module": "src/elements/canvas2d/renderable.ts"
+              }
+            },
+            {
               "kind": "method",
               "name": "addEventListener",
               "return": {
@@ -10855,6 +12296,7 @@
                   }
                 }
               ],
+              "privacy": "private",
               "inheritedFrom": {
                 "name": "Canvas2DBaseRenderable",
                 "module": "src/elements/canvas2d/renderable.ts"
@@ -10877,6 +12319,7 @@
                   }
                 }
               ],
+              "privacy": "private",
               "inheritedFrom": {
                 "name": "Canvas2DBaseRenderable",
                 "module": "src/elements/canvas2d/renderable.ts"
@@ -10899,6 +12342,7 @@
                   }
                 }
               ],
+              "privacy": "private",
               "inheritedFrom": {
                 "name": "Canvas2DBaseRenderable",
                 "module": "src/elements/canvas2d/renderable.ts"
@@ -10941,6 +12385,7 @@
             {
               "kind": "field",
               "name": "changedSinceRender",
+              "privacy": "private",
               "readonly": true,
               "inheritedFrom": {
                 "name": "Canvas2DBaseRenderable",
@@ -10998,6 +12443,7 @@
                   }
                 }
               ],
+              "privacy": "private",
               "inheritedFrom": {
                 "name": "Canvas2DBaseRenderable",
                 "module": "src/elements/canvas2d/renderable.ts"
@@ -11014,6 +12460,27 @@
                   }
                 }
               ],
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "Canvas2DBaseRenderable",
+                "module": "src/elements/canvas2d/renderable.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#shadowChangeListener",
+              "privacy": "private",
+              "type": {
+                "text": "ChangeListener<Shadow>"
+              },
+              "inheritedFrom": {
+                "name": "Canvas2DBaseRenderable",
+                "module": "src/elements/canvas2d/renderable.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "shadow",
               "inheritedFrom": {
                 "name": "Canvas2DBaseRenderable",
                 "module": "src/elements/canvas2d/renderable.ts"
@@ -11047,6 +12514,7 @@
               "type": {
                 "text": "Canvas2DCanvasElement"
               },
+              "description": "The <c2d-canvas> element that is rendering this element. The <c2d-canvas>\r\nwill be an ancestor of this element.",
               "readonly": true,
               "inheritedFrom": {
                 "name": "Canvas2DElement",
@@ -11071,6 +12539,7 @@
                   }
                 }
               ],
+              "privacy": "private",
               "inheritedFrom": {
                 "name": "Canvas2DElement",
                 "module": "src/elements/canvas2d/element.ts"
@@ -11079,6 +12548,9 @@
             {
               "kind": "field",
               "name": "everyFrame",
+              "type": {
+                "text": "Updater | null"
+              },
               "inheritedFrom": {
                 "name": "Canvas2DElement",
                 "module": "src/elements/canvas2d/element.ts"
@@ -11088,6 +12560,22 @@
               "kind": "field",
               "name": "listen",
               "readonly": true,
+              "inheritedFrom": {
+                "name": "Canvas2DElement",
+                "module": "src/elements/canvas2d/element.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "scaleByPixelRatio",
+              "parameters": [
+                {
+                  "name": "vector",
+                  "type": {
+                    "text": "Vector2D"
+                  }
+                }
+              ],
               "inheritedFrom": {
                 "name": "Canvas2DElement",
                 "module": "src/elements/canvas2d/element.ts"
@@ -11257,6 +12745,7 @@
                   }
                 }
               ],
+              "privacy": "private",
               "return": {
                 "type": {
                   "text": "void"
@@ -11284,6 +12773,7 @@
                   }
                 }
               ],
+              "privacy": "private",
               "return": {
                 "type": {
                   "text": "CanvasGradient"
@@ -11311,6 +12801,7 @@
                   }
                 }
               ],
+              "privacy": "private",
               "return": {
                 "type": {
                   "text": "CanvasGradient"
@@ -11338,6 +12829,7 @@
                   }
                 }
               ],
+              "privacy": "private",
               "return": {
                 "type": {
                   "text": "CanvasGradient"
@@ -11377,6 +12869,9 @@
             {
               "kind": "field",
               "name": "lineWidth",
+              "description": "Width in pixels for drawing lines.",
+              "reflects": true,
+              "attribute": "line-width",
               "inheritedFrom": {
                 "name": "strokeable",
                 "module": "src/mixins/stroke.ts"
@@ -11385,6 +12880,12 @@
             {
               "kind": "field",
               "name": "stroke",
+              "type": {
+                "text": "DrawStyle | null"
+              },
+              "description": "The rendering style for lines. This may be a color or gradient.\r\nWhen set to null, the parent element's style is used. When\r\nset to \"none\", no lines will be drawn.",
+              "reflects": true,
+              "attribute": "stroke",
               "inheritedFrom": {
                 "name": "strokeable",
                 "module": "src/mixins/stroke.ts"
@@ -11401,6 +12902,7 @@
                   }
                 }
               ],
+              "privacy": "private",
               "return": {
                 "type": {
                   "text": "void"
@@ -11432,7 +12934,6 @@
               "kind": "field",
               "name": "#anchor",
               "privacy": "private",
-              "default": "new Vector2D(0, 0)",
               "inheritedFrom": {
                 "name": "transformeable",
                 "module": "src/mixins/transform.ts"
@@ -11476,6 +12977,18 @@
             },
             {
               "kind": "field",
+              "name": "#angleChangeListener",
+              "privacy": "private",
+              "type": {
+                "text": "ChangeListener<number>"
+              },
+              "inheritedFrom": {
+                "name": "transformeable",
+                "module": "src/mixins/transform.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "angle",
               "inheritedFrom": {
                 "name": "transformeable",
@@ -11503,7 +13016,7 @@
               "name": "#anchorChangeListener",
               "privacy": "private",
               "type": {
-                "text": "ChangeListener<Vector2D>"
+                "text": "ChangeListener<Vector2DBase>"
               },
               "inheritedFrom": {
                 "name": "transformeable",
@@ -11666,6 +13179,27 @@
             },
             {
               "kind": "method",
+              "name": "multiple",
+              "return": {
+                "type": {
+                  "text": "Node[]"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "callback",
+                  "type": {
+                    "text": "MultipleCallback"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "standaloneChildren",
+                "module": "src/mixins/children.ts"
+              }
+            },
+            {
+              "kind": "method",
               "name": "line",
               "return": {
                 "type": {
@@ -11818,6 +13352,19 @@
               }
             },
             {
+              "kind": "field",
+              "name": "#shadow",
+              "privacy": "private",
+              "type": {
+                "text": "Shadow | null"
+              },
+              "default": "null",
+              "inheritedFrom": {
+                "name": "Canvas2DBaseRenderable",
+                "module": "src/elements/canvas2d/renderable.ts"
+              }
+            },
+            {
               "kind": "method",
               "name": "addEventListener",
               "return": {
@@ -11888,6 +13435,7 @@
             {
               "kind": "field",
               "name": "changedSinceRender",
+              "privacy": "private",
               "readonly": true,
               "inheritedFrom": {
                 "name": "Canvas2DBaseRenderable",
@@ -11945,6 +13493,7 @@
                   }
                 }
               ],
+              "privacy": "private",
               "inheritedFrom": {
                 "name": "Canvas2DBaseRenderable",
                 "module": "src/elements/canvas2d/renderable.ts"
@@ -11961,6 +13510,27 @@
                   }
                 }
               ],
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "Canvas2DBaseRenderable",
+                "module": "src/elements/canvas2d/renderable.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#shadowChangeListener",
+              "privacy": "private",
+              "type": {
+                "text": "ChangeListener<Shadow>"
+              },
+              "inheritedFrom": {
+                "name": "Canvas2DBaseRenderable",
+                "module": "src/elements/canvas2d/renderable.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "shadow",
               "inheritedFrom": {
                 "name": "Canvas2DBaseRenderable",
                 "module": "src/elements/canvas2d/renderable.ts"
@@ -11994,6 +13564,7 @@
               "type": {
                 "text": "Canvas2DCanvasElement"
               },
+              "description": "The <c2d-canvas> element that is rendering this element. The <c2d-canvas>\r\nwill be an ancestor of this element.",
               "readonly": true,
               "inheritedFrom": {
                 "name": "Canvas2DElement",
@@ -12018,6 +13589,7 @@
                   }
                 }
               ],
+              "privacy": "private",
               "inheritedFrom": {
                 "name": "Canvas2DElement",
                 "module": "src/elements/canvas2d/element.ts"
@@ -12026,6 +13598,9 @@
             {
               "kind": "field",
               "name": "everyFrame",
+              "type": {
+                "text": "Updater | null"
+              },
               "inheritedFrom": {
                 "name": "Canvas2DElement",
                 "module": "src/elements/canvas2d/element.ts"
@@ -12035,6 +13610,22 @@
               "kind": "field",
               "name": "listen",
               "readonly": true,
+              "inheritedFrom": {
+                "name": "Canvas2DElement",
+                "module": "src/elements/canvas2d/element.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "scaleByPixelRatio",
+              "parameters": [
+                {
+                  "name": "vector",
+                  "type": {
+                    "text": "Vector2D"
+                  }
+                }
+              ],
               "inheritedFrom": {
                 "name": "Canvas2DElement",
                 "module": "src/elements/canvas2d/element.ts"
@@ -12064,6 +13655,20 @@
           "attributes": [
             {
               "name": "stroke",
+              "type": {
+                "text": "DrawStyle | null"
+              },
+              "description": "The rendering style for lines. This may be a color or gradient.\r\nWhen set to null, the parent element's style is used. When\r\nset to \"none\", no lines will be drawn.",
+              "fieldName": "stroke",
+              "inheritedFrom": {
+                "name": "strokeable",
+                "module": "src/mixins/stroke.ts"
+              }
+            },
+            {
+              "name": "line-width",
+              "description": "Width in pixels for drawing lines.",
+              "fieldName": "lineWidth",
               "inheritedFrom": {
                 "name": "strokeable",
                 "module": "src/mixins/stroke.ts"
@@ -12261,36 +13866,10 @@
                   }
                 }
               ],
+              "privacy": "private",
               "return": {
                 "type": {
                   "text": "void"
-                }
-              },
-              "inheritedFrom": {
-                "name": "Canvas2DBaseRenderable",
-                "module": "src/elements/canvas2d/renderable.ts"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "renderLinearGradient",
-              "parameters": [
-                {
-                  "name": "context",
-                  "type": {
-                    "text": "CanvasRenderingContext2D"
-                  }
-                },
-                {
-                  "name": "gradient",
-                  "type": {
-                    "text": "LinearGradient"
-                  }
-                }
-              ],
-              "return": {
-                "type": {
-                  "text": "CanvasGradient"
                 }
               },
               "inheritedFrom": {
@@ -12315,6 +13894,7 @@
                   }
                 }
               ],
+              "privacy": "private",
               "return": {
                 "type": {
                   "text": "CanvasGradient"
@@ -12329,7 +13909,6 @@
               "kind": "field",
               "name": "#anchor",
               "privacy": "private",
-              "default": "new Vector2D(0, 0)",
               "inheritedFrom": {
                 "name": "transformeable",
                 "module": "src/mixins/transform.ts"
@@ -12373,6 +13952,18 @@
             },
             {
               "kind": "field",
+              "name": "#angleChangeListener",
+              "privacy": "private",
+              "type": {
+                "text": "ChangeListener<number>"
+              },
+              "inheritedFrom": {
+                "name": "transformeable",
+                "module": "src/mixins/transform.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "angle",
               "inheritedFrom": {
                 "name": "transformeable",
@@ -12400,7 +13991,7 @@
               "name": "#anchorChangeListener",
               "privacy": "private",
               "type": {
-                "text": "ChangeListener<Vector2D>"
+                "text": "ChangeListener<Vector2DBase>"
               },
               "inheritedFrom": {
                 "name": "transformeable",
@@ -12440,6 +14031,7 @@
                   }
                 }
               ],
+              "privacy": "private",
               "return": {
                 "type": {
                   "text": "void"
@@ -12581,6 +14173,35 @@
                   }
                 }
               ],
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "CanvasGradient"
+                }
+              },
+              "inheritedFrom": {
+                "name": "Canvas2DBaseRenderable",
+                "module": "src/elements/canvas2d/renderable.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "renderLinearGradient",
+              "parameters": [
+                {
+                  "name": "context",
+                  "type": {
+                    "text": "CanvasRenderingContext2D"
+                  }
+                },
+                {
+                  "name": "gradient",
+                  "type": {
+                    "text": "LinearGradient"
+                  }
+                }
+              ],
+              "privacy": "private",
               "return": {
                 "type": {
                   "text": "CanvasGradient"
@@ -12635,17 +14256,17 @@
             },
             {
               "kind": "field",
-              "name": "#position",
+              "name": "#offset",
               "privacy": "private",
               "default": "new Vector2D(0, 0)",
               "inheritedFrom": {
-                "name": "positioned",
-                "module": "src/mixins/position.ts"
+                "name": "offset",
+                "module": "src/mixins/offset.ts"
               }
             },
             {
               "kind": "method",
-              "name": "movePosition",
+              "name": "moveOffset",
               "parameters": [
                 {
                   "name": "x",
@@ -12661,16 +14282,31 @@
                 }
               ],
               "inheritedFrom": {
-                "name": "positioned",
-                "module": "src/mixins/position.ts"
+                "name": "offset",
+                "module": "src/mixins/offset.ts"
               }
             },
             {
               "kind": "field",
-              "name": "position",
+              "name": "#offsetChangeListener",
+              "privacy": "private",
+              "type": {
+                "text": "ChangeListener<Vector2DBase>"
+              },
               "inheritedFrom": {
-                "name": "positioned",
-                "module": "src/mixins/position.ts"
+                "name": "offset",
+                "module": "src/mixins/offset.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "offset",
+              "description": "Position of the element's origin relative to its anchor.",
+              "reflects": true,
+              "attribute": "offset",
+              "inheritedFrom": {
+                "name": "offset",
+                "module": "src/mixins/offset.ts"
               }
             },
             {
@@ -12702,6 +14338,9 @@
             {
               "kind": "field",
               "name": "lineWidth",
+              "description": "Width in pixels for drawing lines.",
+              "reflects": true,
+              "attribute": "line-width",
               "inheritedFrom": {
                 "name": "strokeable",
                 "module": "src/mixins/stroke.ts"
@@ -12710,6 +14349,12 @@
             {
               "kind": "field",
               "name": "stroke",
+              "type": {
+                "text": "DrawStyle | null"
+              },
+              "description": "The rendering style for lines. This may be a color or gradient.\r\nWhen set to null, the parent element's style is used. When\r\nset to \"none\", no lines will be drawn.",
+              "reflects": true,
+              "attribute": "stroke",
               "inheritedFrom": {
                 "name": "strokeable",
                 "module": "src/mixins/stroke.ts"
@@ -12731,6 +14376,12 @@
             {
               "kind": "field",
               "name": "fill",
+              "type": {
+                "text": "DrawStyle | null"
+              },
+              "description": "The rendering style inside the element. This may be a color or gradient.\r\nWhen set to null, the parent element's style is used. When\r\nset to \"none\", the inside will be transparent.",
+              "reflects": true,
+              "attribute": "fill",
               "inheritedFrom": {
                 "name": "fillable",
                 "module": "src/mixins/fill.ts"
@@ -12795,6 +14446,27 @@
                   "optional": true,
                   "type": {
                     "text": "Options<Canvas2DImage>"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "standaloneChildren",
+                "module": "src/mixins/children.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "multiple",
+              "return": {
+                "type": {
+                  "text": "Node[]"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "callback",
+                  "type": {
+                    "text": "MultipleCallback"
                   }
                 }
               ],
@@ -12957,6 +14629,19 @@
               }
             },
             {
+              "kind": "field",
+              "name": "#shadow",
+              "privacy": "private",
+              "type": {
+                "text": "Shadow | null"
+              },
+              "default": "null",
+              "inheritedFrom": {
+                "name": "Canvas2DBaseRenderable",
+                "module": "src/elements/canvas2d/renderable.ts"
+              }
+            },
+            {
               "kind": "method",
               "name": "addEventListener",
               "return": {
@@ -13027,6 +14712,7 @@
             {
               "kind": "field",
               "name": "changedSinceRender",
+              "privacy": "private",
               "readonly": true,
               "inheritedFrom": {
                 "name": "Canvas2DBaseRenderable",
@@ -13084,6 +14770,7 @@
                   }
                 }
               ],
+              "privacy": "private",
               "inheritedFrom": {
                 "name": "Canvas2DBaseRenderable",
                 "module": "src/elements/canvas2d/renderable.ts"
@@ -13100,6 +14787,27 @@
                   }
                 }
               ],
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "Canvas2DBaseRenderable",
+                "module": "src/elements/canvas2d/renderable.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#shadowChangeListener",
+              "privacy": "private",
+              "type": {
+                "text": "ChangeListener<Shadow>"
+              },
+              "inheritedFrom": {
+                "name": "Canvas2DBaseRenderable",
+                "module": "src/elements/canvas2d/renderable.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "shadow",
               "inheritedFrom": {
                 "name": "Canvas2DBaseRenderable",
                 "module": "src/elements/canvas2d/renderable.ts"
@@ -13133,6 +14841,7 @@
               "type": {
                 "text": "Canvas2DCanvasElement"
               },
+              "description": "The <c2d-canvas> element that is rendering this element. The <c2d-canvas>\r\nwill be an ancestor of this element.",
               "readonly": true,
               "inheritedFrom": {
                 "name": "Canvas2DElement",
@@ -13157,6 +14866,7 @@
                   }
                 }
               ],
+              "privacy": "private",
               "inheritedFrom": {
                 "name": "Canvas2DElement",
                 "module": "src/elements/canvas2d/element.ts"
@@ -13165,6 +14875,9 @@
             {
               "kind": "field",
               "name": "everyFrame",
+              "type": {
+                "text": "Updater | null"
+              },
               "inheritedFrom": {
                 "name": "Canvas2DElement",
                 "module": "src/elements/canvas2d/element.ts"
@@ -13174,6 +14887,22 @@
               "kind": "field",
               "name": "listen",
               "readonly": true,
+              "inheritedFrom": {
+                "name": "Canvas2DElement",
+                "module": "src/elements/canvas2d/element.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "scaleByPixelRatio",
+              "parameters": [
+                {
+                  "name": "vector",
+                  "type": {
+                    "text": "Vector2D"
+                  }
+                }
+              ],
               "inheritedFrom": {
                 "name": "Canvas2DElement",
                 "module": "src/elements/canvas2d/element.ts"
@@ -13237,14 +14966,30 @@
               }
             },
             {
-              "name": "position",
+              "name": "offset",
+              "description": "Position of the element's origin relative to its anchor.",
+              "fieldName": "offset",
               "inheritedFrom": {
-                "name": "positioned",
-                "module": "src/mixins/position.ts"
+                "name": "offset",
+                "module": "src/mixins/offset.ts"
               }
             },
             {
               "name": "stroke",
+              "type": {
+                "text": "DrawStyle | null"
+              },
+              "description": "The rendering style for lines. This may be a color or gradient.\r\nWhen set to null, the parent element's style is used. When\r\nset to \"none\", no lines will be drawn.",
+              "fieldName": "stroke",
+              "inheritedFrom": {
+                "name": "strokeable",
+                "module": "src/mixins/stroke.ts"
+              }
+            },
+            {
+              "name": "line-width",
+              "description": "Width in pixels for drawing lines.",
+              "fieldName": "lineWidth",
               "inheritedFrom": {
                 "name": "strokeable",
                 "module": "src/mixins/stroke.ts"
@@ -13252,6 +14997,11 @@
             },
             {
               "name": "fill",
+              "type": {
+                "text": "DrawStyle | null"
+              },
+              "description": "The rendering style inside the element. This may be a color or gradient.\r\nWhen set to null, the parent element's style is used. When\r\nset to \"none\", the inside will be transparent.",
+              "fieldName": "fill",
               "inheritedFrom": {
                 "name": "fillable",
                 "module": "src/mixins/fill.ts"
@@ -13360,36 +15110,10 @@
                   }
                 }
               ],
+              "privacy": "private",
               "return": {
                 "type": {
                   "text": "void"
-                }
-              },
-              "inheritedFrom": {
-                "name": "Canvas2DBaseRenderable",
-                "module": "src/elements/canvas2d/renderable.ts"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "renderLinearGradient",
-              "parameters": [
-                {
-                  "name": "context",
-                  "type": {
-                    "text": "CanvasRenderingContext2D"
-                  }
-                },
-                {
-                  "name": "gradient",
-                  "type": {
-                    "text": "LinearGradient"
-                  }
-                }
-              ],
-              "return": {
-                "type": {
-                  "text": "CanvasGradient"
                 }
               },
               "inheritedFrom": {
@@ -13414,6 +15138,7 @@
                   }
                 }
               ],
+              "privacy": "private",
               "return": {
                 "type": {
                   "text": "CanvasGradient"
@@ -13428,7 +15153,6 @@
               "kind": "field",
               "name": "#anchor",
               "privacy": "private",
-              "default": "new Vector2D(0, 0)",
               "inheritedFrom": {
                 "name": "transformeable",
                 "module": "src/mixins/transform.ts"
@@ -13472,6 +15196,18 @@
             },
             {
               "kind": "field",
+              "name": "#angleChangeListener",
+              "privacy": "private",
+              "type": {
+                "text": "ChangeListener<number>"
+              },
+              "inheritedFrom": {
+                "name": "transformeable",
+                "module": "src/mixins/transform.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "angle",
               "inheritedFrom": {
                 "name": "transformeable",
@@ -13499,7 +15235,7 @@
               "name": "#anchorChangeListener",
               "privacy": "private",
               "type": {
-                "text": "ChangeListener<Vector2D>"
+                "text": "ChangeListener<Vector2DBase>"
               },
               "inheritedFrom": {
                 "name": "transformeable",
@@ -13539,6 +15275,7 @@
                   }
                 }
               ],
+              "privacy": "private",
               "return": {
                 "type": {
                   "text": "void"
@@ -13680,6 +15417,35 @@
                   }
                 }
               ],
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "CanvasGradient"
+                }
+              },
+              "inheritedFrom": {
+                "name": "Canvas2DBaseRenderable",
+                "module": "src/elements/canvas2d/renderable.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "renderLinearGradient",
+              "parameters": [
+                {
+                  "name": "context",
+                  "type": {
+                    "text": "CanvasRenderingContext2D"
+                  }
+                },
+                {
+                  "name": "gradient",
+                  "type": {
+                    "text": "LinearGradient"
+                  }
+                }
+              ],
+              "privacy": "private",
               "return": {
                 "type": {
                   "text": "CanvasGradient"
@@ -13734,17 +15500,17 @@
             },
             {
               "kind": "field",
-              "name": "#position",
+              "name": "#offset",
               "privacy": "private",
               "default": "new Vector2D(0, 0)",
               "inheritedFrom": {
-                "name": "positioned",
-                "module": "src/mixins/position.ts"
+                "name": "offset",
+                "module": "src/mixins/offset.ts"
               }
             },
             {
               "kind": "method",
-              "name": "movePosition",
+              "name": "moveOffset",
               "parameters": [
                 {
                   "name": "x",
@@ -13760,16 +15526,31 @@
                 }
               ],
               "inheritedFrom": {
-                "name": "positioned",
-                "module": "src/mixins/position.ts"
+                "name": "offset",
+                "module": "src/mixins/offset.ts"
               }
             },
             {
               "kind": "field",
-              "name": "position",
+              "name": "#offsetChangeListener",
+              "privacy": "private",
+              "type": {
+                "text": "ChangeListener<Vector2DBase>"
+              },
               "inheritedFrom": {
-                "name": "positioned",
-                "module": "src/mixins/position.ts"
+                "name": "offset",
+                "module": "src/mixins/offset.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "offset",
+              "description": "Position of the element's origin relative to its anchor.",
+              "reflects": true,
+              "attribute": "offset",
+              "inheritedFrom": {
+                "name": "offset",
+                "module": "src/mixins/offset.ts"
               }
             },
             {
@@ -13884,6 +15665,19 @@
               }
             },
             {
+              "kind": "field",
+              "name": "#shadow",
+              "privacy": "private",
+              "type": {
+                "text": "Shadow | null"
+              },
+              "default": "null",
+              "inheritedFrom": {
+                "name": "Canvas2DBaseRenderable",
+                "module": "src/elements/canvas2d/renderable.ts"
+              }
+            },
+            {
               "kind": "method",
               "name": "addEventListener",
               "return": {
@@ -13954,6 +15748,7 @@
             {
               "kind": "field",
               "name": "changedSinceRender",
+              "privacy": "private",
               "readonly": true,
               "inheritedFrom": {
                 "name": "Canvas2DBaseRenderable",
@@ -14011,6 +15806,7 @@
                   }
                 }
               ],
+              "privacy": "private",
               "inheritedFrom": {
                 "name": "Canvas2DBaseRenderable",
                 "module": "src/elements/canvas2d/renderable.ts"
@@ -14027,6 +15823,27 @@
                   }
                 }
               ],
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "Canvas2DBaseRenderable",
+                "module": "src/elements/canvas2d/renderable.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#shadowChangeListener",
+              "privacy": "private",
+              "type": {
+                "text": "ChangeListener<Shadow>"
+              },
+              "inheritedFrom": {
+                "name": "Canvas2DBaseRenderable",
+                "module": "src/elements/canvas2d/renderable.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "shadow",
               "inheritedFrom": {
                 "name": "Canvas2DBaseRenderable",
                 "module": "src/elements/canvas2d/renderable.ts"
@@ -14060,6 +15877,7 @@
               "type": {
                 "text": "Canvas2DCanvasElement"
               },
+              "description": "The <c2d-canvas> element that is rendering this element. The <c2d-canvas>\r\nwill be an ancestor of this element.",
               "readonly": true,
               "inheritedFrom": {
                 "name": "Canvas2DElement",
@@ -14084,6 +15902,7 @@
                   }
                 }
               ],
+              "privacy": "private",
               "inheritedFrom": {
                 "name": "Canvas2DElement",
                 "module": "src/elements/canvas2d/element.ts"
@@ -14092,6 +15911,9 @@
             {
               "kind": "field",
               "name": "everyFrame",
+              "type": {
+                "text": "Updater | null"
+              },
               "inheritedFrom": {
                 "name": "Canvas2DElement",
                 "module": "src/elements/canvas2d/element.ts"
@@ -14101,6 +15923,22 @@
               "kind": "field",
               "name": "listen",
               "readonly": true,
+              "inheritedFrom": {
+                "name": "Canvas2DElement",
+                "module": "src/elements/canvas2d/element.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "scaleByPixelRatio",
+              "parameters": [
+                {
+                  "name": "vector",
+                  "type": {
+                    "text": "Vector2D"
+                  }
+                }
+              ],
               "inheritedFrom": {
                 "name": "Canvas2DElement",
                 "module": "src/elements/canvas2d/element.ts"
@@ -14156,10 +15994,12 @@
               }
             },
             {
-              "name": "position",
+              "name": "offset",
+              "description": "Position of the element's origin relative to its anchor.",
+              "fieldName": "offset",
               "inheritedFrom": {
-                "name": "positioned",
-                "module": "src/mixins/position.ts"
+                "name": "offset",
+                "module": "src/mixins/offset.ts"
               }
             }
           ],
@@ -14314,6 +16154,15 @@
               "default": "new Set<EventListenerOrEventListenerObject>()"
             },
             {
+              "kind": "field",
+              "name": "#shadow",
+              "privacy": "private",
+              "type": {
+                "text": "Shadow | null"
+              },
+              "default": "null"
+            },
+            {
               "kind": "method",
               "name": "addEventListener",
               "return": {
@@ -14359,7 +16208,8 @@
                     "text": "ConicalGradient"
                   }
                 }
-              ]
+              ],
+              "privacy": "private"
             },
             {
               "kind": "method",
@@ -14377,7 +16227,8 @@
                     "text": "LinearGradient"
                   }
                 }
-              ]
+              ],
+              "privacy": "private"
             },
             {
               "kind": "method",
@@ -14395,7 +16246,8 @@
                     "text": "RadialGradient"
                   }
                 }
-              ]
+              ],
+              "privacy": "private"
             },
             {
               "kind": "method",
@@ -14430,6 +16282,7 @@
             {
               "kind": "field",
               "name": "changedSinceRender",
+              "privacy": "private",
               "readonly": true
             },
             {
@@ -14474,7 +16327,8 @@
                     "text": "V"
                   }
                 }
-              ]
+              ],
+              "privacy": "private"
             },
             {
               "kind": "method",
@@ -14486,7 +16340,8 @@
                     "text": "Canvas2DCanvasElement"
                   }
                 }
-              ]
+              ],
+              "privacy": "private"
             },
             {
               "kind": "method",
@@ -14498,7 +16353,8 @@
                     "text": "Canvas2DCanvasElement"
                   }
                 }
-              ]
+              ],
+              "privacy": "private"
             },
             {
               "kind": "method",
@@ -14510,7 +16366,20 @@
                     "text": "Canvas2DCanvasElement"
                   }
                 }
-              ]
+              ],
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#shadowChangeListener",
+              "privacy": "private",
+              "type": {
+                "text": "ChangeListener<Shadow>"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "shadow"
             },
             {
               "kind": "field",
@@ -14552,6 +16421,7 @@
               "type": {
                 "text": "Canvas2DCanvasElement"
               },
+              "description": "The <c2d-canvas> element that is rendering this element. The <c2d-canvas>\r\nwill be an ancestor of this element.",
               "readonly": true,
               "inheritedFrom": {
                 "name": "Canvas2DElement",
@@ -14576,6 +16446,7 @@
                   }
                 }
               ],
+              "privacy": "private",
               "inheritedFrom": {
                 "name": "Canvas2DElement",
                 "module": "src/elements/canvas2d/element.ts"
@@ -14584,6 +16455,9 @@
             {
               "kind": "field",
               "name": "everyFrame",
+              "type": {
+                "text": "Updater | null"
+              },
               "inheritedFrom": {
                 "name": "Canvas2DElement",
                 "module": "src/elements/canvas2d/element.ts"
@@ -14593,6 +16467,22 @@
               "kind": "field",
               "name": "listen",
               "readonly": true,
+              "inheritedFrom": {
+                "name": "Canvas2DElement",
+                "module": "src/elements/canvas2d/element.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "scaleByPixelRatio",
+              "parameters": [
+                {
+                  "name": "vector",
+                  "type": {
+                    "text": "Vector2D"
+                  }
+                }
+              ],
               "inheritedFrom": {
                 "name": "Canvas2DElement",
                 "module": "src/elements/canvas2d/element.ts"
@@ -14664,6 +16554,7 @@
                   }
                 }
               ],
+              "privacy": "private",
               "inheritedFrom": {
                 "name": "Canvas2DBaseRenderable",
                 "module": "src/elements/canvas2d/renderable.ts"
@@ -14728,6 +16619,27 @@
                   "optional": true,
                   "type": {
                     "text": "Options<Canvas2DImage>"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "standaloneChildren",
+                "module": "src/mixins/children.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "multiple",
+              "return": {
+                "type": {
+                  "text": "Node[]"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "callback",
+                  "type": {
+                    "text": "MultipleCallback"
                   }
                 }
               ],
@@ -14890,6 +16802,19 @@
               }
             },
             {
+              "kind": "field",
+              "name": "#shadow",
+              "privacy": "private",
+              "type": {
+                "text": "Shadow | null"
+              },
+              "default": "null",
+              "inheritedFrom": {
+                "name": "Canvas2DBaseRenderable",
+                "module": "src/elements/canvas2d/renderable.ts"
+              }
+            },
+            {
               "kind": "method",
               "name": "addEventListener",
               "return": {
@@ -14940,6 +16865,7 @@
                   }
                 }
               ],
+              "privacy": "private",
               "inheritedFrom": {
                 "name": "Canvas2DBaseRenderable",
                 "module": "src/elements/canvas2d/renderable.ts"
@@ -14962,6 +16888,7 @@
                   }
                 }
               ],
+              "privacy": "private",
               "inheritedFrom": {
                 "name": "Canvas2DBaseRenderable",
                 "module": "src/elements/canvas2d/renderable.ts"
@@ -14984,6 +16911,7 @@
                   }
                 }
               ],
+              "privacy": "private",
               "inheritedFrom": {
                 "name": "Canvas2DBaseRenderable",
                 "module": "src/elements/canvas2d/renderable.ts"
@@ -15026,6 +16954,7 @@
             {
               "kind": "field",
               "name": "changedSinceRender",
+              "privacy": "private",
               "readonly": true,
               "inheritedFrom": {
                 "name": "Canvas2DBaseRenderable",
@@ -15083,6 +17012,7 @@
                   }
                 }
               ],
+              "privacy": "private",
               "inheritedFrom": {
                 "name": "Canvas2DBaseRenderable",
                 "module": "src/elements/canvas2d/renderable.ts"
@@ -15099,6 +17029,7 @@
                   }
                 }
               ],
+              "privacy": "private",
               "inheritedFrom": {
                 "name": "Canvas2DBaseRenderable",
                 "module": "src/elements/canvas2d/renderable.ts"
@@ -15115,6 +17046,27 @@
                   }
                 }
               ],
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "Canvas2DBaseRenderable",
+                "module": "src/elements/canvas2d/renderable.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#shadowChangeListener",
+              "privacy": "private",
+              "type": {
+                "text": "ChangeListener<Shadow>"
+              },
+              "inheritedFrom": {
+                "name": "Canvas2DBaseRenderable",
+                "module": "src/elements/canvas2d/renderable.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "shadow",
               "inheritedFrom": {
                 "name": "Canvas2DBaseRenderable",
                 "module": "src/elements/canvas2d/renderable.ts"
@@ -15160,6 +17112,7 @@
               "type": {
                 "text": "Canvas2DCanvasElement"
               },
+              "description": "The <c2d-canvas> element that is rendering this element. The <c2d-canvas>\r\nwill be an ancestor of this element.",
               "readonly": true,
               "inheritedFrom": {
                 "name": "Canvas2DElement",
@@ -15184,6 +17137,7 @@
                   }
                 }
               ],
+              "privacy": "private",
               "inheritedFrom": {
                 "name": "Canvas2DElement",
                 "module": "src/elements/canvas2d/element.ts"
@@ -15192,6 +17146,9 @@
             {
               "kind": "field",
               "name": "everyFrame",
+              "type": {
+                "text": "Updater | null"
+              },
               "inheritedFrom": {
                 "name": "Canvas2DElement",
                 "module": "src/elements/canvas2d/element.ts"
@@ -15201,6 +17158,22 @@
               "kind": "field",
               "name": "listen",
               "readonly": true,
+              "inheritedFrom": {
+                "name": "Canvas2DElement",
+                "module": "src/elements/canvas2d/element.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "scaleByPixelRatio",
+              "parameters": [
+                {
+                  "name": "vector",
+                  "type": {
+                    "text": "Vector2D"
+                  }
+                }
+              ],
               "inheritedFrom": {
                 "name": "Canvas2DElement",
                 "module": "src/elements/canvas2d/element.ts"
@@ -15417,6 +17390,19 @@
               }
             },
             {
+              "kind": "field",
+              "name": "#shadow",
+              "privacy": "private",
+              "type": {
+                "text": "Shadow | null"
+              },
+              "default": "null",
+              "inheritedFrom": {
+                "name": "Canvas2DBaseRenderable",
+                "module": "src/elements/canvas2d/renderable.ts"
+              }
+            },
+            {
               "kind": "method",
               "name": "addEventListener",
               "return": {
@@ -15467,6 +17453,7 @@
                   }
                 }
               ],
+              "privacy": "private",
               "inheritedFrom": {
                 "name": "Canvas2DBaseRenderable",
                 "module": "src/elements/canvas2d/renderable.ts"
@@ -15489,6 +17476,7 @@
                   }
                 }
               ],
+              "privacy": "private",
               "inheritedFrom": {
                 "name": "Canvas2DBaseRenderable",
                 "module": "src/elements/canvas2d/renderable.ts"
@@ -15511,6 +17499,7 @@
                   }
                 }
               ],
+              "privacy": "private",
               "inheritedFrom": {
                 "name": "Canvas2DBaseRenderable",
                 "module": "src/elements/canvas2d/renderable.ts"
@@ -15553,6 +17542,7 @@
             {
               "kind": "field",
               "name": "changedSinceRender",
+              "privacy": "private",
               "readonly": true,
               "inheritedFrom": {
                 "name": "Canvas2DBaseRenderable",
@@ -15610,6 +17600,7 @@
                   }
                 }
               ],
+              "privacy": "private",
               "inheritedFrom": {
                 "name": "Canvas2DBaseRenderable",
                 "module": "src/elements/canvas2d/renderable.ts"
@@ -15626,6 +17617,7 @@
                   }
                 }
               ],
+              "privacy": "private",
               "inheritedFrom": {
                 "name": "Canvas2DBaseRenderable",
                 "module": "src/elements/canvas2d/renderable.ts"
@@ -15642,6 +17634,7 @@
                   }
                 }
               ],
+              "privacy": "private",
               "inheritedFrom": {
                 "name": "Canvas2DBaseRenderable",
                 "module": "src/elements/canvas2d/renderable.ts"
@@ -15658,6 +17651,27 @@
                   }
                 }
               ],
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "Canvas2DBaseRenderable",
+                "module": "src/elements/canvas2d/renderable.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#shadowChangeListener",
+              "privacy": "private",
+              "type": {
+                "text": "ChangeListener<Shadow>"
+              },
+              "inheritedFrom": {
+                "name": "Canvas2DBaseRenderable",
+                "module": "src/elements/canvas2d/renderable.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "shadow",
               "inheritedFrom": {
                 "name": "Canvas2DBaseRenderable",
                 "module": "src/elements/canvas2d/renderable.ts"
@@ -15703,6 +17717,7 @@
               "type": {
                 "text": "Canvas2DCanvasElement"
               },
+              "description": "The <c2d-canvas> element that is rendering this element. The <c2d-canvas>\r\nwill be an ancestor of this element.",
               "readonly": true,
               "inheritedFrom": {
                 "name": "Canvas2DElement",
@@ -15727,6 +17742,7 @@
                   }
                 }
               ],
+              "privacy": "private",
               "inheritedFrom": {
                 "name": "Canvas2DElement",
                 "module": "src/elements/canvas2d/element.ts"
@@ -15735,6 +17751,9 @@
             {
               "kind": "field",
               "name": "everyFrame",
+              "type": {
+                "text": "Updater | null"
+              },
               "inheritedFrom": {
                 "name": "Canvas2DElement",
                 "module": "src/elements/canvas2d/element.ts"
@@ -15744,6 +17763,22 @@
               "kind": "field",
               "name": "listen",
               "readonly": true,
+              "inheritedFrom": {
+                "name": "Canvas2DElement",
+                "module": "src/elements/canvas2d/element.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "scaleByPixelRatio",
+              "parameters": [
+                {
+                  "name": "vector",
+                  "type": {
+                    "text": "Vector2D"
+                  }
+                }
+              ],
               "inheritedFrom": {
                 "name": "Canvas2DElement",
                 "module": "src/elements/canvas2d/element.ts"
@@ -15905,6 +17940,7 @@
                   }
                 }
               ],
+              "privacy": "private",
               "inheritedFrom": {
                 "name": "Canvas2DBaseRenderable",
                 "module": "src/elements/canvas2d/renderable.ts"
@@ -15931,6 +17967,12 @@
             {
               "kind": "field",
               "name": "fill",
+              "type": {
+                "text": "DrawStyle | null"
+              },
+              "description": "The rendering style inside the element. This may be a color or gradient.\r\nWhen set to null, the parent element's style is used. When\r\nset to \"none\", the inside will be transparent.",
+              "reflects": true,
+              "attribute": "fill",
               "inheritedFrom": {
                 "name": "fillable",
                 "module": "src/mixins/fill.ts"
@@ -15947,6 +17989,7 @@
                   }
                 }
               ],
+              "privacy": "private",
               "inheritedFrom": {
                 "name": "Canvas2DBaseRenderable",
                 "module": "src/elements/canvas2d/renderable.ts"
@@ -15986,6 +18029,9 @@
             {
               "kind": "field",
               "name": "lineWidth",
+              "description": "Width in pixels for drawing lines.",
+              "reflects": true,
+              "attribute": "line-width",
               "inheritedFrom": {
                 "name": "strokeable",
                 "module": "src/mixins/stroke.ts"
@@ -15994,6 +18040,12 @@
             {
               "kind": "field",
               "name": "stroke",
+              "type": {
+                "text": "DrawStyle | null"
+              },
+              "description": "The rendering style for lines. This may be a color or gradient.\r\nWhen set to null, the parent element's style is used. When\r\nset to \"none\", no lines will be drawn.",
+              "reflects": true,
+              "attribute": "stroke",
               "inheritedFrom": {
                 "name": "strokeable",
                 "module": "src/mixins/stroke.ts"
@@ -16003,7 +18055,6 @@
               "kind": "field",
               "name": "#anchor",
               "privacy": "private",
-              "default": "new Vector2D(0, 0)",
               "inheritedFrom": {
                 "name": "transformeable",
                 "module": "src/mixins/transform.ts"
@@ -16047,6 +18098,18 @@
             },
             {
               "kind": "field",
+              "name": "#angleChangeListener",
+              "privacy": "private",
+              "type": {
+                "text": "ChangeListener<number>"
+              },
+              "inheritedFrom": {
+                "name": "transformeable",
+                "module": "src/mixins/transform.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "angle",
               "inheritedFrom": {
                 "name": "transformeable",
@@ -16074,7 +18137,7 @@
               "name": "#anchorChangeListener",
               "privacy": "private",
               "type": {
-                "text": "ChangeListener<Vector2D>"
+                "text": "ChangeListener<Vector2DBase>"
               },
               "inheritedFrom": {
                 "name": "transformeable",
@@ -16153,17 +18216,17 @@
             },
             {
               "kind": "field",
-              "name": "#position",
+              "name": "#offset",
               "privacy": "private",
               "default": "new Vector2D(0, 0)",
               "inheritedFrom": {
-                "name": "positioned",
-                "module": "src/mixins/position.ts"
+                "name": "offset",
+                "module": "src/mixins/offset.ts"
               }
             },
             {
               "kind": "method",
-              "name": "movePosition",
+              "name": "moveOffset",
               "parameters": [
                 {
                   "name": "x",
@@ -16179,16 +18242,31 @@
                 }
               ],
               "inheritedFrom": {
-                "name": "positioned",
-                "module": "src/mixins/position.ts"
+                "name": "offset",
+                "module": "src/mixins/offset.ts"
               }
             },
             {
               "kind": "field",
-              "name": "position",
+              "name": "#offsetChangeListener",
+              "privacy": "private",
+              "type": {
+                "text": "ChangeListener<Vector2DBase>"
+              },
               "inheritedFrom": {
-                "name": "positioned",
-                "module": "src/mixins/position.ts"
+                "name": "offset",
+                "module": "src/mixins/offset.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "offset",
+              "description": "Position of the element's origin relative to its anchor.",
+              "reflects": true,
+              "attribute": "offset",
+              "inheritedFrom": {
+                "name": "offset",
+                "module": "src/mixins/offset.ts"
               }
             },
             {
@@ -16303,6 +18381,19 @@
               }
             },
             {
+              "kind": "field",
+              "name": "#shadow",
+              "privacy": "private",
+              "type": {
+                "text": "Shadow | null"
+              },
+              "default": "null",
+              "inheritedFrom": {
+                "name": "Canvas2DBaseRenderable",
+                "module": "src/elements/canvas2d/renderable.ts"
+              }
+            },
+            {
               "kind": "method",
               "name": "addEventListener",
               "return": {
@@ -16353,6 +18444,7 @@
                   }
                 }
               ],
+              "privacy": "private",
               "inheritedFrom": {
                 "name": "Canvas2DBaseRenderable",
                 "module": "src/elements/canvas2d/renderable.ts"
@@ -16375,6 +18467,7 @@
                   }
                 }
               ],
+              "privacy": "private",
               "inheritedFrom": {
                 "name": "Canvas2DBaseRenderable",
                 "module": "src/elements/canvas2d/renderable.ts"
@@ -16397,6 +18490,7 @@
                   }
                 }
               ],
+              "privacy": "private",
               "inheritedFrom": {
                 "name": "Canvas2DBaseRenderable",
                 "module": "src/elements/canvas2d/renderable.ts"
@@ -16439,6 +18533,7 @@
             {
               "kind": "field",
               "name": "changedSinceRender",
+              "privacy": "private",
               "readonly": true,
               "inheritedFrom": {
                 "name": "Canvas2DBaseRenderable",
@@ -16496,6 +18591,7 @@
                   }
                 }
               ],
+              "privacy": "private",
               "inheritedFrom": {
                 "name": "Canvas2DBaseRenderable",
                 "module": "src/elements/canvas2d/renderable.ts"
@@ -16512,6 +18608,27 @@
                   }
                 }
               ],
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "Canvas2DBaseRenderable",
+                "module": "src/elements/canvas2d/renderable.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#shadowChangeListener",
+              "privacy": "private",
+              "type": {
+                "text": "ChangeListener<Shadow>"
+              },
+              "inheritedFrom": {
+                "name": "Canvas2DBaseRenderable",
+                "module": "src/elements/canvas2d/renderable.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "shadow",
               "inheritedFrom": {
                 "name": "Canvas2DBaseRenderable",
                 "module": "src/elements/canvas2d/renderable.ts"
@@ -16545,6 +18662,7 @@
               "type": {
                 "text": "Canvas2DCanvasElement"
               },
+              "description": "The <c2d-canvas> element that is rendering this element. The <c2d-canvas>\r\nwill be an ancestor of this element.",
               "readonly": true,
               "inheritedFrom": {
                 "name": "Canvas2DElement",
@@ -16569,6 +18687,7 @@
                   }
                 }
               ],
+              "privacy": "private",
               "inheritedFrom": {
                 "name": "Canvas2DElement",
                 "module": "src/elements/canvas2d/element.ts"
@@ -16577,6 +18696,9 @@
             {
               "kind": "field",
               "name": "everyFrame",
+              "type": {
+                "text": "Updater | null"
+              },
               "inheritedFrom": {
                 "name": "Canvas2DElement",
                 "module": "src/elements/canvas2d/element.ts"
@@ -16586,6 +18708,22 @@
               "kind": "field",
               "name": "listen",
               "readonly": true,
+              "inheritedFrom": {
+                "name": "Canvas2DElement",
+                "module": "src/elements/canvas2d/element.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "scaleByPixelRatio",
+              "parameters": [
+                {
+                  "name": "vector",
+                  "type": {
+                    "text": "Vector2D"
+                  }
+                }
+              ],
               "inheritedFrom": {
                 "name": "Canvas2DElement",
                 "module": "src/elements/canvas2d/element.ts"
@@ -16606,8 +18744,8 @@
               "module": "/src/mixins/transform"
             },
             {
-              "name": "positioned",
-              "module": "/src/mixins/position"
+              "name": "offset",
+              "module": "/src/mixins/offset"
             }
           ],
           "superclass": {
@@ -16619,6 +18757,11 @@
           "attributes": [
             {
               "name": "fill",
+              "type": {
+                "text": "DrawStyle | null"
+              },
+              "description": "The rendering style inside the element. This may be a color or gradient.\r\nWhen set to null, the parent element's style is used. When\r\nset to \"none\", the inside will be transparent.",
+              "fieldName": "fill",
               "inheritedFrom": {
                 "name": "fillable",
                 "module": "src/mixins/fill.ts"
@@ -16626,6 +18769,20 @@
             },
             {
               "name": "stroke",
+              "type": {
+                "text": "DrawStyle | null"
+              },
+              "description": "The rendering style for lines. This may be a color or gradient.\r\nWhen set to null, the parent element's style is used. When\r\nset to \"none\", no lines will be drawn.",
+              "fieldName": "stroke",
+              "inheritedFrom": {
+                "name": "strokeable",
+                "module": "src/mixins/stroke.ts"
+              }
+            },
+            {
+              "name": "line-width",
+              "description": "Width in pixels for drawing lines.",
+              "fieldName": "lineWidth",
               "inheritedFrom": {
                 "name": "strokeable",
                 "module": "src/mixins/stroke.ts"
@@ -16667,10 +18824,12 @@
               }
             },
             {
-              "name": "position",
+              "name": "offset",
+              "description": "Position of the element's origin relative to its anchor.",
+              "fieldName": "offset",
               "inheritedFrom": {
-                "name": "positioned",
-                "module": "src/mixins/position.ts"
+                "name": "offset",
+                "module": "src/mixins/offset.ts"
               }
             }
           ],
@@ -17039,6 +19198,7 @@
                   }
                 }
               ],
+              "privacy": "private",
               "inheritedFrom": {
                 "name": "Canvas2DBaseRenderable",
                 "module": "src/elements/canvas2d/renderable.ts"
@@ -17087,7 +19247,6 @@
               "kind": "field",
               "name": "#anchor",
               "privacy": "private",
-              "default": "new Vector2D(0, 0)",
               "inheritedFrom": {
                 "name": "transformeable",
                 "module": "src/mixins/transform.ts"
@@ -17131,6 +19290,18 @@
             },
             {
               "kind": "field",
+              "name": "#angleChangeListener",
+              "privacy": "private",
+              "type": {
+                "text": "ChangeListener<number>"
+              },
+              "inheritedFrom": {
+                "name": "transformeable",
+                "module": "src/mixins/transform.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "angle",
               "inheritedFrom": {
                 "name": "transformeable",
@@ -17158,7 +19329,7 @@
               "name": "#anchorChangeListener",
               "privacy": "private",
               "type": {
-                "text": "ChangeListener<Vector2D>"
+                "text": "ChangeListener<Vector2DBase>"
               },
               "inheritedFrom": {
                 "name": "transformeable",
@@ -17198,6 +19369,7 @@
                   }
                 }
               ],
+              "privacy": "private",
               "inheritedFrom": {
                 "name": "Canvas2DBaseRenderable",
                 "module": "src/elements/canvas2d/renderable.ts"
@@ -17339,6 +19511,35 @@
                   }
                 }
               ],
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "Canvas2DBaseRenderable",
+                "module": "src/elements/canvas2d/renderable.ts"
+              },
+              "return": {
+                "type": {
+                  "text": "CanvasGradient"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "renderLinearGradient",
+              "parameters": [
+                {
+                  "name": "context",
+                  "type": {
+                    "text": "CanvasRenderingContext2D"
+                  }
+                },
+                {
+                  "name": "gradient",
+                  "type": {
+                    "text": "LinearGradient"
+                  }
+                }
+              ],
+              "privacy": "private",
               "inheritedFrom": {
                 "name": "Canvas2DBaseRenderable",
                 "module": "src/elements/canvas2d/renderable.ts"
@@ -17377,17 +19578,17 @@
             },
             {
               "kind": "field",
-              "name": "#position",
+              "name": "#offset",
               "privacy": "private",
               "default": "new Vector2D(0, 0)",
               "inheritedFrom": {
-                "name": "positioned",
-                "module": "src/mixins/position.ts"
+                "name": "offset",
+                "module": "src/mixins/offset.ts"
               }
             },
             {
               "kind": "method",
-              "name": "movePosition",
+              "name": "moveOffset",
               "parameters": [
                 {
                   "name": "x",
@@ -17403,16 +19604,31 @@
                 }
               ],
               "inheritedFrom": {
-                "name": "positioned",
-                "module": "src/mixins/position.ts"
+                "name": "offset",
+                "module": "src/mixins/offset.ts"
               }
             },
             {
               "kind": "field",
-              "name": "position",
+              "name": "#offsetChangeListener",
+              "privacy": "private",
+              "type": {
+                "text": "ChangeListener<Vector2DBase>"
+              },
               "inheritedFrom": {
-                "name": "positioned",
-                "module": "src/mixins/position.ts"
+                "name": "offset",
+                "module": "src/mixins/offset.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "offset",
+              "description": "Position of the element's origin relative to its anchor.",
+              "reflects": true,
+              "attribute": "offset",
+              "inheritedFrom": {
+                "name": "offset",
+                "module": "src/mixins/offset.ts"
               }
             },
             {
@@ -17474,6 +19690,27 @@
                   "optional": true,
                   "type": {
                     "text": "Options<Canvas2DImage>"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "standaloneChildren",
+                "module": "src/mixins/children.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "multiple",
+              "return": {
+                "type": {
+                  "text": "Node[]"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "callback",
+                  "type": {
+                    "text": "MultipleCallback"
                   }
                 }
               ],
@@ -17636,6 +19873,19 @@
               }
             },
             {
+              "kind": "field",
+              "name": "#shadow",
+              "privacy": "private",
+              "type": {
+                "text": "Shadow | null"
+              },
+              "default": "null",
+              "inheritedFrom": {
+                "name": "Canvas2DBaseRenderable",
+                "module": "src/elements/canvas2d/renderable.ts"
+              }
+            },
+            {
               "kind": "method",
               "name": "addEventListener",
               "return": {
@@ -17671,28 +19921,6 @@
             },
             {
               "kind": "method",
-              "name": "renderLinearGradient",
-              "parameters": [
-                {
-                  "name": "context",
-                  "type": {
-                    "text": "CanvasRenderingContext2D"
-                  }
-                },
-                {
-                  "name": "gradient",
-                  "type": {
-                    "text": "LinearGradient"
-                  }
-                }
-              ],
-              "inheritedFrom": {
-                "name": "Canvas2DBaseRenderable",
-                "module": "src/elements/canvas2d/renderable.ts"
-              }
-            },
-            {
-              "kind": "method",
               "name": "renderRadialGradient",
               "parameters": [
                 {
@@ -17708,6 +19936,7 @@
                   }
                 }
               ],
+              "privacy": "private",
               "inheritedFrom": {
                 "name": "Canvas2DBaseRenderable",
                 "module": "src/elements/canvas2d/renderable.ts"
@@ -17750,6 +19979,7 @@
             {
               "kind": "field",
               "name": "changedSinceRender",
+              "privacy": "private",
               "readonly": true,
               "inheritedFrom": {
                 "name": "Canvas2DBaseRenderable",
@@ -17807,6 +20037,7 @@
                   }
                 }
               ],
+              "privacy": "private",
               "inheritedFrom": {
                 "name": "Canvas2DBaseRenderable",
                 "module": "src/elements/canvas2d/renderable.ts"
@@ -17823,6 +20054,27 @@
                   }
                 }
               ],
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "Canvas2DBaseRenderable",
+                "module": "src/elements/canvas2d/renderable.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#shadowChangeListener",
+              "privacy": "private",
+              "type": {
+                "text": "ChangeListener<Shadow>"
+              },
+              "inheritedFrom": {
+                "name": "Canvas2DBaseRenderable",
+                "module": "src/elements/canvas2d/renderable.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "shadow",
               "inheritedFrom": {
                 "name": "Canvas2DBaseRenderable",
                 "module": "src/elements/canvas2d/renderable.ts"
@@ -17856,6 +20108,7 @@
               "type": {
                 "text": "Canvas2DCanvasElement"
               },
+              "description": "The <c2d-canvas> element that is rendering this element. The <c2d-canvas>\r\nwill be an ancestor of this element.",
               "readonly": true,
               "inheritedFrom": {
                 "name": "Canvas2DElement",
@@ -17880,6 +20133,7 @@
                   }
                 }
               ],
+              "privacy": "private",
               "inheritedFrom": {
                 "name": "Canvas2DElement",
                 "module": "src/elements/canvas2d/element.ts"
@@ -17888,6 +20142,9 @@
             {
               "kind": "field",
               "name": "everyFrame",
+              "type": {
+                "text": "Updater | null"
+              },
               "inheritedFrom": {
                 "name": "Canvas2DElement",
                 "module": "src/elements/canvas2d/element.ts"
@@ -17897,6 +20154,22 @@
               "kind": "field",
               "name": "listen",
               "readonly": true,
+              "inheritedFrom": {
+                "name": "Canvas2DElement",
+                "module": "src/elements/canvas2d/element.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "scaleByPixelRatio",
+              "parameters": [
+                {
+                  "name": "vector",
+                  "type": {
+                    "text": "Vector2D"
+                  }
+                }
+              ],
               "inheritedFrom": {
                 "name": "Canvas2DElement",
                 "module": "src/elements/canvas2d/element.ts"
@@ -17952,10 +20225,12 @@
               }
             },
             {
-              "name": "position",
+              "name": "offset",
+              "description": "Position of the element's origin relative to its anchor.",
+              "fieldName": "offset",
               "inheritedFrom": {
-                "name": "positioned",
-                "module": "src/mixins/position.ts"
+                "name": "offset",
+                "module": "src/mixins/offset.ts"
               }
             }
           ],

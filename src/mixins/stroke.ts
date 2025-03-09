@@ -21,6 +21,12 @@ export function strokeable<B extends typeof Canvas2DBaseRenderable>(Base: B) {
     #stroke: DrawStyle | null = null;
     #lineWidth: number | null = null;
 
+    /**
+     * Width in pixels for drawing lines.
+     *
+     * @attr line-width
+     * @reflect
+     */
     get lineWidth() {
       return this.#lineWidth;
     }
@@ -31,7 +37,15 @@ export function strokeable<B extends typeof Canvas2DBaseRenderable>(Base: B) {
       this.registerChange("lineWidth", (this.#lineWidth = value));
     }
 
-    get stroke() {
+    /**
+     * The rendering style for lines. This may be a color or gradient.
+     * When set to null, the parent element's style is used. When
+     * set to "none", no lines will be drawn.
+     *
+     * @attr
+     * @reflect
+     */
+    get stroke(): DrawStyle | null {
       return this.#stroke;
     }
 

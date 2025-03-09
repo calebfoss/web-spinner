@@ -17,7 +17,15 @@ export function fillable<B extends typeof Canvas2DBaseRenderable>(Base: B) {
 
     #fill: DrawStyle | null = null;
 
-    get fill() {
+    /**
+     * The rendering style inside the element. This may be a color or gradient.
+     * When set to null, the parent element's style is used. When
+     * set to "none", the inside will be transparent.
+     *
+     * @attr
+     * @reflect
+     */
+    get fill(): DrawStyle | null {
       return this.#fill;
     }
 

@@ -103,6 +103,8 @@ const elementClasses = [
   Canvas2DVideo,
 ];
 
+customElements.define("c2d-canvas", Canvas2DCanvasElement);
+
 for (const elementClass of elementClasses) {
   const tag = customElements.getName(elementClass);
   const ctor = customElements.get(elementClass.tag);
