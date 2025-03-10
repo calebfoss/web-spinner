@@ -440,7 +440,7 @@ function renderPropertyRows(
 
   descriptionCell.appendChild(descriptionRow);
 
-  descriptionCell.colSpan = 3;
+  descriptionCell.colSpan = 4;
 
   if (member.readonly) {
     descriptionCell.textContent = "[read only] ";
