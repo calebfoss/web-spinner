@@ -153,11 +153,11 @@ export function transformeable<B extends typeof Canvas2DBaseRenderable>(
 
       if (this.#angularVelocity.radians !== 0) {
         const angleChange =
-          (this.#angularVelocity.radians *
+          (this.#angularVelocity[this.#angle.unit] *
             Math.min(deltaTime, now - this.#angularVelocityChangedTime)) /
           1000;
 
-        this.angle.radians += angleChange;
+        this.angle[this.#angle.unit] += angleChange;
       }
 
       if (this.#velocity.x !== 0 || this.#velocity.y !== 0) {

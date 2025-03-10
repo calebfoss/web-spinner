@@ -1,9 +1,12 @@
 import { State } from "./state";
 
-export type AngleUnit = (typeof Angle)["unit"][keyof (typeof Angle)["unit"]];
+export type AngleUnitLong = keyof (typeof Angle)["unit"];
+
+export type AngleUnitShort =
+  (typeof Angle)["unit"][keyof (typeof Angle)["unit"]];
 
 const unitsInCircle: {
-  [U in AngleUnit]: number;
+  [U in AngleUnitShort]: number;
 } = {
   deg: 360,
   rad: Math.PI * 2,
@@ -11,10 +14,14 @@ const unitsInCircle: {
   turn: 1,
 };
 
-export class Angle extends State<number> {
-  #conversions = new Map<Exclude<AngleUnit, "rad">, number>();
+type AngleConverter = {
+  [U in keyof (typeof Angle)["unit"]]: number;
+};
 
-  constructor(unit: AngleUnit, value: number) {
+export class Angle extends State<number> implements AngleConverter {
+  #conversions = new Map<Exclude<AngleUnitShort, "rad">, number>();
+
+  constructor(unit: AngleUnitShort, value: number) {
     const radians = unit === "rad" ? value : Angle.convert(value, unit, "rad");
 
     super(radians);
@@ -22,7 +29,7 @@ export class Angle extends State<number> {
     if (unit !== "rad") this.#conversions.set(unit, value);
   }
 
-  #getConverted(unit: Exclude<AngleUnit, "rad">) {
+  #getConverted(unit: Exclude<AngleUnitShort, "rad">) {
     const cached = this.#conversions.get(unit);
 
     if (cached !== undefined) return cached;
@@ -34,7 +41,7 @@ export class Angle extends State<number> {
     return conversion;
   }
 
-  #setConverted(unit: Exclude<AngleUnit, "rad">, value: number) {
+  #setConverted(unit: Exclude<AngleUnitShort, "rad">, value: number) {
     this.#conversions.set(unit, value);
 
     this.value = Angle.convert(value, unit, "rad");
@@ -53,7 +60,7 @@ export class Angle extends State<number> {
 
     const [unit, value] =
       conversionCount === 0
-        ? ["rad" as AngleUnit, this.value]
+        ? ["rad" as AngleUnitShort, this.value]
         : Array.from(this.#conversions)[conversionCount - 1];
 
     const valueString = Number.isInteger(value)
@@ -63,7 +70,11 @@ export class Angle extends State<number> {
     return valueString + unit;
   }
 
-  static convert(value: number, unitFrom: AngleUnit, unitTo: AngleUnit) {
+  static convert(
+    value: number,
+    unitFrom: AngleUnitShort,
+    unitTo: AngleUnitShort
+  ) {
     return value * (unitsInCircle[unitTo] / unitsInCircle[unitFrom]);
   }
 
@@ -73,6 +84,14 @@ export class Angle extends State<number> {
 
   equals(other: Angle) {
     return super.equals(other) || this.radians === other.radians;
+  }
+
+  get gradians() {
+    return this.#getConverted("grad");
+  }
+
+  set gradians(value) {
+    this.#setConverted("grad", value);
   }
 
   static radians(value: number) {
@@ -89,6 +108,32 @@ export class Angle extends State<number> {
     this.#conversions.clear();
 
     this.value = value;
+  }
+
+  get turn() {
+    return this.#getConverted("turn");
+  }
+
+  set turn(value) {
+    this.#setConverted("turn", value);
+  }
+
+  get unit(): AngleUnitLong {
+    const conversionCount = this.#conversions.size;
+
+    const [shortUnit] =
+      conversionCount === 0
+        ? ["rad" as AngleUnitShort, this.value]
+        : Array.from(this.#conversions)[conversionCount - 1];
+
+    const longUnit = Object.keys(Angle.unit).find(
+      (key) => Angle.unit[key as AngleUnitLong] === shortUnit
+    );
+
+    if (longUnit === undefined)
+      throw new Error(`Could not find angle unit: ${shortUnit}`);
+
+    return longUnit as AngleUnitLong;
   }
 
   static unit = {

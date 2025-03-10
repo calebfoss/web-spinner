@@ -1,5 +1,5 @@
 import { NONE } from "..";
-import { Angle, AngleUnit } from "../classes/angle";
+import { Angle, AngleUnitShort } from "../classes/angle";
 import { Color } from "../classes/color";
 import { DrawStyle } from "../classes/gradient";
 import { Vector2D } from "../classes/vector2d";
@@ -79,7 +79,7 @@ export const attributeParser: AttributeTypeParser = {
 
     const value = attributeParser.number(args[1]);
 
-    const unit = args[2] as AngleUnit;
+    const unit = args[2] as AngleUnitShort;
 
     return new Angle(unit, value);
   },
