@@ -80,18 +80,17 @@ h6 {
   }
 
   .element {
-    display: inline-block;
     margin-left: 20px;
     margin-bottom: 20px;
     background-color: var(--dark);
     border-radius: 20px;
     box-shadow: black 5px 5px;
-    width: max(40% 600px);
+    /* width: max(40%, 600px); */
 
     h3 {
       position: sticky;
       top: 0;
-      z-index: 1;
+      z-index: 3;
       background-color: var(--medium);
       font-size: 2rem;
       margin: 0;
@@ -100,9 +99,22 @@ h6 {
 
     .demo {
       position: sticky;
-      top: 3rem;
+      height: 300px;
+      top: 3.5rem;
       background-color: var(--dark);
-      margin: 2.5% 0 2.5% 0;
+      margin: 0 0 2.5% 0;
+      padding-top: 2.5%;
+      overflow: hidden;
+      box-shadow: var(--dark-gray) 0 4px 4px;
+      z-index: 2;
+
+      c2d-canvas {
+        float: inline-start;
+      }
+
+      code {
+        white-space: pre-wrap;
+      }
     }
 
     label {
@@ -113,9 +125,9 @@ h6 {
       display: table;
       box-shadow: var(--dark-gray) 5px 5px;
       border-collapse: collapse;
-      width: 90%;
       margin: auto;
       border-radius: 0 0 20px 20px;
+      width: 90%;
 
       caption {
         background-color: var(--medium);
@@ -125,8 +137,22 @@ h6 {
         box-shadow: var(--dark-gray) 5px 5px;
       }
 
+      tbody {
+        width: 100%;
+      }
+
       td:last-child {
         width: 400px;
+      }
+
+      tr {
+        width: 100%;
+      }
+
+      tr:first-child {
+        position: sticky;
+        top: calc(300px + 3.5rem);
+        z-index: 1;
       }
 
       tr:last-child {

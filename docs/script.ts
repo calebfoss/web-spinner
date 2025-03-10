@@ -521,6 +521,20 @@ function renderDemo(element: ElementData): [HTMLDivElement, HTMLElement] {
 
   const mainElement = document.createElement(element.tag);
 
+  const htmlCode = document.createElement("code");
+
+  div.appendChild(htmlCode);
+
+  const jsCode = document.createElement("code");
+
+  div.appendChild(jsCode);
+
+  const observer = new MutationObserver(() => {
+    htmlCode.textContent = mainElement.outerHTML;
+  });
+
+  observer.observe(mainElement, { attributes: true });
+
   if (element.tag === "c2d-text") {
     mainElement.textContent = "Web Spinner";
 
