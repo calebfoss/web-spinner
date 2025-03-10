@@ -40,7 +40,7 @@ export function offset<B extends typeof Canvas2DBaseRenderable>(Base: B) {
      * @attr
      * @reflect
      */
-    get offset() {
+    get offset(): Vector2D {
       return this.#offset;
     }
 

@@ -53,6 +53,7 @@ const rotatingSquare = canvas.rectangle({
   stroke: "none",
   width: 250,
   height: 250,
+  velocity: Vector2D.xy(10, 0),
 });
 
 rotatingSquare.text({

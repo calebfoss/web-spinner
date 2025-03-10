@@ -5,10 +5,16 @@ import { transformeable } from "./transform";
 
 export function hasTo<B extends typeof Canvas2DBaseRenderable>(Base: B) {
   return class extends transformeable(Base) {
-    static observedAttributes = [...Base.observedAttributes, "to"];
+    static observedAttributes = [...super.observedAttributes, "to"];
 
     #to = Vector2D.xy(100, 100);
 
+    /**
+     * End point of the element relative to its anchor.
+     *
+     * @attr
+     * @reflect
+     */
     get to() {
       return this.#to;
     }
@@ -26,17 +32,25 @@ export function hasTo<B extends typeof Canvas2DBaseRenderable>(Base: B) {
     ): void {
       if (name === "to" && newValue !== null)
         this.to = attributeParser.Vector2D(newValue);
+
+      super.attributeChangedCallback(name, oldValue, newValue);
     }
   };
 }
 
 export function hasFrom<B extends typeof Canvas2DBaseRenderable>(Base: B) {
   return class extends Base {
-    static observedAttributes = [...Base.observedAttributes, "from"];
+    static observedAttributes = [...super.observedAttributes, "from"];
 
     #from = Vector2D.zero;
 
-    get from() {
+    /**
+     * Starting point of the element relative to its anchor.
+     *
+     * @attr
+     * @reflect
+     */
+    get from(): Vector2D {
       return this.#from;
     }
 
@@ -53,6 +67,8 @@ export function hasFrom<B extends typeof Canvas2DBaseRenderable>(Base: B) {
     ): void {
       if (name === "from" && newValue !== null)
         this.from = attributeParser.Vector2D(newValue);
+
+      super.attributeChangedCallback(name, oldValue, newValue);
     }
   };
 }

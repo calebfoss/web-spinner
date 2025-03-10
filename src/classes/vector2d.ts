@@ -1,4 +1,4 @@
-import { State } from './state';
+import { State } from "./state";
 
 export class Vector2DBase {
   #x: number;
@@ -31,10 +31,14 @@ export class Vector2D extends State<Vector2DBase> {
     super(new Vector2DBase(x, y));
   }
 
+  copy() {
+    return new Vector2D(this.x, this.y);
+  }
+
   equals(x: number, y: number): boolean;
   equals(other: Vector2D): boolean;
   equals(arg1: Vector2D | number, arg2?: number) {
-    if (typeof arg1 === 'number') return this.x === arg1 && this.y === arg2;
+    if (typeof arg1 === "number") return this.x === arg1 && this.y === arg2;
     return this.x === arg1.x && this.y === arg1.y;
   }
 
@@ -49,7 +53,7 @@ export class Vector2D extends State<Vector2DBase> {
   minus(x: number, y: number): Vector2D;
   minus(other: Vector2D): Vector2D;
   minus(arg1: Vector2D | number, arg2?: number) {
-    if (typeof arg1 === 'number')
+    if (typeof arg1 === "number")
       return Vector2D.xy(this.x - arg1, this.y - (arg2 ?? arg1));
     return Vector2D.xy(this.x - arg1.x, this.y - arg1.y);
   }
@@ -57,7 +61,7 @@ export class Vector2D extends State<Vector2DBase> {
   plus(x: number, y: number): Vector2D;
   plus(other: Vector2D): Vector2D;
   plus(arg1: Vector2D | number, arg2?: number) {
-    if (typeof arg1 === 'number')
+    if (typeof arg1 === "number")
       return Vector2D.xy(this.x + arg1, this.y + (arg2 ?? arg1));
     return Vector2D.xy(this.x + arg1.x, this.y + arg1.y);
   }

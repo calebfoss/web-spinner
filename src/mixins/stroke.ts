@@ -16,6 +16,7 @@ export function strokeable<B extends typeof Canvas2DBaseRenderable>(Base: B) {
     static observedAttributes: string[] = [
       ...Base.observedAttributes,
       "stroke",
+      "line-width",
     ];
 
     #stroke: DrawStyle | null = null;
@@ -27,7 +28,7 @@ export function strokeable<B extends typeof Canvas2DBaseRenderable>(Base: B) {
      * @attr line-width
      * @reflect
      */
-    get lineWidth() {
+    get lineWidth(): number | null {
       return this.#lineWidth;
     }
 

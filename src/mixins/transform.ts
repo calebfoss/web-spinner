@@ -39,7 +39,13 @@ export function transformeable<B extends typeof Canvas2DBaseRenderable>(
       this.registerChange("angle", this.#angle);
     };
 
-    get angle() {
+    /**
+     * Clockwise rotation of the element around its anchor.
+     *
+     * @attr
+     * @reflect
+     */
+    get angle(): Angle {
       return this.#angle;
     }
 
@@ -47,7 +53,14 @@ export function transformeable<B extends typeof Canvas2DBaseRenderable>(
       this.#angle = this.#angle.replace(value, this.#angleChangeListener);
     }
 
-    get angularVelocity() {
+    #angularVelocityChangedTime = -1;
+    /**
+     * Clockwise rotation per second.
+     *
+     * @attr angular-velocity
+     * @reflect
+     */
+    get angularVelocity(): Angle {
       return this.#angularVelocity;
     }
 
@@ -56,10 +69,18 @@ export function transformeable<B extends typeof Canvas2DBaseRenderable>(
         return;
       }
 
+      this.#angularVelocityChangedTime = performance.now();
+
       this.registerChange("angularVelocity", (this.#angularVelocity = value));
     }
 
-    get anchor() {
+    /**
+     * Base position of the element relative to its parent's anchor.
+     *
+     * @attr
+     * @reflect
+     */
+    get anchor(): Vector2D {
       return this.#anchor;
     }
 
@@ -126,11 +147,31 @@ export function transformeable<B extends typeof Canvas2DBaseRenderable>(
     afterRender(canvas2D: Canvas2DCanvasElement): void {
       super.afterRender(canvas2D);
 
-      this.angle.radians += this.#angularVelocity.radians;
+      const { deltaTime } = canvas2D;
 
-      if (!isReadOnly(this.#anchor, "x")) this.#anchor.x += this.#velocity.x;
+      const now = performance.now();
 
-      if (!isReadOnly(this.#anchor, "y")) this.#anchor.y += this.#velocity.y;
+      if (this.#angularVelocity.radians !== 0) {
+        const angleChange =
+          (this.#angularVelocity.radians *
+            Math.min(deltaTime, now - this.#angularVelocityChangedTime)) /
+          1000;
+
+        this.angle.radians += angleChange;
+      }
+
+      if (this.#velocity.x !== 0 || this.#velocity.y !== 0) {
+        const velocityDelta =
+          Math.min(deltaTime, now - this.#velocityChangedTime) / 1000;
+
+        if (isReadOnly(this.#anchor, "x") || isReadOnly(this.#anchor, "y"))
+          this.#anchor = this.#anchor.copy();
+
+        this.moveAnchor(
+          this.#velocity.x * velocityDelta,
+          this.#velocity.y * velocityDelta
+        );
+      }
     }
 
     rotateClockwise(angle: Angle) {
@@ -159,7 +200,15 @@ export function transformeable<B extends typeof Canvas2DBaseRenderable>(
       }
     }
 
-    get velocity() {
+    #velocityChangedTime = -1;
+
+    /**
+     * Anchor movement per second.
+     *
+     * @attr
+     * @reflect
+     */
+    get velocity(): Vector2D {
       return this.#velocity;
     }
 
@@ -167,6 +216,8 @@ export function transformeable<B extends typeof Canvas2DBaseRenderable>(
       if (this.#velocity.equals(value)) return;
 
       this.registerChange("velocity", (this.#velocity = value));
+
+      this.#velocityChangedTime = performance.now();
     }
   };
 }

@@ -1,6 +1,7 @@
 import * as Schema from "custom-elements-manifest/schema";
 import data from "./custom-elements.json";
 import { createCanvas, Color } from "web-spinner";
+import * as WebSpinner from "web-spinner";
 
 interface ClassFieldExtended extends Schema.ClassField {
   attribute?: string;
@@ -278,7 +279,14 @@ function renderMethodsDocs(methods: Schema.ClassMethod[]) {
   return div;
 }
 
-function renderPropertyRows(member: ClassFieldExtended) {
+const angleMatch = new RegExp(
+  `([\\d\\.]+)\\s*(${Object.values(WebSpinner.Angle.unit).join("|")})`
+);
+
+function renderPropertyRows(
+  member: ClassFieldExtended,
+  demoElement: HTMLElement
+) {
   const statRow = document.createElement("tr");
 
   const jsNameCell = document.createElement("td");
@@ -303,6 +311,129 @@ function renderPropertyRows(member: ClassFieldExtended) {
 
   statRow.appendChild(typeCell);
 
+  const demoCell = document.createElement("td");
+
+  const attributeName = member.attribute;
+
+  if (attributeName !== undefined) {
+    const demoInput = document.createElement("input");
+
+    const typeText = member.type?.text;
+
+    switch (typeText) {
+      case "Color":
+      case "DrawStyle":
+      case "DrawStyle | null":
+        demoInput.type = "color";
+        break;
+      case "number":
+      case "number | null":
+        demoInput.type = "number";
+        break;
+      case "Vector2D":
+      case "Vetor2D | null":
+        {
+          demoInput.type = "hidden";
+
+          const vector = Reflect.get(
+            demoElement,
+            member.name
+          ) as WebSpinner.Vector2D;
+
+          demoElement.setAttribute(attributeName, vector.toString());
+
+          const xLabel = document.createElement("label");
+
+          xLabel.textContent = "x";
+
+          demoCell.appendChild(xLabel);
+
+          const xInput = document.createElement("input");
+
+          xInput.type = "number";
+
+          xInput.value = vector.x.toString();
+
+          xLabel.appendChild(xInput);
+
+          const yLabel = document.createElement("label");
+
+          yLabel.textContent = "y";
+
+          demoCell.appendChild(yLabel);
+
+          const yInput = document.createElement("input");
+
+          yInput.type = "number";
+
+          yInput.value = vector.y.toString();
+
+          yLabel.appendChild(yInput);
+
+          xInput.addEventListener("input", () => {
+            if (
+              xInput.value.length === 0 ||
+              yInput.value.length === 0 ||
+              Number.isNaN(Number(xInput.value)) ||
+              Number.isNaN(Number(yInput.value))
+            )
+              return;
+
+            const newValue = `${xInput.value}, ${yInput.value}`;
+
+            const currentValue = demoElement.getAttribute(attributeName);
+
+            if (currentValue === newValue) return;
+
+            demoInput.value = newValue;
+
+            demoElement.setAttribute(attributeName, newValue);
+          });
+
+          yInput.addEventListener("input", () => {
+            if (
+              xInput.value.length === 0 ||
+              yInput.value.length === 0 ||
+              Number.isNaN(Number(xInput.value)) ||
+              Number.isNaN(Number(yInput.value))
+            )
+              return;
+
+            const newValue = `${xInput.value}, ${yInput.value}`;
+
+            const currentValue = demoElement.getAttribute(attributeName);
+
+            if (currentValue === newValue) return;
+
+            demoInput.value = newValue;
+
+            demoElement.setAttribute(attributeName, newValue);
+          });
+        }
+        break;
+    }
+
+    demoInput.addEventListener("input", (evt) => {
+      const currentValue = demoElement.getAttribute(attributeName);
+
+      if (currentValue === demoInput.value) return;
+
+      if (
+        member.type?.text === "Angle" &&
+        demoInput.value.match(angleMatch) === null
+      )
+        return;
+
+      demoElement.setAttribute(attributeName, demoInput.value);
+    });
+
+    demoInput.value = Reflect.get(demoElement, member.name);
+
+    demoCell.appendChild(demoInput);
+  }
+
+  statRow.appendChild(demoCell);
+
   const descriptionRow = document.createElement("tr");
 
   const descriptionCell = document.createElement("td");
@@ -322,7 +453,10 @@ function renderPropertyRows(member: ClassFieldExtended) {
   return [statRow, descriptionRow];
 }
 
-function renderPropertyTable(fields: Schema.ClassField[]) {
+function renderPropertyTable(
+  fields: Schema.ClassField[],
+  demoElement: HTMLElement
+) {
   const table = document.createElement("table");
 
   const caption = document.createElement("caption");
@@ -335,7 +469,12 @@ function renderPropertyTable(fields: Schema.ClassField[]) {
 
   table.appendChild(body);
 
-  const fieldHeaderRow = renderTableHeaders("JS Name", "HTML Name", "Type");
+  const fieldHeaderRow = renderTableHeaders(
+    "JS Name",
+    "HTML Name",
+    "Type",
+    "Demo"
+  );
 
   body.appendChild(fieldHeaderRow);
 
@@ -343,7 +482,9 @@ function renderPropertyTable(fields: Schema.ClassField[]) {
     (field) => field.privacy === undefined || field.privacy === "public"
   ) as ClassFieldExtended[];
 
-  const rows = publicFields.map(renderPropertyRows).flat();
+  const rows = publicFields
+    .map((field) => renderPropertyRows(field, demoElement))
+    .flat();
 
   for (const row of rows) {
     body.appendChild(row);
@@ -352,38 +493,57 @@ function renderPropertyTable(fields: Schema.ClassField[]) {
   return table;
 }
 
-function renderDemo(element: ElementData) {
+function renderDemo(element: ElementData): [HTMLDivElement, HTMLElement] {
   const div = document.createElement("div");
 
   div.classList.add("demo");
 
-  const heading = document.createElement("h4");
-
-  heading.textContent = "Demo";
-
-  div.appendChild(heading);
-
-  const canvas = createCanvas({ background: Color.gray(210) });
+  const canvas = createCanvas({
+    background: Color.gray(210),
+    height: 200,
+    width: 500,
+  });
 
   div.appendChild(canvas);
 
-  if (element.tag === "c2d-canvas") return div;
+  if (element.tag === "c2d-canvas") {
+    canvas.background = Color.random;
+
+    return [div, canvas];
+  }
+
+  const defaults = {
+    anchor: canvas.center,
+    fill: Color.random,
+    stroke: Color.random,
+    lineWidth: Math.ceil(Math.random() * 10),
+  };
 
   const mainElement = document.createElement(element.tag);
 
-  if (element.tag.slice(0, 10) === "c2d-shape-") {
+  if (element.tag === "c2d-text") {
+    mainElement.textContent = "Web Spinner";
+
+    canvas.appendChild(mainElement);
+  } else if (element.tag.slice(0, 10) === "c2d-shape-") {
     const shape = document.createElement("c2d-shape");
 
     canvas.appendChild(shape);
 
     shape.appendChild(mainElement);
-
-    return div;
+  } else {
+    canvas.appendChild(mainElement);
   }
 
-  canvas.appendChild(mainElement);
+  for (const [name, value] of Object.entries(defaults)) {
+    if (name in mainElement) {
+      Reflect.set(mainElement, name, value);
+    }
+  }
 
-  return div;
+  canvas.queueRender();
+
+  return [div, mainElement];
 }
 
 function renderElementDoc(element: ElementData) {
@@ -391,17 +551,19 @@ function renderElementDoc(element: ElementData) {
 
   div.classList.add("element");
 
+  div.id = element.tag;
+
   const heading = document.createElement("h3");
 
   heading.textContent = element.tag;
 
   div.appendChild(heading);
 
-  const demo = renderDemo(element);
+  const [demoDiv, demoElement] = renderDemo(element);
 
-  div.appendChild(demo);
+  div.appendChild(demoDiv);
 
-  const fieldTable = renderPropertyTable(element.fields);
+  const fieldTable = renderPropertyTable(element.fields, demoElement);
 
   div.appendChild(fieldTable);
 
@@ -412,26 +574,64 @@ function renderElementDoc(element: ElementData) {
   return div;
 }
 
+function renderNav(elements: ElementData[]) {
+  const nav = document.createElement("nav");
+
+  const topAnchor = document.createElement("a");
+
+  topAnchor.href = "/";
+
+  const topHeading = document.createElement("h1");
+
+  topHeading.textContent = "Web Spinner";
+
+  topAnchor.appendChild(topHeading);
+
+  nav.appendChild(topAnchor);
+
+  for (const element of elements) {
+    const anchor = document.createElement("a");
+
+    anchor.href = "#" + element.tag;
+
+    anchor.textContent = element.tag;
+
+    nav.appendChild(anchor);
+  }
+
+  return nav;
+}
+
 function renderDocumentation() {
   const { elements } = getDocData();
 
-  const div = document.createElement("div");
+  const docDiv = document.createElement("div");
 
-  div.classList.add("doc");
+  docDiv.classList.add("doc");
 
   const heading = document.createElement("h2");
 
   heading.textContent = "Documentation";
 
-  div.appendChild(heading);
+  docDiv.appendChild(heading);
+
+  const nav = renderNav(elements);
+
+  docDiv.appendChild(nav);
+
+  const elementDiv = document.createElement("div");
+
+  elementDiv.classList.add("elements");
+
+  docDiv.appendChild(elementDiv);
 
   const elementDocs = elements.map(renderElementDoc);
 
   for (const doc of elementDocs) {
-    div.appendChild(doc);
+    elementDiv.appendChild(doc);
   }
 
-  return div;
+  return docDiv;
 }
 
 const reference = renderDocumentation();

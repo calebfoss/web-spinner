@@ -7,6 +7,7 @@ import { standaloneChildren } from "../../mixins/children";
 import { attributeParser } from "../../utlities/attributeParser";
 import { Canvas2DElement } from "./element";
 import { Canvas2DBaseRenderable } from "./renderable";
+import { DrawStyle } from "../../classes/gradient";
 
 export class Canvas2DCanvasElement extends standaloneChildren(Canvas2DElement) {
   static observedAttributes: string[] = [
@@ -20,12 +21,14 @@ export class Canvas2DCanvasElement extends standaloneChildren(Canvas2DElement) {
   }
 
   #animating = false;
-  #background: Color | None = "none";
+  #background: DrawStyle = "none";
   #clickTracker: ClickTracker;
   #context: CanvasRenderingContext2D;
+  #deltaTime: number = 0;
   #devicePixelRatio: number;
   #frame = 0;
   #keyboardTracker = new KeyboardTracker();
+  #lastFrameTime = -1;
   #mouseTracker: MouseTracker;
   #renderEvents = new Set<keyof HTMLElementEventMap>();
   #renderQueued = false;
@@ -88,7 +91,7 @@ export class Canvas2DCanvasElement extends standaloneChildren(Canvas2DElement) {
           break;
 
         case "background":
-          this.#background = attributeParser.Color(newValue);
+          this.background = attributeParser.Color(newValue);
           break;
       }
     }
@@ -96,12 +99,27 @@ export class Canvas2DCanvasElement extends standaloneChildren(Canvas2DElement) {
     super.attributeChangedCallback(name, oldValue, newValue);
   }
 
-  get background() {
+  /**
+   * At the beginning of each frame, the canvas renders its background using
+   * this style. It may be a Color or Gradient. When set to "none", the canvas
+   * will not render a background. This will result in the next frame being
+   * rendered on top of the last frame's contents.
+   *
+   * @attr
+   * @reflect
+   */
+  get background(): DrawStyle {
     return this.#background;
   }
 
-  set background(color) {
-    this.#background = color;
+  set background(value) {
+    if (this.#background.toString() === value.toString()) return;
+
+    this.#background = value;
+
+    this.setAttribute("background", value.toString());
+
+    this.queueRender();
   }
 
   get center() {
@@ -140,6 +158,13 @@ export class Canvas2DCanvasElement extends standaloneChildren(Canvas2DElement) {
 
   get context() {
     return this.#context;
+  }
+
+  /**
+   * Time passed the previous and current frame.
+   */
+  get deltaTime() {
+    return this.#deltaTime;
   }
 
   get everyFrame() {
@@ -181,10 +206,22 @@ export class Canvas2DCanvasElement extends standaloneChildren(Canvas2DElement) {
 
     this.#renderQueued = true;
 
-    requestAnimationFrame(this.#render.bind(this));
+    requestAnimationFrame((time) => {
+      this.#deltaTime = time - this.#lastFrameTime;
+
+      this.#lastFrameTime = time;
+
+      this.#render();
+    });
   }
 
-  get width() {
+  /**
+   * The width of the canvas element in pixels divided by the device's pixel ratio.
+   *
+   * @attr
+   * @reflect
+   */
+  get width(): number {
     return this.domCanvas.width / devicePixelRatio;
   }
 
@@ -198,8 +235,14 @@ export class Canvas2DCanvasElement extends standaloneChildren(Canvas2DElement) {
     this.queueRender();
   }
 
-  get height() {
-    return this.domCanvas.width / devicePixelRatio;
+  /**
+   * The height of the canvas element in pixels divided by the device's pixel ratio.
+   *
+   * @attr
+   * @reflect
+   */
+  get height(): number {
+    return this.domCanvas.height / devicePixelRatio;
   }
 
   set height(value) {

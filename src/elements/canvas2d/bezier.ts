@@ -8,6 +8,7 @@ import {
   Canvas2DStandaloneRenderable,
 } from "./renderable";
 import { Canvas2DCanvasElement } from "./canvas";
+import { transformeable } from "../../mixins/transform";
 
 function hasControlPoints<B extends typeof Canvas2DBaseRenderable>(Base: B) {
   return class extends hasTo(Base) {
@@ -64,7 +65,9 @@ export class Canvas2DShapeBezier extends hasControlPoints(
 customElements.define("c2d-shape-bezier", Canvas2DShapeBezier);
 
 export class Canvas2DBezier extends strokeable(
-  fillable(hasFrom(hasControlPoints(Canvas2DStandaloneRenderable)))
+  fillable(
+    hasFrom(hasControlPoints(transformeable(Canvas2DStandaloneRenderable)))
+  )
 ) {
   static get tag() {
     return "c2d-bezier";

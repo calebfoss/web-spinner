@@ -1,6 +1,6 @@
-import { State } from './state';
+import { State } from "./state";
 
-export type AngleUnit = (typeof Angle)['unit'][keyof (typeof Angle)['unit']];
+export type AngleUnit = (typeof Angle)["unit"][keyof (typeof Angle)["unit"]];
 
 const unitsInCircle: {
   [U in AngleUnit]: number;
@@ -12,38 +12,40 @@ const unitsInCircle: {
 };
 
 export class Angle extends State<number> {
-  #conversions = new Map<Exclude<AngleUnit, 'rad'>, number>();
+  #conversions = new Map<Exclude<AngleUnit, "rad">, number>();
 
   constructor(unit: AngleUnit, value: number) {
-    const radians = unit === 'rad' ? value : Angle.convert(value, unit, 'rad');
+    const radians = unit === "rad" ? value : Angle.convert(value, unit, "rad");
 
     super(radians);
+
+    if (unit !== "rad") this.#conversions.set(unit, value);
   }
 
-  #getConverted(unit: Exclude<AngleUnit, 'rad'>) {
+  #getConverted(unit: Exclude<AngleUnit, "rad">) {
     const cached = this.#conversions.get(unit);
 
     if (cached !== undefined) return cached;
 
-    const conversion = Angle.convert(this.value, 'rad', unit);
+    const conversion = Angle.convert(this.value, "rad", unit);
 
     this.#conversions.set(unit, conversion);
 
     return conversion;
   }
 
-  #setConverted(unit: Exclude<AngleUnit, 'rad'>, value: number) {
+  #setConverted(unit: Exclude<AngleUnit, "rad">, value: number) {
     this.#conversions.set(unit, value);
 
-    this.value = Angle.convert(value, unit, 'rad');
+    this.value = Angle.convert(value, unit, "rad");
   }
 
   get degrees() {
-    return this.#getConverted('deg');
+    return this.#getConverted("deg");
   }
 
   set degrees(value) {
-    this.#setConverted('deg', value);
+    this.#setConverted("deg", value);
   }
 
   toString() {
@@ -51,7 +53,7 @@ export class Angle extends State<number> {
 
     const [unit, value] =
       conversionCount === 0
-        ? ['rad' as AngleUnit, this.value]
+        ? ["rad" as AngleUnit, this.value]
         : Array.from(this.#conversions)[conversionCount - 1];
 
     const valueString = Number.isInteger(value)
@@ -90,10 +92,10 @@ export class Angle extends State<number> {
   }
 
   static unit = {
-    degrees: 'deg',
-    radians: 'rad',
-    gradians: 'grad',
-    turn: 'turn',
+    degrees: "deg",
+    radians: "rad",
+    gradians: "grad",
+    turn: "turn",
   } as const;
 
   static get unitsInCircle() {

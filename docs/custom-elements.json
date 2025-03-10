@@ -10,12 +10,6 @@
     },
     {
       "kind": "javascript-module",
-      "path": "docs/script.ts",
-      "declarations": [],
-      "exports": []
-    },
-    {
-      "kind": "javascript-module",
       "path": "dist/webSpinner.js",
       "declarations": [
         {
@@ -190,6 +184,12 @@
           }
         }
       ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "docs/script.ts",
+      "declarations": [],
+      "exports": []
     },
     {
       "kind": "javascript-module",
@@ -382,7 +382,7 @@
               "kind": "field",
               "name": "#conversions",
               "privacy": "private",
-              "default": "new Map<Exclude<AngleUnit, 'rad'>, number>()"
+              "default": "new Map<Exclude<AngleUnit, \"rad\">, number>()"
             },
             {
               "kind": "method",
@@ -392,7 +392,7 @@
                 {
                   "name": "unit",
                   "type": {
-                    "text": "Exclude<AngleUnit, 'rad'>"
+                    "text": "Exclude<AngleUnit, \"rad\">"
                   }
                 }
               ]
@@ -405,7 +405,7 @@
                 {
                   "name": "unit",
                   "type": {
-                    "text": "Exclude<AngleUnit, 'rad'>"
+                    "text": "Exclude<AngleUnit, \"rad\">"
                   }
                 },
                 {
@@ -499,9 +499,9 @@
               "kind": "field",
               "name": "unit",
               "static": true,
-              "default": "{ degrees: 'deg', radians: 'rad', gradians: 'grad', turn: 'turn', }",
+              "default": "{ degrees: \"deg\", radians: \"rad\", gradians: \"grad\", turn: \"turn\", }",
               "type": {
-                "text": "{\r\n    degrees: 'deg',\r\n    radians: 'rad',\r\n    gradians: 'grad',\r\n    turn: 'turn',\r\n  }"
+                "text": "{\r\n    degrees: \"deg\",\r\n    radians: \"rad\",\r\n    gradians: \"grad\",\r\n    turn: \"turn\",\r\n  }"
               }
             },
             {
@@ -648,6 +648,14 @@
             {
               "kind": "field",
               "name": "clicked"
+            },
+            {
+              "kind": "method",
+              "name": "copy",
+              "inheritedFrom": {
+                "name": "Vector2D",
+                "module": "src/classes/vector2d.ts"
+              }
             },
             {
               "kind": "method",
@@ -969,6 +977,14 @@
               "inheritedFrom": {
                 "name": "ClickData",
                 "module": "src/classes/click.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "copy",
+              "inheritedFrom": {
+                "name": "Vector2D",
+                "module": "src/classes/vector2d.ts"
               }
             },
             {
@@ -2055,6 +2071,14 @@
             },
             {
               "kind": "method",
+              "name": "copy",
+              "inheritedFrom": {
+                "name": "Vector2D",
+                "module": "src/classes/vector2d.ts"
+              }
+            },
+            {
+              "kind": "method",
               "name": "equals",
               "parameters": [
                 {
@@ -2401,6 +2425,14 @@
               "inheritedFrom": {
                 "name": "MouseData",
                 "module": "src/classes/mouse.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "copy",
+              "inheritedFrom": {
+                "name": "Vector2D",
+                "module": "src/classes/vector2d.ts"
               }
             },
             {
@@ -2971,6 +3003,10 @@
           "description": "",
           "name": "Vector2D",
           "members": [
+            {
+              "kind": "method",
+              "name": "copy"
+            },
             {
               "kind": "method",
               "name": "equals",
@@ -4010,7 +4046,10 @@
             },
             {
               "kind": "field",
-              "name": "to"
+              "name": "to",
+              "description": "End point of the element relative to its anchor.",
+              "reflects": true,
+              "attribute": "to"
             },
             {
               "kind": "field",
@@ -4072,6 +4111,25 @@
             {
               "kind": "field",
               "name": "angle",
+              "type": {
+                "text": "Angle"
+              },
+              "description": "Clockwise rotation of the element around its anchor.",
+              "reflects": true,
+              "attribute": "angle",
+              "inheritedFrom": {
+                "name": "transformeable",
+                "module": "src/mixins/transform.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#angularVelocityChangedTime",
+              "privacy": "private",
+              "type": {
+                "text": "number"
+              },
+              "default": "-1",
               "inheritedFrom": {
                 "name": "transformeable",
                 "module": "src/mixins/transform.ts"
@@ -4080,6 +4138,12 @@
             {
               "kind": "field",
               "name": "angularVelocity",
+              "type": {
+                "text": "Angle"
+              },
+              "description": "Clockwise rotation per second.",
+              "reflects": true,
+              "attribute": "angular-velocity",
               "inheritedFrom": {
                 "name": "transformeable",
                 "module": "src/mixins/transform.ts"
@@ -4088,6 +4152,12 @@
             {
               "kind": "field",
               "name": "anchor",
+              "type": {
+                "text": "Vector2D"
+              },
+              "description": "Base position of the element relative to its parent's anchor.",
+              "reflects": true,
+              "attribute": "anchor",
               "inheritedFrom": {
                 "name": "transformeable",
                 "module": "src/mixins/transform.ts"
@@ -4211,7 +4281,26 @@
             },
             {
               "kind": "field",
+              "name": "#velocityChangedTime",
+              "privacy": "private",
+              "type": {
+                "text": "number"
+              },
+              "default": "-1",
+              "inheritedFrom": {
+                "name": "transformeable",
+                "module": "src/mixins/transform.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "velocity",
+              "type": {
+                "text": "Vector2D"
+              },
+              "description": "Anchor movement per second.",
+              "reflects": true,
+              "attribute": "velocity",
               "inheritedFrom": {
                 "name": "transformeable",
                 "module": "src/mixins/transform.ts"
@@ -4220,10 +4309,17 @@
           ],
           "attributes": [
             {
-              "name": "to"
+              "name": "to",
+              "description": "End point of the element relative to its anchor.",
+              "fieldName": "to"
             },
             {
               "name": "angle",
+              "type": {
+                "text": "Angle"
+              },
+              "description": "Clockwise rotation of the element around its anchor.",
+              "fieldName": "angle",
               "inheritedFrom": {
                 "name": "transformeable",
                 "module": "src/mixins/transform.ts"
@@ -4231,6 +4327,11 @@
             },
             {
               "name": "angular-velocity",
+              "type": {
+                "text": "Angle"
+              },
+              "description": "Clockwise rotation per second.",
+              "fieldName": "angularVelocity",
               "inheritedFrom": {
                 "name": "transformeable",
                 "module": "src/mixins/transform.ts"
@@ -4238,6 +4339,11 @@
             },
             {
               "name": "anchor",
+              "type": {
+                "text": "Vector2D"
+              },
+              "description": "Base position of the element relative to its parent's anchor.",
+              "fieldName": "anchor",
               "inheritedFrom": {
                 "name": "transformeable",
                 "module": "src/mixins/transform.ts"
@@ -4252,6 +4358,11 @@
             },
             {
               "name": "velocity",
+              "type": {
+                "text": "Vector2D"
+              },
+              "description": "Anchor movement per second.",
+              "fieldName": "velocity",
               "inheritedFrom": {
                 "name": "transformeable",
                 "module": "src/mixins/transform.ts"
@@ -4285,12 +4396,23 @@
             },
             {
               "kind": "field",
-              "name": "from"
+              "name": "from",
+              "type": {
+                "text": "Vector2D"
+              },
+              "description": "Starting point of the element relative to its anchor.",
+              "reflects": true,
+              "attribute": "from"
             }
           ],
           "attributes": [
             {
-              "name": "from"
+              "name": "from",
+              "type": {
+                "text": "Vector2D"
+              },
+              "description": "Starting point of the element relative to its anchor.",
+              "fieldName": "from"
             }
           ],
           "parameters": [
@@ -4366,6 +4488,9 @@
             {
               "kind": "field",
               "name": "offset",
+              "type": {
+                "text": "Vector2D"
+              },
               "description": "Position of the element's origin relative to its anchor.",
               "reflects": true,
               "attribute": "offset"
@@ -4374,6 +4499,9 @@
           "attributes": [
             {
               "name": "offset",
+              "type": {
+                "text": "Vector2D"
+              },
               "description": "Position of the element's origin relative to its anchor.",
               "fieldName": "offset"
             }
@@ -4581,6 +4709,9 @@
             {
               "kind": "field",
               "name": "offset",
+              "type": {
+                "text": "Vector2D"
+              },
               "description": "Position of the element's origin relative to its anchor.",
               "reflects": true,
               "attribute": "offset",
@@ -4611,6 +4742,9 @@
           "attributes": [
             {
               "name": "offset",
+              "type": {
+                "text": "Vector2D"
+              },
               "description": "Position of the element's origin relative to its anchor.",
               "fieldName": "offset",
               "inheritedFrom": {
@@ -4662,6 +4796,9 @@
             {
               "kind": "field",
               "name": "lineWidth",
+              "type": {
+                "text": "number | null"
+              },
               "description": "Width in pixels for drawing lines.",
               "reflects": true,
               "attribute": "line-width"
@@ -4722,6 +4859,9 @@
             },
             {
               "name": "line-width",
+              "type": {
+                "text": "number | null"
+              },
               "description": "Width in pixels for drawing lines.",
               "fieldName": "lineWidth"
             }
@@ -4791,15 +4931,42 @@
             },
             {
               "kind": "field",
-              "name": "angle"
+              "name": "angle",
+              "type": {
+                "text": "Angle"
+              },
+              "description": "Clockwise rotation of the element around its anchor.",
+              "reflects": true,
+              "attribute": "angle"
             },
             {
               "kind": "field",
-              "name": "angularVelocity"
+              "name": "#angularVelocityChangedTime",
+              "privacy": "private",
+              "type": {
+                "text": "number"
+              },
+              "default": "-1"
             },
             {
               "kind": "field",
-              "name": "anchor"
+              "name": "angularVelocity",
+              "type": {
+                "text": "Angle"
+              },
+              "description": "Clockwise rotation per second.",
+              "reflects": true,
+              "attribute": "angular-velocity"
+            },
+            {
+              "kind": "field",
+              "name": "anchor",
+              "type": {
+                "text": "Vector2D"
+              },
+              "description": "Base position of the element relative to its parent's anchor.",
+              "reflects": true,
+              "attribute": "anchor"
             },
             {
               "kind": "field",
@@ -4891,24 +5058,59 @@
             },
             {
               "kind": "field",
-              "name": "velocity"
+              "name": "#velocityChangedTime",
+              "privacy": "private",
+              "type": {
+                "text": "number"
+              },
+              "default": "-1"
+            },
+            {
+              "kind": "field",
+              "name": "velocity",
+              "type": {
+                "text": "Vector2D"
+              },
+              "description": "Anchor movement per second.",
+              "reflects": true,
+              "attribute": "velocity"
             }
           ],
           "attributes": [
             {
-              "name": "angle"
+              "name": "angle",
+              "type": {
+                "text": "Angle"
+              },
+              "description": "Clockwise rotation of the element around its anchor.",
+              "fieldName": "angle"
             },
             {
-              "name": "angular-velocity"
+              "name": "angular-velocity",
+              "type": {
+                "text": "Angle"
+              },
+              "description": "Clockwise rotation per second.",
+              "fieldName": "angularVelocity"
             },
             {
-              "name": "anchor"
+              "name": "anchor",
+              "type": {
+                "text": "Vector2D"
+              },
+              "description": "Base position of the element relative to its parent's anchor.",
+              "fieldName": "anchor"
             },
             {
               "name": "scale"
             },
             {
-              "name": "velocity"
+              "name": "velocity",
+              "type": {
+                "text": "Vector2D"
+              },
+              "description": "Anchor movement per second.",
+              "fieldName": "velocity"
             }
           ],
           "parameters": [
@@ -5083,6 +5285,25 @@
             {
               "kind": "field",
               "name": "angle",
+              "type": {
+                "text": "Angle"
+              },
+              "description": "Clockwise rotation of the element around its anchor.",
+              "reflects": true,
+              "attribute": "angle",
+              "inheritedFrom": {
+                "name": "transformeable",
+                "module": "src/mixins/transform.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#angularVelocityChangedTime",
+              "privacy": "private",
+              "type": {
+                "text": "number"
+              },
+              "default": "-1",
               "inheritedFrom": {
                 "name": "transformeable",
                 "module": "src/mixins/transform.ts"
@@ -5091,6 +5312,12 @@
             {
               "kind": "field",
               "name": "angularVelocity",
+              "type": {
+                "text": "Angle"
+              },
+              "description": "Clockwise rotation per second.",
+              "reflects": true,
+              "attribute": "angular-velocity",
               "inheritedFrom": {
                 "name": "transformeable",
                 "module": "src/mixins/transform.ts"
@@ -5099,6 +5326,12 @@
             {
               "kind": "field",
               "name": "anchor",
+              "type": {
+                "text": "Vector2D"
+              },
+              "description": "Base position of the element relative to its parent's anchor.",
+              "reflects": true,
+              "attribute": "anchor",
               "inheritedFrom": {
                 "name": "transformeable",
                 "module": "src/mixins/transform.ts"
@@ -5201,7 +5434,26 @@
             },
             {
               "kind": "field",
+              "name": "#velocityChangedTime",
+              "privacy": "private",
+              "type": {
+                "text": "number"
+              },
+              "default": "-1",
+              "inheritedFrom": {
+                "name": "transformeable",
+                "module": "src/mixins/transform.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "velocity",
+              "type": {
+                "text": "Vector2D"
+              },
+              "description": "Anchor movement per second.",
+              "reflects": true,
+              "attribute": "velocity",
               "inheritedFrom": {
                 "name": "transformeable",
                 "module": "src/mixins/transform.ts"
@@ -5400,6 +5652,9 @@
             {
               "kind": "field",
               "name": "offset",
+              "type": {
+                "text": "Vector2D"
+              },
               "description": "Position of the element's origin relative to its anchor.",
               "reflects": true,
               "attribute": "offset",
@@ -5436,6 +5691,11 @@
           "attributes": [
             {
               "name": "angle",
+              "type": {
+                "text": "Angle"
+              },
+              "description": "Clockwise rotation of the element around its anchor.",
+              "fieldName": "angle",
               "inheritedFrom": {
                 "name": "transformeable",
                 "module": "src/mixins/transform.ts"
@@ -5443,6 +5703,11 @@
             },
             {
               "name": "angular-velocity",
+              "type": {
+                "text": "Angle"
+              },
+              "description": "Clockwise rotation per second.",
+              "fieldName": "angularVelocity",
               "inheritedFrom": {
                 "name": "transformeable",
                 "module": "src/mixins/transform.ts"
@@ -5450,6 +5715,11 @@
             },
             {
               "name": "anchor",
+              "type": {
+                "text": "Vector2D"
+              },
+              "description": "Base position of the element relative to its parent's anchor.",
+              "fieldName": "anchor",
               "inheritedFrom": {
                 "name": "transformeable",
                 "module": "src/mixins/transform.ts"
@@ -5464,6 +5734,11 @@
             },
             {
               "name": "velocity",
+              "type": {
+                "text": "Vector2D"
+              },
+              "description": "Anchor movement per second.",
+              "fieldName": "velocity",
               "inheritedFrom": {
                 "name": "transformeable",
                 "module": "src/mixins/transform.ts"
@@ -5471,6 +5746,9 @@
             },
             {
               "name": "offset",
+              "type": {
+                "text": "Vector2D"
+              },
               "description": "Position of the element's origin relative to its anchor.",
               "fieldName": "offset",
               "inheritedFrom": {
@@ -5502,7 +5780,7 @@
           "type": {
             "text": "AttributeTypeParser"
           },
-          "default": "{ number(stringValue) { return parseFloat(stringValue); }, Color(stringValue) { const args = stringValue.split(\",\"); const numbers = args.map(attributeParser.number); switch (numbers.length) { case 1: return isNaN(numbers[0]) ? new Color(args[0]) : new Color(numbers[0]); case 2: return new Color(numbers[0], numbers[1]); case 3: return new Color(numbers[0], numbers[1], numbers[2]); case 5: console.warn( `Found ${numbers.length} arguments passed to Color attribute, but the maximum is 4` ); default: return new Color(numbers[0], numbers[1], numbers[2], numbers[3]); } }, FillStrokeStyle(stringValue) { if (stringValue === NONE || stringValue === \"gradient\") return stringValue; return attributeParser.Color(stringValue); }, Vector2D(stringValue) { const numbers = stringValue.split(\",\").map(attributeParser.number); switch (numbers.length) { case 0: return new Vector2D(); case 1: return new Vector2D(numbers[0]); case 3: console.warn( `Found ${numbers.length} arguments passed to Vecto2D attribute, but the maximum is 2` ); default: return new Vector2D(numbers[0], numbers[1]); } }, Angle(stringValue) { const args = stringValue.match(angleMatch); if (args === null) throw new Error(`Angle arguments could not be parsed: ${stringValue}`); const value = attributeParser.number(args[1]); const unit = args[2] as AngleUnit; return new Angle(unit, value); }, }"
+          "default": "{ number(stringValue) { return parseFloat(stringValue); }, Color(stringValue) { const args = stringValue.split(\",\"); const numbers = args.map(attributeParser.number); switch (numbers.length) { case 1: return isNaN(numbers[0]) ? new Color(args[0]) : new Color(numbers[0]); case 2: return new Color(numbers[0], numbers[1]); case 3: return new Color(numbers[0], numbers[1], numbers[2]); case 5: console.warn( `Found ${numbers.length} arguments passed to Color attribute, but the maximum is 4` ); default: return new Color(numbers[0], numbers[1], numbers[2], numbers[3]); } }, FillStrokeStyle(stringValue) { if (stringValue === NONE || stringValue === \"gradient\") return stringValue; return attributeParser.Color(stringValue); }, Vector2D(stringValue) { const numbers = stringValue.split(\",\").map(attributeParser.number); if (numbers.some(Number.isNaN)) throw new Error(`NaN: ${stringValue}`); switch (numbers.length) { case 0: return new Vector2D(); case 1: return new Vector2D(numbers[0]); case 3: console.warn( `Found ${numbers.length} arguments passed to Vecto2D attribute, but the maximum is 2` ); default: return new Vector2D(numbers[0], numbers[1]); } }, Angle(stringValue) { const args = stringValue.match(angleMatch); if (args === null) throw new Error(`Angle arguments could not be parsed: ${stringValue}`); const value = attributeParser.number(args[1]); const unit = args[2] as AngleUnit; return new Angle(unit, value); }, }"
         }
       ],
       "exports": [
@@ -5640,6 +5918,9 @@
             {
               "kind": "field",
               "name": "to",
+              "description": "End point of the element relative to its anchor.",
+              "reflects": true,
+              "attribute": "to",
               "inheritedFrom": {
                 "name": "hasTo",
                 "module": "src/mixins/fromTo.ts"
@@ -5705,6 +5986,25 @@
             {
               "kind": "field",
               "name": "angle",
+              "type": {
+                "text": "Angle"
+              },
+              "description": "Clockwise rotation of the element around its anchor.",
+              "reflects": true,
+              "attribute": "angle",
+              "inheritedFrom": {
+                "name": "transformeable",
+                "module": "src/mixins/transform.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#angularVelocityChangedTime",
+              "privacy": "private",
+              "type": {
+                "text": "number"
+              },
+              "default": "-1",
               "inheritedFrom": {
                 "name": "transformeable",
                 "module": "src/mixins/transform.ts"
@@ -5713,6 +6013,12 @@
             {
               "kind": "field",
               "name": "angularVelocity",
+              "type": {
+                "text": "Angle"
+              },
+              "description": "Clockwise rotation per second.",
+              "reflects": true,
+              "attribute": "angular-velocity",
               "inheritedFrom": {
                 "name": "transformeable",
                 "module": "src/mixins/transform.ts"
@@ -5721,6 +6027,12 @@
             {
               "kind": "field",
               "name": "anchor",
+              "type": {
+                "text": "Vector2D"
+              },
+              "description": "Base position of the element relative to its parent's anchor.",
+              "reflects": true,
+              "attribute": "anchor",
               "inheritedFrom": {
                 "name": "transformeable",
                 "module": "src/mixins/transform.ts"
@@ -5824,7 +6136,26 @@
             },
             {
               "kind": "field",
+              "name": "#velocityChangedTime",
+              "privacy": "private",
+              "type": {
+                "text": "number"
+              },
+              "default": "-1",
+              "inheritedFrom": {
+                "name": "transformeable",
+                "module": "src/mixins/transform.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "velocity",
+              "type": {
+                "text": "Vector2D"
+              },
+              "description": "Anchor movement per second.",
+              "reflects": true,
+              "attribute": "velocity",
               "inheritedFrom": {
                 "name": "transformeable",
                 "module": "src/mixins/transform.ts"
@@ -6306,6 +6637,8 @@
           "attributes": [
             {
               "name": "to",
+              "description": "End point of the element relative to its anchor.",
+              "fieldName": "to",
               "inheritedFrom": {
                 "name": "hasTo",
                 "module": "src/mixins/fromTo.ts"
@@ -6313,6 +6646,11 @@
             },
             {
               "name": "angle",
+              "type": {
+                "text": "Angle"
+              },
+              "description": "Clockwise rotation of the element around its anchor.",
+              "fieldName": "angle",
               "inheritedFrom": {
                 "name": "transformeable",
                 "module": "src/mixins/transform.ts"
@@ -6320,6 +6658,11 @@
             },
             {
               "name": "angular-velocity",
+              "type": {
+                "text": "Angle"
+              },
+              "description": "Clockwise rotation per second.",
+              "fieldName": "angularVelocity",
               "inheritedFrom": {
                 "name": "transformeable",
                 "module": "src/mixins/transform.ts"
@@ -6327,6 +6670,11 @@
             },
             {
               "name": "anchor",
+              "type": {
+                "text": "Vector2D"
+              },
+              "description": "Base position of the element relative to its parent's anchor.",
+              "fieldName": "anchor",
               "inheritedFrom": {
                 "name": "transformeable",
                 "module": "src/mixins/transform.ts"
@@ -6341,6 +6689,11 @@
             },
             {
               "name": "velocity",
+              "type": {
+                "text": "Vector2D"
+              },
+              "description": "Anchor movement per second.",
+              "fieldName": "velocity",
               "inheritedFrom": {
                 "name": "transformeable",
                 "module": "src/mixins/transform.ts"
@@ -6489,6 +6842,9 @@
             {
               "kind": "field",
               "name": "lineWidth",
+              "type": {
+                "text": "number | null"
+              },
               "description": "Width in pixels for drawing lines.",
               "reflects": true,
               "attribute": "line-width",
@@ -6572,6 +6928,12 @@
             {
               "kind": "field",
               "name": "from",
+              "type": {
+                "text": "Vector2D"
+              },
+              "description": "Starting point of the element relative to its anchor.",
+              "reflects": true,
+              "attribute": "from",
               "inheritedFrom": {
                 "name": "hasFrom",
                 "module": "src/mixins/fromTo.ts"
@@ -6623,6 +6985,9 @@
             {
               "kind": "field",
               "name": "to",
+              "description": "End point of the element relative to its anchor.",
+              "reflects": true,
+              "attribute": "to",
               "inheritedFrom": {
                 "name": "hasTo",
                 "module": "src/mixins/fromTo.ts"
@@ -6688,6 +7053,25 @@
             {
               "kind": "field",
               "name": "angle",
+              "type": {
+                "text": "Angle"
+              },
+              "description": "Clockwise rotation of the element around its anchor.",
+              "reflects": true,
+              "attribute": "angle",
+              "inheritedFrom": {
+                "name": "transformeable",
+                "module": "src/mixins/transform.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#angularVelocityChangedTime",
+              "privacy": "private",
+              "type": {
+                "text": "number"
+              },
+              "default": "-1",
               "inheritedFrom": {
                 "name": "transformeable",
                 "module": "src/mixins/transform.ts"
@@ -6696,6 +7080,12 @@
             {
               "kind": "field",
               "name": "angularVelocity",
+              "type": {
+                "text": "Angle"
+              },
+              "description": "Clockwise rotation per second.",
+              "reflects": true,
+              "attribute": "angular-velocity",
               "inheritedFrom": {
                 "name": "transformeable",
                 "module": "src/mixins/transform.ts"
@@ -6704,6 +7094,12 @@
             {
               "kind": "field",
               "name": "anchor",
+              "type": {
+                "text": "Vector2D"
+              },
+              "description": "Base position of the element relative to its parent's anchor.",
+              "reflects": true,
+              "attribute": "anchor",
               "inheritedFrom": {
                 "name": "transformeable",
                 "module": "src/mixins/transform.ts"
@@ -6785,7 +7181,26 @@
             },
             {
               "kind": "field",
+              "name": "#velocityChangedTime",
+              "privacy": "private",
+              "type": {
+                "text": "number"
+              },
+              "default": "-1",
+              "inheritedFrom": {
+                "name": "transformeable",
+                "module": "src/mixins/transform.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "velocity",
+              "type": {
+                "text": "Vector2D"
+              },
+              "description": "Anchor movement per second.",
+              "reflects": true,
+              "attribute": "velocity",
               "inheritedFrom": {
                 "name": "transformeable",
                 "module": "src/mixins/transform.ts"
@@ -7398,6 +7813,10 @@
             {
               "name": "hasControlPoints",
               "module": "src/elements/canvas2d/bezier.ts"
+            },
+            {
+              "name": "transformeable",
+              "module": "/src/mixins/transform"
             }
           ],
           "superclass": {
@@ -7421,6 +7840,9 @@
             },
             {
               "name": "line-width",
+              "type": {
+                "text": "number | null"
+              },
               "description": "Width in pixels for drawing lines.",
               "fieldName": "lineWidth",
               "inheritedFrom": {
@@ -7442,6 +7864,11 @@
             },
             {
               "name": "from",
+              "type": {
+                "text": "Vector2D"
+              },
+              "description": "Starting point of the element relative to its anchor.",
+              "fieldName": "from",
               "inheritedFrom": {
                 "name": "hasFrom",
                 "module": "src/mixins/fromTo.ts"
@@ -7449,6 +7876,8 @@
             },
             {
               "name": "to",
+              "description": "End point of the element relative to its anchor.",
+              "fieldName": "to",
               "inheritedFrom": {
                 "name": "hasTo",
                 "module": "src/mixins/fromTo.ts"
@@ -7456,6 +7885,11 @@
             },
             {
               "name": "angle",
+              "type": {
+                "text": "Angle"
+              },
+              "description": "Clockwise rotation of the element around its anchor.",
+              "fieldName": "angle",
               "inheritedFrom": {
                 "name": "transformeable",
                 "module": "src/mixins/transform.ts"
@@ -7463,6 +7897,11 @@
             },
             {
               "name": "angular-velocity",
+              "type": {
+                "text": "Angle"
+              },
+              "description": "Clockwise rotation per second.",
+              "fieldName": "angularVelocity",
               "inheritedFrom": {
                 "name": "transformeable",
                 "module": "src/mixins/transform.ts"
@@ -7470,6 +7909,11 @@
             },
             {
               "name": "anchor",
+              "type": {
+                "text": "Vector2D"
+              },
+              "description": "Base position of the element relative to its parent's anchor.",
+              "fieldName": "anchor",
               "inheritedFrom": {
                 "name": "transformeable",
                 "module": "src/mixins/transform.ts"
@@ -7484,6 +7928,11 @@
             },
             {
               "name": "velocity",
+              "type": {
+                "text": "Vector2D"
+              },
+              "description": "Anchor movement per second.",
+              "fieldName": "velocity",
               "inheritedFrom": {
                 "name": "transformeable",
                 "module": "src/mixins/transform.ts"
@@ -7635,7 +8084,7 @@
               "name": "#background",
               "privacy": "private",
               "type": {
-                "text": "Color | None"
+                "text": "DrawStyle"
               },
               "default": "\"none\""
             },
@@ -7659,6 +8108,15 @@
             },
             {
               "kind": "field",
+              "name": "#deltaTime",
+              "privacy": "private",
+              "type": {
+                "text": "number"
+              },
+              "default": "0"
+            },
+            {
+              "kind": "field",
               "name": "#devicePixelRatio",
               "privacy": "private",
               "type": {
@@ -7679,6 +8137,15 @@
               "name": "#keyboardTracker",
               "privacy": "private",
               "default": "new KeyboardTracker()"
+            },
+            {
+              "kind": "field",
+              "name": "#lastFrameTime",
+              "privacy": "private",
+              "type": {
+                "text": "number"
+              },
+              "default": "-1"
             },
             {
               "kind": "field",
@@ -7747,7 +8214,13 @@
             },
             {
               "kind": "field",
-              "name": "background"
+              "name": "background",
+              "type": {
+                "text": "DrawStyle"
+              },
+              "description": "At the beginning of each frame, the canvas renders its background using\r\nthis style. It may be a Color or Gradient. When set to \"none\", the canvas\r\nwill not render a background. This will result in the next frame being\r\nrendered on top of the last frame's contents.",
+              "reflects": true,
+              "attribute": "background"
             },
             {
               "kind": "field",
@@ -7777,6 +8250,12 @@
             {
               "kind": "field",
               "name": "context",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "deltaTime",
+              "description": "Time passed the previous and current frame.",
               "readonly": true
             },
             {
@@ -7835,11 +8314,23 @@
             },
             {
               "kind": "field",
-              "name": "width"
+              "name": "width",
+              "type": {
+                "text": "number"
+              },
+              "description": "The width of the canvas element in pixels divided by the device's pixel ratio.",
+              "reflects": true,
+              "attribute": "width"
             },
             {
               "kind": "field",
-              "name": "height"
+              "name": "height",
+              "type": {
+                "text": "number"
+              },
+              "description": "The height of the canvas element in pixels divided by the device's pixel ratio.",
+              "reflects": true,
+              "attribute": "height"
             },
             {
               "kind": "method",
@@ -8167,13 +8658,28 @@
           ],
           "attributes": [
             {
-              "name": "width"
+              "name": "width",
+              "type": {
+                "text": "number"
+              },
+              "description": "The width of the canvas element in pixels divided by the device's pixel ratio.",
+              "fieldName": "width"
             },
             {
-              "name": "height"
+              "name": "height",
+              "type": {
+                "text": "number"
+              },
+              "description": "The height of the canvas element in pixels divided by the device's pixel ratio.",
+              "fieldName": "height"
             },
             {
-              "name": "background"
+              "name": "background",
+              "type": {
+                "text": "DrawStyle"
+              },
+              "description": "At the beginning of each frame, the canvas renders its background using\r\nthis style. It may be a Color or Gradient. When set to \"none\", the canvas\r\nwill not render a background. This will result in the next frame being\r\nrendered on top of the last frame's contents.",
+              "fieldName": "background"
             }
           ],
           "mixins": [
@@ -8481,6 +8987,25 @@
             {
               "kind": "field",
               "name": "angle",
+              "type": {
+                "text": "Angle"
+              },
+              "description": "Clockwise rotation of the element around its anchor.",
+              "reflects": true,
+              "attribute": "angle",
+              "inheritedFrom": {
+                "name": "transformeable",
+                "module": "src/mixins/transform.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#angularVelocityChangedTime",
+              "privacy": "private",
+              "type": {
+                "text": "number"
+              },
+              "default": "-1",
               "inheritedFrom": {
                 "name": "transformeable",
                 "module": "src/mixins/transform.ts"
@@ -8489,6 +9014,12 @@
             {
               "kind": "field",
               "name": "angularVelocity",
+              "type": {
+                "text": "Angle"
+              },
+              "description": "Clockwise rotation per second.",
+              "reflects": true,
+              "attribute": "angular-velocity",
               "inheritedFrom": {
                 "name": "transformeable",
                 "module": "src/mixins/transform.ts"
@@ -8497,6 +9028,12 @@
             {
               "kind": "field",
               "name": "anchor",
+              "type": {
+                "text": "Vector2D"
+              },
+              "description": "Base position of the element relative to its parent's anchor.",
+              "reflects": true,
+              "attribute": "anchor",
               "inheritedFrom": {
                 "name": "transformeable",
                 "module": "src/mixins/transform.ts"
@@ -8600,7 +9137,26 @@
             },
             {
               "kind": "field",
+              "name": "#velocityChangedTime",
+              "privacy": "private",
+              "type": {
+                "text": "number"
+              },
+              "default": "-1",
+              "inheritedFrom": {
+                "name": "transformeable",
+                "module": "src/mixins/transform.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "velocity",
+              "type": {
+                "text": "Vector2D"
+              },
+              "description": "Anchor movement per second.",
+              "reflects": true,
+              "attribute": "velocity",
               "inheritedFrom": {
                 "name": "transformeable",
                 "module": "src/mixins/transform.ts"
@@ -8809,6 +9365,9 @@
             {
               "kind": "field",
               "name": "offset",
+              "type": {
+                "text": "Vector2D"
+              },
               "description": "Position of the element's origin relative to its anchor.",
               "reflects": true,
               "attribute": "offset",
@@ -8846,6 +9405,9 @@
             {
               "kind": "field",
               "name": "lineWidth",
+              "type": {
+                "text": "number | null"
+              },
               "description": "Width in pixels for drawing lines.",
               "reflects": true,
               "attribute": "line-width",
@@ -9440,6 +10002,11 @@
           "attributes": [
             {
               "name": "angle",
+              "type": {
+                "text": "Angle"
+              },
+              "description": "Clockwise rotation of the element around its anchor.",
+              "fieldName": "angle",
               "inheritedFrom": {
                 "name": "transformeable",
                 "module": "src/mixins/transform.ts"
@@ -9447,6 +10014,11 @@
             },
             {
               "name": "angular-velocity",
+              "type": {
+                "text": "Angle"
+              },
+              "description": "Clockwise rotation per second.",
+              "fieldName": "angularVelocity",
               "inheritedFrom": {
                 "name": "transformeable",
                 "module": "src/mixins/transform.ts"
@@ -9454,6 +10026,11 @@
             },
             {
               "name": "anchor",
+              "type": {
+                "text": "Vector2D"
+              },
+              "description": "Base position of the element relative to its parent's anchor.",
+              "fieldName": "anchor",
               "inheritedFrom": {
                 "name": "transformeable",
                 "module": "src/mixins/transform.ts"
@@ -9468,6 +10045,11 @@
             },
             {
               "name": "velocity",
+              "type": {
+                "text": "Vector2D"
+              },
+              "description": "Anchor movement per second.",
+              "fieldName": "velocity",
               "inheritedFrom": {
                 "name": "transformeable",
                 "module": "src/mixins/transform.ts"
@@ -9475,6 +10057,9 @@
             },
             {
               "name": "offset",
+              "type": {
+                "text": "Vector2D"
+              },
               "description": "Position of the element's origin relative to its anchor.",
               "fieldName": "offset",
               "inheritedFrom": {
@@ -9496,6 +10081,9 @@
             },
             {
               "name": "line-width",
+              "type": {
+                "text": "number | null"
+              },
               "description": "Width in pixels for drawing lines.",
               "fieldName": "lineWidth",
               "inheritedFrom": {
@@ -9763,6 +10351,25 @@
             {
               "kind": "field",
               "name": "angle",
+              "type": {
+                "text": "Angle"
+              },
+              "description": "Clockwise rotation of the element around its anchor.",
+              "reflects": true,
+              "attribute": "angle",
+              "inheritedFrom": {
+                "name": "transformeable",
+                "module": "src/mixins/transform.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#angularVelocityChangedTime",
+              "privacy": "private",
+              "type": {
+                "text": "number"
+              },
+              "default": "-1",
               "inheritedFrom": {
                 "name": "transformeable",
                 "module": "src/mixins/transform.ts"
@@ -9771,6 +10378,12 @@
             {
               "kind": "field",
               "name": "angularVelocity",
+              "type": {
+                "text": "Angle"
+              },
+              "description": "Clockwise rotation per second.",
+              "reflects": true,
+              "attribute": "angular-velocity",
               "inheritedFrom": {
                 "name": "transformeable",
                 "module": "src/mixins/transform.ts"
@@ -9779,6 +10392,12 @@
             {
               "kind": "field",
               "name": "anchor",
+              "type": {
+                "text": "Vector2D"
+              },
+              "description": "Base position of the element relative to its parent's anchor.",
+              "reflects": true,
+              "attribute": "anchor",
               "inheritedFrom": {
                 "name": "transformeable",
                 "module": "src/mixins/transform.ts"
@@ -9882,7 +10501,26 @@
             },
             {
               "kind": "field",
+              "name": "#velocityChangedTime",
+              "privacy": "private",
+              "type": {
+                "text": "number"
+              },
+              "default": "-1",
+              "inheritedFrom": {
+                "name": "transformeable",
+                "module": "src/mixins/transform.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "velocity",
+              "type": {
+                "text": "Vector2D"
+              },
+              "description": "Anchor movement per second.",
+              "reflects": true,
+              "attribute": "velocity",
               "inheritedFrom": {
                 "name": "transformeable",
                 "module": "src/mixins/transform.ts"
@@ -10091,6 +10729,9 @@
             {
               "kind": "field",
               "name": "offset",
+              "type": {
+                "text": "Vector2D"
+              },
               "description": "Position of the element's origin relative to its anchor.",
               "reflects": true,
               "attribute": "offset",
@@ -10506,6 +11147,11 @@
           "attributes": [
             {
               "name": "angle",
+              "type": {
+                "text": "Angle"
+              },
+              "description": "Clockwise rotation of the element around its anchor.",
+              "fieldName": "angle",
               "inheritedFrom": {
                 "name": "transformeable",
                 "module": "src/mixins/transform.ts"
@@ -10513,6 +11159,11 @@
             },
             {
               "name": "angular-velocity",
+              "type": {
+                "text": "Angle"
+              },
+              "description": "Clockwise rotation per second.",
+              "fieldName": "angularVelocity",
               "inheritedFrom": {
                 "name": "transformeable",
                 "module": "src/mixins/transform.ts"
@@ -10520,6 +11171,11 @@
             },
             {
               "name": "anchor",
+              "type": {
+                "text": "Vector2D"
+              },
+              "description": "Base position of the element relative to its parent's anchor.",
+              "fieldName": "anchor",
               "inheritedFrom": {
                 "name": "transformeable",
                 "module": "src/mixins/transform.ts"
@@ -10534,6 +11190,11 @@
             },
             {
               "name": "velocity",
+              "type": {
+                "text": "Vector2D"
+              },
+              "description": "Anchor movement per second.",
+              "fieldName": "velocity",
               "inheritedFrom": {
                 "name": "transformeable",
                 "module": "src/mixins/transform.ts"
@@ -10541,6 +11202,9 @@
             },
             {
               "name": "offset",
+              "type": {
+                "text": "Vector2D"
+              },
               "description": "Position of the element's origin relative to its anchor.",
               "fieldName": "offset",
               "inheritedFrom": {
@@ -10851,6 +11515,25 @@
             {
               "kind": "field",
               "name": "angle",
+              "type": {
+                "text": "Angle"
+              },
+              "description": "Clockwise rotation of the element around its anchor.",
+              "reflects": true,
+              "attribute": "angle",
+              "inheritedFrom": {
+                "name": "transformeable",
+                "module": "src/mixins/transform.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#angularVelocityChangedTime",
+              "privacy": "private",
+              "type": {
+                "text": "number"
+              },
+              "default": "-1",
               "inheritedFrom": {
                 "name": "transformeable",
                 "module": "src/mixins/transform.ts"
@@ -10859,6 +11542,12 @@
             {
               "kind": "field",
               "name": "angularVelocity",
+              "type": {
+                "text": "Angle"
+              },
+              "description": "Clockwise rotation per second.",
+              "reflects": true,
+              "attribute": "angular-velocity",
               "inheritedFrom": {
                 "name": "transformeable",
                 "module": "src/mixins/transform.ts"
@@ -10867,6 +11556,12 @@
             {
               "kind": "field",
               "name": "anchor",
+              "type": {
+                "text": "Vector2D"
+              },
+              "description": "Base position of the element relative to its parent's anchor.",
+              "reflects": true,
+              "attribute": "anchor",
               "inheritedFrom": {
                 "name": "transformeable",
                 "module": "src/mixins/transform.ts"
@@ -10970,7 +11665,26 @@
             },
             {
               "kind": "field",
+              "name": "#velocityChangedTime",
+              "privacy": "private",
+              "type": {
+                "text": "number"
+              },
+              "default": "-1",
+              "inheritedFrom": {
+                "name": "transformeable",
+                "module": "src/mixins/transform.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "velocity",
+              "type": {
+                "text": "Vector2D"
+              },
+              "description": "Anchor movement per second.",
+              "reflects": true,
+              "attribute": "velocity",
               "inheritedFrom": {
                 "name": "transformeable",
                 "module": "src/mixins/transform.ts"
@@ -11171,6 +11885,9 @@
             {
               "kind": "field",
               "name": "offset",
+              "type": {
+                "text": "Vector2D"
+              },
               "description": "Position of the element's origin relative to its anchor.",
               "reflects": true,
               "attribute": "offset",
@@ -11739,6 +12456,11 @@
           "attributes": [
             {
               "name": "angle",
+              "type": {
+                "text": "Angle"
+              },
+              "description": "Clockwise rotation of the element around its anchor.",
+              "fieldName": "angle",
               "inheritedFrom": {
                 "name": "transformeable",
                 "module": "src/mixins/transform.ts"
@@ -11746,6 +12468,11 @@
             },
             {
               "name": "angular-velocity",
+              "type": {
+                "text": "Angle"
+              },
+              "description": "Clockwise rotation per second.",
+              "fieldName": "angularVelocity",
               "inheritedFrom": {
                 "name": "transformeable",
                 "module": "src/mixins/transform.ts"
@@ -11753,6 +12480,11 @@
             },
             {
               "name": "anchor",
+              "type": {
+                "text": "Vector2D"
+              },
+              "description": "Base position of the element relative to its parent's anchor.",
+              "fieldName": "anchor",
               "inheritedFrom": {
                 "name": "transformeable",
                 "module": "src/mixins/transform.ts"
@@ -11767,6 +12499,11 @@
             },
             {
               "name": "velocity",
+              "type": {
+                "text": "Vector2D"
+              },
+              "description": "Anchor movement per second.",
+              "fieldName": "velocity",
               "inheritedFrom": {
                 "name": "transformeable",
                 "module": "src/mixins/transform.ts"
@@ -11774,6 +12511,9 @@
             },
             {
               "name": "offset",
+              "type": {
+                "text": "Vector2D"
+              },
               "description": "Position of the element's origin relative to its anchor.",
               "fieldName": "offset",
               "inheritedFrom": {
@@ -11931,6 +12671,9 @@
             {
               "kind": "field",
               "name": "to",
+              "description": "End point of the element relative to its anchor.",
+              "reflects": true,
+              "attribute": "to",
               "inheritedFrom": {
                 "name": "hasTo",
                 "module": "src/mixins/fromTo.ts"
@@ -11996,6 +12739,25 @@
             {
               "kind": "field",
               "name": "angle",
+              "type": {
+                "text": "Angle"
+              },
+              "description": "Clockwise rotation of the element around its anchor.",
+              "reflects": true,
+              "attribute": "angle",
+              "inheritedFrom": {
+                "name": "transformeable",
+                "module": "src/mixins/transform.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#angularVelocityChangedTime",
+              "privacy": "private",
+              "type": {
+                "text": "number"
+              },
+              "default": "-1",
               "inheritedFrom": {
                 "name": "transformeable",
                 "module": "src/mixins/transform.ts"
@@ -12004,6 +12766,12 @@
             {
               "kind": "field",
               "name": "angularVelocity",
+              "type": {
+                "text": "Angle"
+              },
+              "description": "Clockwise rotation per second.",
+              "reflects": true,
+              "attribute": "angular-velocity",
               "inheritedFrom": {
                 "name": "transformeable",
                 "module": "src/mixins/transform.ts"
@@ -12012,6 +12780,12 @@
             {
               "kind": "field",
               "name": "anchor",
+              "type": {
+                "text": "Vector2D"
+              },
+              "description": "Base position of the element relative to its parent's anchor.",
+              "reflects": true,
+              "attribute": "anchor",
               "inheritedFrom": {
                 "name": "transformeable",
                 "module": "src/mixins/transform.ts"
@@ -12115,7 +12889,26 @@
             },
             {
               "kind": "field",
+              "name": "#velocityChangedTime",
+              "privacy": "private",
+              "type": {
+                "text": "number"
+              },
+              "default": "-1",
+              "inheritedFrom": {
+                "name": "transformeable",
+                "module": "src/mixins/transform.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "velocity",
+              "type": {
+                "text": "Vector2D"
+              },
+              "description": "Anchor movement per second.",
+              "reflects": true,
+              "attribute": "velocity",
               "inheritedFrom": {
                 "name": "transformeable",
                 "module": "src/mixins/transform.ts"
@@ -12597,6 +13390,8 @@
           "attributes": [
             {
               "name": "to",
+              "description": "End point of the element relative to its anchor.",
+              "fieldName": "to",
               "inheritedFrom": {
                 "name": "hasTo",
                 "module": "src/mixins/fromTo.ts"
@@ -12604,6 +13399,11 @@
             },
             {
               "name": "angle",
+              "type": {
+                "text": "Angle"
+              },
+              "description": "Clockwise rotation of the element around its anchor.",
+              "fieldName": "angle",
               "inheritedFrom": {
                 "name": "transformeable",
                 "module": "src/mixins/transform.ts"
@@ -12611,6 +13411,11 @@
             },
             {
               "name": "angular-velocity",
+              "type": {
+                "text": "Angle"
+              },
+              "description": "Clockwise rotation per second.",
+              "fieldName": "angularVelocity",
               "inheritedFrom": {
                 "name": "transformeable",
                 "module": "src/mixins/transform.ts"
@@ -12618,6 +13423,11 @@
             },
             {
               "name": "anchor",
+              "type": {
+                "text": "Vector2D"
+              },
+              "description": "Base position of the element relative to its parent's anchor.",
+              "fieldName": "anchor",
               "inheritedFrom": {
                 "name": "transformeable",
                 "module": "src/mixins/transform.ts"
@@ -12632,6 +13442,11 @@
             },
             {
               "name": "velocity",
+              "type": {
+                "text": "Vector2D"
+              },
+              "description": "Anchor movement per second.",
+              "fieldName": "velocity",
               "inheritedFrom": {
                 "name": "transformeable",
                 "module": "src/mixins/transform.ts"
@@ -12869,6 +13684,9 @@
             {
               "kind": "field",
               "name": "lineWidth",
+              "type": {
+                "text": "number | null"
+              },
               "description": "Width in pixels for drawing lines.",
               "reflects": true,
               "attribute": "line-width",
@@ -12925,6 +13743,9 @@
             {
               "kind": "field",
               "name": "to",
+              "description": "End point of the element relative to its anchor.",
+              "reflects": true,
+              "attribute": "to",
               "inheritedFrom": {
                 "name": "hasTo",
                 "module": "src/mixins/fromTo.ts"
@@ -12990,6 +13811,25 @@
             {
               "kind": "field",
               "name": "angle",
+              "type": {
+                "text": "Angle"
+              },
+              "description": "Clockwise rotation of the element around its anchor.",
+              "reflects": true,
+              "attribute": "angle",
+              "inheritedFrom": {
+                "name": "transformeable",
+                "module": "src/mixins/transform.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#angularVelocityChangedTime",
+              "privacy": "private",
+              "type": {
+                "text": "number"
+              },
+              "default": "-1",
               "inheritedFrom": {
                 "name": "transformeable",
                 "module": "src/mixins/transform.ts"
@@ -12998,6 +13838,12 @@
             {
               "kind": "field",
               "name": "angularVelocity",
+              "type": {
+                "text": "Angle"
+              },
+              "description": "Clockwise rotation per second.",
+              "reflects": true,
+              "attribute": "angular-velocity",
               "inheritedFrom": {
                 "name": "transformeable",
                 "module": "src/mixins/transform.ts"
@@ -13006,6 +13852,12 @@
             {
               "kind": "field",
               "name": "anchor",
+              "type": {
+                "text": "Vector2D"
+              },
+              "description": "Base position of the element relative to its parent's anchor.",
+              "reflects": true,
+              "attribute": "anchor",
               "inheritedFrom": {
                 "name": "transformeable",
                 "module": "src/mixins/transform.ts"
@@ -13087,7 +13939,26 @@
             },
             {
               "kind": "field",
+              "name": "#velocityChangedTime",
+              "privacy": "private",
+              "type": {
+                "text": "number"
+              },
+              "default": "-1",
+              "inheritedFrom": {
+                "name": "transformeable",
+                "module": "src/mixins/transform.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "velocity",
+              "type": {
+                "text": "Vector2D"
+              },
+              "description": "Anchor movement per second.",
+              "reflects": true,
+              "attribute": "velocity",
               "inheritedFrom": {
                 "name": "transformeable",
                 "module": "src/mixins/transform.ts"
@@ -13105,6 +13976,12 @@
             {
               "kind": "field",
               "name": "from",
+              "type": {
+                "text": "Vector2D"
+              },
+              "description": "Starting point of the element relative to its anchor.",
+              "reflects": true,
+              "attribute": "from",
               "inheritedFrom": {
                 "name": "hasFrom",
                 "module": "src/mixins/fromTo.ts"
@@ -13667,6 +14544,9 @@
             },
             {
               "name": "line-width",
+              "type": {
+                "text": "number | null"
+              },
               "description": "Width in pixels for drawing lines.",
               "fieldName": "lineWidth",
               "inheritedFrom": {
@@ -13676,6 +14556,8 @@
             },
             {
               "name": "to",
+              "description": "End point of the element relative to its anchor.",
+              "fieldName": "to",
               "inheritedFrom": {
                 "name": "hasTo",
                 "module": "src/mixins/fromTo.ts"
@@ -13683,6 +14565,11 @@
             },
             {
               "name": "angle",
+              "type": {
+                "text": "Angle"
+              },
+              "description": "Clockwise rotation of the element around its anchor.",
+              "fieldName": "angle",
               "inheritedFrom": {
                 "name": "transformeable",
                 "module": "src/mixins/transform.ts"
@@ -13690,6 +14577,11 @@
             },
             {
               "name": "angular-velocity",
+              "type": {
+                "text": "Angle"
+              },
+              "description": "Clockwise rotation per second.",
+              "fieldName": "angularVelocity",
               "inheritedFrom": {
                 "name": "transformeable",
                 "module": "src/mixins/transform.ts"
@@ -13697,6 +14589,11 @@
             },
             {
               "name": "anchor",
+              "type": {
+                "text": "Vector2D"
+              },
+              "description": "Base position of the element relative to its parent's anchor.",
+              "fieldName": "anchor",
               "inheritedFrom": {
                 "name": "transformeable",
                 "module": "src/mixins/transform.ts"
@@ -13711,6 +14608,11 @@
             },
             {
               "name": "velocity",
+              "type": {
+                "text": "Vector2D"
+              },
+              "description": "Anchor movement per second.",
+              "fieldName": "velocity",
               "inheritedFrom": {
                 "name": "transformeable",
                 "module": "src/mixins/transform.ts"
@@ -13718,6 +14620,11 @@
             },
             {
               "name": "from",
+              "type": {
+                "text": "Vector2D"
+              },
+              "description": "Starting point of the element relative to its anchor.",
+              "fieldName": "from",
               "inheritedFrom": {
                 "name": "hasFrom",
                 "module": "src/mixins/fromTo.ts"
@@ -13965,6 +14872,25 @@
             {
               "kind": "field",
               "name": "angle",
+              "type": {
+                "text": "Angle"
+              },
+              "description": "Clockwise rotation of the element around its anchor.",
+              "reflects": true,
+              "attribute": "angle",
+              "inheritedFrom": {
+                "name": "transformeable",
+                "module": "src/mixins/transform.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#angularVelocityChangedTime",
+              "privacy": "private",
+              "type": {
+                "text": "number"
+              },
+              "default": "-1",
               "inheritedFrom": {
                 "name": "transformeable",
                 "module": "src/mixins/transform.ts"
@@ -13973,6 +14899,12 @@
             {
               "kind": "field",
               "name": "angularVelocity",
+              "type": {
+                "text": "Angle"
+              },
+              "description": "Clockwise rotation per second.",
+              "reflects": true,
+              "attribute": "angular-velocity",
               "inheritedFrom": {
                 "name": "transformeable",
                 "module": "src/mixins/transform.ts"
@@ -13981,6 +14913,12 @@
             {
               "kind": "field",
               "name": "anchor",
+              "type": {
+                "text": "Vector2D"
+              },
+              "description": "Base position of the element relative to its parent's anchor.",
+              "reflects": true,
+              "attribute": "anchor",
               "inheritedFrom": {
                 "name": "transformeable",
                 "module": "src/mixins/transform.ts"
@@ -14084,7 +15022,26 @@
             },
             {
               "kind": "field",
+              "name": "#velocityChangedTime",
+              "privacy": "private",
+              "type": {
+                "text": "number"
+              },
+              "default": "-1",
+              "inheritedFrom": {
+                "name": "transformeable",
+                "module": "src/mixins/transform.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "velocity",
+              "type": {
+                "text": "Vector2D"
+              },
+              "description": "Anchor movement per second.",
+              "reflects": true,
+              "attribute": "velocity",
               "inheritedFrom": {
                 "name": "transformeable",
                 "module": "src/mixins/transform.ts"
@@ -14301,6 +15258,9 @@
             {
               "kind": "field",
               "name": "offset",
+              "type": {
+                "text": "Vector2D"
+              },
               "description": "Position of the element's origin relative to its anchor.",
               "reflects": true,
               "attribute": "offset",
@@ -14338,6 +15298,9 @@
             {
               "kind": "field",
               "name": "lineWidth",
+              "type": {
+                "text": "number | null"
+              },
               "description": "Width in pixels for drawing lines.",
               "reflects": true,
               "attribute": "line-width",
@@ -14932,6 +15895,11 @@
           "attributes": [
             {
               "name": "angle",
+              "type": {
+                "text": "Angle"
+              },
+              "description": "Clockwise rotation of the element around its anchor.",
+              "fieldName": "angle",
               "inheritedFrom": {
                 "name": "transformeable",
                 "module": "src/mixins/transform.ts"
@@ -14939,6 +15907,11 @@
             },
             {
               "name": "angular-velocity",
+              "type": {
+                "text": "Angle"
+              },
+              "description": "Clockwise rotation per second.",
+              "fieldName": "angularVelocity",
               "inheritedFrom": {
                 "name": "transformeable",
                 "module": "src/mixins/transform.ts"
@@ -14946,6 +15919,11 @@
             },
             {
               "name": "anchor",
+              "type": {
+                "text": "Vector2D"
+              },
+              "description": "Base position of the element relative to its parent's anchor.",
+              "fieldName": "anchor",
               "inheritedFrom": {
                 "name": "transformeable",
                 "module": "src/mixins/transform.ts"
@@ -14960,6 +15938,11 @@
             },
             {
               "name": "velocity",
+              "type": {
+                "text": "Vector2D"
+              },
+              "description": "Anchor movement per second.",
+              "fieldName": "velocity",
               "inheritedFrom": {
                 "name": "transformeable",
                 "module": "src/mixins/transform.ts"
@@ -14967,6 +15950,9 @@
             },
             {
               "name": "offset",
+              "type": {
+                "text": "Vector2D"
+              },
               "description": "Position of the element's origin relative to its anchor.",
               "fieldName": "offset",
               "inheritedFrom": {
@@ -14988,6 +15974,9 @@
             },
             {
               "name": "line-width",
+              "type": {
+                "text": "number | null"
+              },
               "description": "Width in pixels for drawing lines.",
               "fieldName": "lineWidth",
               "inheritedFrom": {
@@ -15209,6 +16198,25 @@
             {
               "kind": "field",
               "name": "angle",
+              "type": {
+                "text": "Angle"
+              },
+              "description": "Clockwise rotation of the element around its anchor.",
+              "reflects": true,
+              "attribute": "angle",
+              "inheritedFrom": {
+                "name": "transformeable",
+                "module": "src/mixins/transform.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#angularVelocityChangedTime",
+              "privacy": "private",
+              "type": {
+                "text": "number"
+              },
+              "default": "-1",
               "inheritedFrom": {
                 "name": "transformeable",
                 "module": "src/mixins/transform.ts"
@@ -15217,6 +16225,12 @@
             {
               "kind": "field",
               "name": "angularVelocity",
+              "type": {
+                "text": "Angle"
+              },
+              "description": "Clockwise rotation per second.",
+              "reflects": true,
+              "attribute": "angular-velocity",
               "inheritedFrom": {
                 "name": "transformeable",
                 "module": "src/mixins/transform.ts"
@@ -15225,6 +16239,12 @@
             {
               "kind": "field",
               "name": "anchor",
+              "type": {
+                "text": "Vector2D"
+              },
+              "description": "Base position of the element relative to its parent's anchor.",
+              "reflects": true,
+              "attribute": "anchor",
               "inheritedFrom": {
                 "name": "transformeable",
                 "module": "src/mixins/transform.ts"
@@ -15328,7 +16348,26 @@
             },
             {
               "kind": "field",
+              "name": "#velocityChangedTime",
+              "privacy": "private",
+              "type": {
+                "text": "number"
+              },
+              "default": "-1",
+              "inheritedFrom": {
+                "name": "transformeable",
+                "module": "src/mixins/transform.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "velocity",
+              "type": {
+                "text": "Vector2D"
+              },
+              "description": "Anchor movement per second.",
+              "reflects": true,
+              "attribute": "velocity",
               "inheritedFrom": {
                 "name": "transformeable",
                 "module": "src/mixins/transform.ts"
@@ -15545,6 +16584,9 @@
             {
               "kind": "field",
               "name": "offset",
+              "type": {
+                "text": "Vector2D"
+              },
               "description": "Position of the element's origin relative to its anchor.",
               "reflects": true,
               "attribute": "offset",
@@ -15960,6 +17002,11 @@
           "attributes": [
             {
               "name": "angle",
+              "type": {
+                "text": "Angle"
+              },
+              "description": "Clockwise rotation of the element around its anchor.",
+              "fieldName": "angle",
               "inheritedFrom": {
                 "name": "transformeable",
                 "module": "src/mixins/transform.ts"
@@ -15967,6 +17014,11 @@
             },
             {
               "name": "angular-velocity",
+              "type": {
+                "text": "Angle"
+              },
+              "description": "Clockwise rotation per second.",
+              "fieldName": "angularVelocity",
               "inheritedFrom": {
                 "name": "transformeable",
                 "module": "src/mixins/transform.ts"
@@ -15974,6 +17026,11 @@
             },
             {
               "name": "anchor",
+              "type": {
+                "text": "Vector2D"
+              },
+              "description": "Base position of the element relative to its parent's anchor.",
+              "fieldName": "anchor",
               "inheritedFrom": {
                 "name": "transformeable",
                 "module": "src/mixins/transform.ts"
@@ -15988,6 +17045,11 @@
             },
             {
               "name": "velocity",
+              "type": {
+                "text": "Vector2D"
+              },
+              "description": "Anchor movement per second.",
+              "fieldName": "velocity",
               "inheritedFrom": {
                 "name": "transformeable",
                 "module": "src/mixins/transform.ts"
@@ -15995,6 +17057,9 @@
             },
             {
               "name": "offset",
+              "type": {
+                "text": "Vector2D"
+              },
               "description": "Position of the element's origin relative to its anchor.",
               "fieldName": "offset",
               "inheritedFrom": {
@@ -18029,6 +19094,9 @@
             {
               "kind": "field",
               "name": "lineWidth",
+              "type": {
+                "text": "number | null"
+              },
               "description": "Width in pixels for drawing lines.",
               "reflects": true,
               "attribute": "line-width",
@@ -18111,6 +19179,25 @@
             {
               "kind": "field",
               "name": "angle",
+              "type": {
+                "text": "Angle"
+              },
+              "description": "Clockwise rotation of the element around its anchor.",
+              "reflects": true,
+              "attribute": "angle",
+              "inheritedFrom": {
+                "name": "transformeable",
+                "module": "src/mixins/transform.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#angularVelocityChangedTime",
+              "privacy": "private",
+              "type": {
+                "text": "number"
+              },
+              "default": "-1",
               "inheritedFrom": {
                 "name": "transformeable",
                 "module": "src/mixins/transform.ts"
@@ -18119,6 +19206,12 @@
             {
               "kind": "field",
               "name": "angularVelocity",
+              "type": {
+                "text": "Angle"
+              },
+              "description": "Clockwise rotation per second.",
+              "reflects": true,
+              "attribute": "angular-velocity",
               "inheritedFrom": {
                 "name": "transformeable",
                 "module": "src/mixins/transform.ts"
@@ -18127,6 +19220,12 @@
             {
               "kind": "field",
               "name": "anchor",
+              "type": {
+                "text": "Vector2D"
+              },
+              "description": "Base position of the element relative to its parent's anchor.",
+              "reflects": true,
+              "attribute": "anchor",
               "inheritedFrom": {
                 "name": "transformeable",
                 "module": "src/mixins/transform.ts"
@@ -18208,7 +19307,26 @@
             },
             {
               "kind": "field",
+              "name": "#velocityChangedTime",
+              "privacy": "private",
+              "type": {
+                "text": "number"
+              },
+              "default": "-1",
+              "inheritedFrom": {
+                "name": "transformeable",
+                "module": "src/mixins/transform.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "velocity",
+              "type": {
+                "text": "Vector2D"
+              },
+              "description": "Anchor movement per second.",
+              "reflects": true,
+              "attribute": "velocity",
               "inheritedFrom": {
                 "name": "transformeable",
                 "module": "src/mixins/transform.ts"
@@ -18261,6 +19379,9 @@
             {
               "kind": "field",
               "name": "offset",
+              "type": {
+                "text": "Vector2D"
+              },
               "description": "Position of the element's origin relative to its anchor.",
               "reflects": true,
               "attribute": "offset",
@@ -18781,6 +19902,9 @@
             },
             {
               "name": "line-width",
+              "type": {
+                "text": "number | null"
+              },
               "description": "Width in pixels for drawing lines.",
               "fieldName": "lineWidth",
               "inheritedFrom": {
@@ -18790,6 +19914,11 @@
             },
             {
               "name": "angle",
+              "type": {
+                "text": "Angle"
+              },
+              "description": "Clockwise rotation of the element around its anchor.",
+              "fieldName": "angle",
               "inheritedFrom": {
                 "name": "transformeable",
                 "module": "src/mixins/transform.ts"
@@ -18797,6 +19926,11 @@
             },
             {
               "name": "angular-velocity",
+              "type": {
+                "text": "Angle"
+              },
+              "description": "Clockwise rotation per second.",
+              "fieldName": "angularVelocity",
               "inheritedFrom": {
                 "name": "transformeable",
                 "module": "src/mixins/transform.ts"
@@ -18804,6 +19938,11 @@
             },
             {
               "name": "anchor",
+              "type": {
+                "text": "Vector2D"
+              },
+              "description": "Base position of the element relative to its parent's anchor.",
+              "fieldName": "anchor",
               "inheritedFrom": {
                 "name": "transformeable",
                 "module": "src/mixins/transform.ts"
@@ -18818,6 +19957,11 @@
             },
             {
               "name": "velocity",
+              "type": {
+                "text": "Vector2D"
+              },
+              "description": "Anchor movement per second.",
+              "fieldName": "velocity",
               "inheritedFrom": {
                 "name": "transformeable",
                 "module": "src/mixins/transform.ts"
@@ -18825,6 +19969,9 @@
             },
             {
               "name": "offset",
+              "type": {
+                "text": "Vector2D"
+              },
               "description": "Position of the element's origin relative to its anchor.",
               "fieldName": "offset",
               "inheritedFrom": {
@@ -19303,6 +20450,25 @@
             {
               "kind": "field",
               "name": "angle",
+              "type": {
+                "text": "Angle"
+              },
+              "description": "Clockwise rotation of the element around its anchor.",
+              "reflects": true,
+              "attribute": "angle",
+              "inheritedFrom": {
+                "name": "transformeable",
+                "module": "src/mixins/transform.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#angularVelocityChangedTime",
+              "privacy": "private",
+              "type": {
+                "text": "number"
+              },
+              "default": "-1",
               "inheritedFrom": {
                 "name": "transformeable",
                 "module": "src/mixins/transform.ts"
@@ -19311,6 +20477,12 @@
             {
               "kind": "field",
               "name": "angularVelocity",
+              "type": {
+                "text": "Angle"
+              },
+              "description": "Clockwise rotation per second.",
+              "reflects": true,
+              "attribute": "angular-velocity",
               "inheritedFrom": {
                 "name": "transformeable",
                 "module": "src/mixins/transform.ts"
@@ -19319,6 +20491,12 @@
             {
               "kind": "field",
               "name": "anchor",
+              "type": {
+                "text": "Vector2D"
+              },
+              "description": "Base position of the element relative to its parent's anchor.",
+              "reflects": true,
+              "attribute": "anchor",
               "inheritedFrom": {
                 "name": "transformeable",
                 "module": "src/mixins/transform.ts"
@@ -19422,7 +20600,26 @@
             },
             {
               "kind": "field",
+              "name": "#velocityChangedTime",
+              "privacy": "private",
+              "type": {
+                "text": "number"
+              },
+              "default": "-1",
+              "inheritedFrom": {
+                "name": "transformeable",
+                "module": "src/mixins/transform.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "velocity",
+              "type": {
+                "text": "Vector2D"
+              },
+              "description": "Anchor movement per second.",
+              "reflects": true,
+              "attribute": "velocity",
               "inheritedFrom": {
                 "name": "transformeable",
                 "module": "src/mixins/transform.ts"
@@ -19623,6 +20820,9 @@
             {
               "kind": "field",
               "name": "offset",
+              "type": {
+                "text": "Vector2D"
+              },
               "description": "Position of the element's origin relative to its anchor.",
               "reflects": true,
               "attribute": "offset",
@@ -20191,6 +21391,11 @@
           "attributes": [
             {
               "name": "angle",
+              "type": {
+                "text": "Angle"
+              },
+              "description": "Clockwise rotation of the element around its anchor.",
+              "fieldName": "angle",
               "inheritedFrom": {
                 "name": "transformeable",
                 "module": "src/mixins/transform.ts"
@@ -20198,6 +21403,11 @@
             },
             {
               "name": "angular-velocity",
+              "type": {
+                "text": "Angle"
+              },
+              "description": "Clockwise rotation per second.",
+              "fieldName": "angularVelocity",
               "inheritedFrom": {
                 "name": "transformeable",
                 "module": "src/mixins/transform.ts"
@@ -20205,6 +21415,11 @@
             },
             {
               "name": "anchor",
+              "type": {
+                "text": "Vector2D"
+              },
+              "description": "Base position of the element relative to its parent's anchor.",
+              "fieldName": "anchor",
               "inheritedFrom": {
                 "name": "transformeable",
                 "module": "src/mixins/transform.ts"
@@ -20219,6 +21434,11 @@
             },
             {
               "name": "velocity",
+              "type": {
+                "text": "Vector2D"
+              },
+              "description": "Anchor movement per second.",
+              "fieldName": "velocity",
               "inheritedFrom": {
                 "name": "transformeable",
                 "module": "src/mixins/transform.ts"
@@ -20226,6 +21446,9 @@
             },
             {
               "name": "offset",
+              "type": {
+                "text": "Vector2D"
+              },
               "description": "Position of the element's origin relative to its anchor.",
               "fieldName": "offset",
               "inheritedFrom": {

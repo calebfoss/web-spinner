@@ -56,6 +56,8 @@ export const attributeParser: AttributeTypeParser = {
   Vector2D(stringValue) {
     const numbers = stringValue.split(",").map(attributeParser.number);
 
+    if (numbers.some(Number.isNaN)) throw new Error(`NaN: ${stringValue}`);
+
     switch (numbers.length) {
       case 0:
         return new Vector2D();
