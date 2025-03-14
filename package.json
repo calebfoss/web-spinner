@@ -4,6 +4,7 @@
     "api-viewer-element": "^1.0.0-pre.10",
     "ts-loader": "^9.5.2",
     "typescript-declaration-webpack-plugin": "^0.3.0",
+    "vite": "^6.2.2",
     "webpack": "^5.97.1",
     "webpack-cli": "^6.0.1"
   },
@@ -13,7 +14,9 @@
   "main": "dist/webSpinner.js",
   "types": "dist/types/index.d.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "vite docs",
+    "docs": "npx cem analyze --globs src --outdir docs"
   },
   "author": "Caleb Foss",
   "license": "ISC",
