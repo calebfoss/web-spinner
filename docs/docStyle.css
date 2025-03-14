@@ -21,6 +21,10 @@
   font-family: "Open Dyslexic";
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   background-color: var(--darkest);
   color: var(--light-gray);
@@ -85,7 +89,6 @@ h6 {
     background-color: var(--dark);
     border-radius: 20px;
     box-shadow: black 5px 5px;
-    /* width: max(40%, 600px); */
 
     h3 {
       position: sticky;
@@ -103,17 +106,29 @@ h6 {
       top: 3.5rem;
       background-color: var(--dark);
       margin: 0 0 2.5% 0;
-      padding-top: 2.5%;
+      padding: 2.5%;
       overflow: hidden;
       box-shadow: var(--dark-gray) 0 4px 4px;
       z-index: 2;
 
-      c2d-canvas {
-        float: inline-start;
+      pre {
+        text-wrap: wrap;
       }
 
       code {
-        white-space: pre-wrap;
+        max-width: 600px;
+      }
+
+      c2d-canvas {
+        float: inline-start;
+        margin-right: 15px;
+      }
+
+      button {
+        background-color: var(--medium);
+        color: var(--light-gray);
+        border-color: var(--light-gray);
+        border-radius: 5px;
       }
     }
 

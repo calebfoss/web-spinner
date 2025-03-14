@@ -20101,7 +20101,14 @@
             {
               "kind": "field",
               "name": "tag",
+              "type": {
+                "text": "string"
+              },
               "static": true,
+              "inheritedFrom": {
+                "name": "Canvas2DElement",
+                "module": "src/elements/canvas2d/element.ts"
+              },
               "readonly": true
             },
             {
@@ -20124,7 +20131,13 @@
             },
             {
               "kind": "field",
-              "name": "align"
+              "name": "align",
+              "type": {
+                "text": "CanvasTextAlign | null"
+              },
+              "description": "Horizontal alignment. Options are \"center\", \"end\", \"left\", \"right\", or \"start\".",
+              "reflects": true,
+              "attribute": "align"
             },
             {
               "kind": "field",
@@ -20133,11 +20146,6 @@
             {
               "kind": "method",
               "name": "render",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
               "parameters": [
                 {
                   "name": "canvas2D",
@@ -20145,16 +20153,21 @@
                     "text": "Canvas2DCanvasElement"
                   }
                 }
-              ]
+              ],
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "Canvas2DBaseRenderable",
+                "module": "src/elements/canvas2d/renderable.ts"
+              },
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
             },
             {
               "kind": "method",
               "name": "renderLinearGradient",
-              "return": {
-                "type": {
-                  "text": "CanvasGradient"
-                }
-              },
               "parameters": [
                 {
                   "name": "context",
@@ -20168,16 +20181,21 @@
                     "text": "LinearGradient"
                   }
                 }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "renderRadialGradient",
+              ],
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "Canvas2DBaseRenderable",
+                "module": "src/elements/canvas2d/renderable.ts"
+              },
               "return": {
                 "type": {
                   "text": "CanvasGradient"
                 }
-              },
+              }
+            },
+            {
+              "kind": "method",
+              "name": "renderRadialGradient",
               "parameters": [
                 {
                   "name": "context",
@@ -20191,19 +20209,1114 @@
                     "text": "RadialGradient"
                   }
                 }
-              ]
+              ],
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "Canvas2DBaseRenderable",
+                "module": "src/elements/canvas2d/renderable.ts"
+              },
+              "return": {
+                "type": {
+                  "text": "CanvasGradient"
+                }
+              }
             },
             {
               "kind": "field",
               "name": "textContent"
+            },
+            {
+              "kind": "field",
+              "name": "#fill",
+              "privacy": "private",
+              "type": {
+                "text": "DrawStyle | null"
+              },
+              "default": "null",
+              "inheritedFrom": {
+                "name": "fillable",
+                "module": "src/mixins/fill.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "fill",
+              "type": {
+                "text": "DrawStyle | null"
+              },
+              "description": "The rendering style inside the element. This may be a color or gradient.\r\nWhen set to null, the parent element's style is used. When\r\nset to \"none\", the inside will be transparent.",
+              "reflects": true,
+              "attribute": "fill",
+              "inheritedFrom": {
+                "name": "fillable",
+                "module": "src/mixins/fill.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "afterRender",
+              "parameters": [
+                {
+                  "name": "canvas2D",
+                  "type": {
+                    "text": "Canvas2DCanvasElement"
+                  }
+                }
+              ],
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "Canvas2DBaseRenderable",
+                "module": "src/elements/canvas2d/renderable.ts"
+              },
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#stroke",
+              "privacy": "private",
+              "type": {
+                "text": "DrawStyle | null"
+              },
+              "default": "null",
+              "inheritedFrom": {
+                "name": "strokeable",
+                "module": "src/mixins/stroke.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#lineWidth",
+              "privacy": "private",
+              "type": {
+                "text": "number | null"
+              },
+              "default": "null",
+              "inheritedFrom": {
+                "name": "strokeable",
+                "module": "src/mixins/stroke.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "lineWidth",
+              "type": {
+                "text": "number | null"
+              },
+              "description": "Width in pixels for drawing lines.",
+              "reflects": true,
+              "attribute": "line-width",
+              "inheritedFrom": {
+                "name": "strokeable",
+                "module": "src/mixins/stroke.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "stroke",
+              "type": {
+                "text": "DrawStyle | null"
+              },
+              "description": "The rendering style for lines. This may be a color or gradient.\r\nWhen set to null, the parent element's style is used. When\r\nset to \"none\", no lines will be drawn.",
+              "reflects": true,
+              "attribute": "stroke",
+              "inheritedFrom": {
+                "name": "strokeable",
+                "module": "src/mixins/stroke.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#anchor",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "transformeable",
+                "module": "src/mixins/transform.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#angle",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "transformeable",
+                "module": "src/mixins/transform.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#angularVelocity",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "transformeable",
+                "module": "src/mixins/transform.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#scale",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "transformeable",
+                "module": "src/mixins/transform.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#velocity",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "transformeable",
+                "module": "src/mixins/transform.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#angleChangeListener",
+              "privacy": "private",
+              "type": {
+                "text": "ChangeListener<number>"
+              },
+              "inheritedFrom": {
+                "name": "transformeable",
+                "module": "src/mixins/transform.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "angle",
+              "type": {
+                "text": "Angle"
+              },
+              "description": "Clockwise rotation of the element around its anchor.",
+              "reflects": true,
+              "attribute": "angle",
+              "inheritedFrom": {
+                "name": "transformeable",
+                "module": "src/mixins/transform.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#angularVelocityChangedTime",
+              "privacy": "private",
+              "type": {
+                "text": "number"
+              },
+              "default": "-1",
+              "inheritedFrom": {
+                "name": "transformeable",
+                "module": "src/mixins/transform.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "angularVelocity",
+              "type": {
+                "text": "Angle"
+              },
+              "description": "Clockwise rotation per second.",
+              "reflects": true,
+              "attribute": "angular-velocity",
+              "inheritedFrom": {
+                "name": "transformeable",
+                "module": "src/mixins/transform.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "anchor",
+              "type": {
+                "text": "Vector2D"
+              },
+              "description": "Base position of the element relative to its parent's anchor.",
+              "reflects": true,
+              "attribute": "anchor",
+              "inheritedFrom": {
+                "name": "transformeable",
+                "module": "src/mixins/transform.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#anchorChangeListener",
+              "privacy": "private",
+              "type": {
+                "text": "ChangeListener<Vector2DBase>"
+              },
+              "inheritedFrom": {
+                "name": "transformeable",
+                "module": "src/mixins/transform.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "moveAnchor",
+              "parameters": [
+                {
+                  "name": "x",
+                  "type": {
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "y",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "transformeable",
+                "module": "src/mixins/transform.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "rotateClockwise",
+              "parameters": [
+                {
+                  "name": "angle",
+                  "type": {
+                    "text": "Angle"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "transformeable",
+                "module": "src/mixins/transform.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "rotateCounterclockwise",
+              "parameters": [
+                {
+                  "name": "angle",
+                  "type": {
+                    "text": "Angle"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "transformeable",
+                "module": "src/mixins/transform.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "scale",
+              "inheritedFrom": {
+                "name": "transformeable",
+                "module": "src/mixins/transform.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#velocityChangedTime",
+              "privacy": "private",
+              "type": {
+                "text": "number"
+              },
+              "default": "-1",
+              "inheritedFrom": {
+                "name": "transformeable",
+                "module": "src/mixins/transform.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "velocity",
+              "type": {
+                "text": "Vector2D"
+              },
+              "description": "Anchor movement per second.",
+              "reflects": true,
+              "attribute": "velocity",
+              "inheritedFrom": {
+                "name": "transformeable",
+                "module": "src/mixins/transform.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#offset",
+              "privacy": "private",
+              "default": "new Vector2D(0, 0)",
+              "inheritedFrom": {
+                "name": "offset",
+                "module": "src/mixins/offset.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "moveOffset",
+              "parameters": [
+                {
+                  "name": "x",
+                  "type": {
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "y",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "offset",
+                "module": "src/mixins/offset.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#offsetChangeListener",
+              "privacy": "private",
+              "type": {
+                "text": "ChangeListener<Vector2DBase>"
+              },
+              "inheritedFrom": {
+                "name": "offset",
+                "module": "src/mixins/offset.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "offset",
+              "type": {
+                "text": "Vector2D"
+              },
+              "description": "Position of the element's origin relative to its anchor.",
+              "reflects": true,
+              "attribute": "offset",
+              "inheritedFrom": {
+                "name": "offset",
+                "module": "src/mixins/offset.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#fontFamily",
+              "privacy": "private",
+              "type": {
+                "text": "string | null"
+              },
+              "default": "null",
+              "inheritedFrom": {
+                "name": "useFont",
+                "module": "src/mixins/font.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#kerning",
+              "privacy": "private",
+              "type": {
+                "text": "CanvasFontKerning | null"
+              },
+              "default": "null",
+              "inheritedFrom": {
+                "name": "useFont",
+                "module": "src/mixins/font.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#size",
+              "privacy": "private",
+              "type": {
+                "text": "number | null"
+              },
+              "default": "null",
+              "inheritedFrom": {
+                "name": "useFont",
+                "module": "src/mixins/font.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#sizeUnit",
+              "privacy": "private",
+              "type": {
+                "text": "FontSizeUnit"
+              },
+              "default": "\"px\"",
+              "inheritedFrom": {
+                "name": "useFont",
+                "module": "src/mixins/font.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#stretch",
+              "privacy": "private",
+              "type": {
+                "text": "CanvasFontStretch | null"
+              },
+              "default": "null",
+              "inheritedFrom": {
+                "name": "useFont",
+                "module": "src/mixins/font.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#fontStyle",
+              "privacy": "private",
+              "type": {
+                "text": "FontStyle | null"
+              },
+              "default": "null",
+              "inheritedFrom": {
+                "name": "useFont",
+                "module": "src/mixins/font.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "sizeUnit",
+              "static": true,
+              "default": "{ ...Units.size, capHeight: \"cap\", characterWidth: \"ch\", calculated: \"em\", xHeight: \"ex\", characterHeight: \"ic\", lineHeight: \"lh\", rootCapHeight: \"rcap\", rootCharacterWidth: \"rch\", rootSize: \"rem\", rootXHeight: \"rex\", rootCharacterHeight: \"ic\", rootLineHeight: \"rlh\", }",
+              "type": {
+                "text": "{\r\n  ...Units.size,\r\n  capHeight: \"cap\",\r\n  characterWidth: \"ch\",\r\n  calculated: \"em\",\r\n  xHeight: \"ex\",\r\n  characterHeight: \"ic\",\r\n  lineHeight: \"lh\",\r\n  rootCapHeight: \"rcap\",\r\n  rootCharacterWidth: \"rch\",\r\n  rootSize: \"rem\",\r\n  rootXHeight: \"rex\",\r\n  rootCharacterHeight: \"ic\",\r\n  rootLineHeight: \"rlh\",\r\n}"
+              },
+              "inheritedFrom": {
+                "name": "useFont",
+                "module": "src/mixins/font.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "stretch",
+              "type": {
+                "text": "{ [key: string]: CanvasFontStretch }"
+              },
+              "static": true,
+              "default": "{ normal: \"normal\", ultraCondensed: \"ultra-condensed\", extraCondensed: \"extra-condensed\", condensed: \"condensed\", expanded: \"expanded\", extraExpanded: \"extra-expanded\", ultraExpanded: \"ultra-expanded\", }",
+              "inheritedFrom": {
+                "name": "useFont",
+                "module": "src/mixins/font.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "style",
+              "static": true,
+              "default": "{ normal: \"normal\", italic: \"italic\", oblique: \"oblique\", }",
+              "type": {
+                "text": "{\r\n  normal: \"normal\",\r\n  italic: \"italic\",\r\n  oblique: \"oblique\",\r\n}"
+              },
+              "inheritedFrom": {
+                "name": "useFont",
+                "module": "src/mixins/font.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "fontFamily",
+              "inheritedFrom": {
+                "name": "useFont",
+                "module": "src/mixins/font.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "fontStyle",
+              "inheritedFrom": {
+                "name": "useFont",
+                "module": "src/mixins/font.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "kerning",
+              "inheritedFrom": {
+                "name": "useFont",
+                "module": "src/mixins/font.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "size",
+              "inheritedFrom": {
+                "name": "useFont",
+                "module": "src/mixins/font.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "sizeString",
+              "readonly": true,
+              "inheritedFrom": {
+                "name": "useFont",
+                "module": "src/mixins/font.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "bezier",
+              "return": {
+                "type": {
+                  "text": "Canvas2DBezier"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "options",
+                  "optional": true,
+                  "type": {
+                    "text": "Options<Canvas2DBezier>"
+                  }
+                }
+              ],
+              "description": "Creates a `<c2d-bezier>` child element and returns it.",
+              "inheritedFrom": {
+                "name": "standaloneChildren",
+                "module": "src/mixins/children.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "ellipse",
+              "return": {
+                "type": {
+                  "text": "Canvas2DEllipse"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "options",
+                  "optional": true,
+                  "type": {
+                    "text": "Options<Canvas2DEllipse>"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "standaloneChildren",
+                "module": "src/mixins/children.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "image",
+              "return": {
+                "type": {
+                  "text": "Canvas2DImage"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "options",
+                  "optional": true,
+                  "type": {
+                    "text": "Options<Canvas2DImage>"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "standaloneChildren",
+                "module": "src/mixins/children.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "multiple",
+              "return": {
+                "type": {
+                  "text": "Node[]"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "callback",
+                  "type": {
+                    "text": "MultipleCallback"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "standaloneChildren",
+                "module": "src/mixins/children.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "line",
+              "return": {
+                "type": {
+                  "text": "Canvas2DLine"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "options",
+                  "optional": true,
+                  "type": {
+                    "text": "Options<Canvas2DLine>"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "standaloneChildren",
+                "module": "src/mixins/children.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "rectangle",
+              "return": {
+                "type": {
+                  "text": "Canvas2DRectangle"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "options",
+                  "optional": true,
+                  "type": {
+                    "text": "Options<Canvas2DRectangle>"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "standaloneChildren",
+                "module": "src/mixins/children.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "shape",
+              "return": {
+                "type": {
+                  "text": "Canvas2DShape"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "options",
+                  "optional": true,
+                  "type": {
+                    "text": "Options<Canvas2DShape>"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "standaloneChildren",
+                "module": "src/mixins/children.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "text",
+              "return": {
+                "type": {
+                  "text": "Canvas2DText"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "options",
+                  "optional": true,
+                  "type": {
+                    "text": "Options<Canvas2DText>"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "standaloneChildren",
+                "module": "src/mixins/children.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "video",
+              "return": {
+                "type": {
+                  "text": "Canvas2DVideo"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "options",
+                  "optional": true,
+                  "type": {
+                    "text": "Options<Canvas2DVideo>"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "standaloneChildren",
+                "module": "src/mixins/children.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#changedSinceRender",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "Canvas2DBaseRenderable",
+                "module": "src/elements/canvas2d/renderable.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#clickListeners",
+              "privacy": "private",
+              "default": "new Set<EventListenerOrEventListenerObject>()",
+              "inheritedFrom": {
+                "name": "Canvas2DBaseRenderable",
+                "module": "src/elements/canvas2d/renderable.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#localMouse",
+              "privacy": "private",
+              "default": "new MouseData()",
+              "inheritedFrom": {
+                "name": "Canvas2DBaseRenderable",
+                "module": "src/elements/canvas2d/renderable.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#mouseListeners",
+              "privacy": "private",
+              "default": "new Set<EventListenerOrEventListenerObject>()",
+              "inheritedFrom": {
+                "name": "Canvas2DBaseRenderable",
+                "module": "src/elements/canvas2d/renderable.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#shadow",
+              "privacy": "private",
+              "type": {
+                "text": "Shadow | null"
+              },
+              "default": "null",
+              "inheritedFrom": {
+                "name": "Canvas2DBaseRenderable",
+                "module": "src/elements/canvas2d/renderable.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "addEventListener",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "type",
+                  "type": {
+                    "text": "keyof HTMLElementEventMap"
+                  }
+                },
+                {
+                  "name": "listener",
+                  "type": {
+                    "text": "EventListenerOrEventListenerObject"
+                  }
+                },
+                {
+                  "name": "options",
+                  "optional": true,
+                  "type": {
+                    "text": "boolean | AddEventListenerOptions"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "Canvas2DBaseRenderable",
+                "module": "src/elements/canvas2d/renderable.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "renderConicalGradient",
+              "parameters": [
+                {
+                  "name": "context",
+                  "type": {
+                    "text": "CanvasRenderingContext2D"
+                  }
+                },
+                {
+                  "name": "gradient",
+                  "type": {
+                    "text": "ConicalGradient"
+                  }
+                }
+              ],
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "Canvas2DBaseRenderable",
+                "module": "src/elements/canvas2d/renderable.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "removeEventListener",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "type",
+                  "type": {
+                    "text": "keyof HTMLElementEventMap"
+                  }
+                },
+                {
+                  "name": "listener",
+                  "type": {
+                    "text": "EventListenerOrEventListenerObject"
+                  }
+                },
+                {
+                  "name": "options",
+                  "optional": true,
+                  "type": {
+                    "text": "boolean | AddEventListenerOptions"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "Canvas2DBaseRenderable",
+                "module": "src/elements/canvas2d/renderable.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "changedSinceRender",
+              "privacy": "private",
+              "readonly": true,
+              "inheritedFrom": {
+                "name": "Canvas2DBaseRenderable",
+                "module": "src/elements/canvas2d/renderable.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#handleClick",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "canvas2D",
+                  "type": {
+                    "text": "Canvas2DCanvasElement"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "Canvas2DBaseRenderable",
+                "module": "src/elements/canvas2d/renderable.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#handleMouse",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "canvas2D",
+                  "type": {
+                    "text": "Canvas2DCanvasElement"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "Canvas2DBaseRenderable",
+                "module": "src/elements/canvas2d/renderable.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "registerChange",
+              "parameters": [
+                {
+                  "name": "propertyName",
+                  "type": {
+                    "text": "P"
+                  }
+                },
+                {
+                  "name": "newValue",
+                  "type": {
+                    "text": "V"
+                  }
+                }
+              ],
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "Canvas2DBaseRenderable",
+                "module": "src/elements/canvas2d/renderable.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "renderChildren",
+              "parameters": [
+                {
+                  "name": "canvas2D",
+                  "type": {
+                    "text": "Canvas2DCanvasElement"
+                  }
+                }
+              ],
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "Canvas2DBaseRenderable",
+                "module": "src/elements/canvas2d/renderable.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#shadowChangeListener",
+              "privacy": "private",
+              "type": {
+                "text": "ChangeListener<Shadow>"
+              },
+              "inheritedFrom": {
+                "name": "Canvas2DBaseRenderable",
+                "module": "src/elements/canvas2d/renderable.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "shadow",
+              "inheritedFrom": {
+                "name": "Canvas2DBaseRenderable",
+                "module": "src/elements/canvas2d/renderable.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#eventProxy",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "Canvas2DElement",
+                "module": "src/elements/canvas2d/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#everyFrame",
+              "privacy": "private",
+              "type": {
+                "text": "Updater | null"
+              },
+              "default": "null",
+              "inheritedFrom": {
+                "name": "Canvas2DElement",
+                "module": "src/elements/canvas2d/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "canvas",
+              "type": {
+                "text": "Canvas2DCanvasElement"
+              },
+              "description": "The <c2d-canvas> element that is rendering this element. The <c2d-canvas>\r\nwill be an ancestor of this element.",
+              "readonly": true,
+              "inheritedFrom": {
+                "name": "Canvas2DElement",
+                "module": "src/elements/canvas2d/element.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "createChild",
+              "parameters": [
+                {
+                  "name": "ElementClass",
+                  "type": {
+                    "text": "E"
+                  }
+                },
+                {
+                  "name": "options",
+                  "optional": true,
+                  "type": {
+                    "text": "Options<InstanceType<E>>"
+                  }
+                }
+              ],
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "Canvas2DElement",
+                "module": "src/elements/canvas2d/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "everyFrame",
+              "type": {
+                "text": "Updater | null"
+              },
+              "inheritedFrom": {
+                "name": "Canvas2DElement",
+                "module": "src/elements/canvas2d/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "listen",
+              "readonly": true,
+              "inheritedFrom": {
+                "name": "Canvas2DElement",
+                "module": "src/elements/canvas2d/element.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "scaleByPixelRatio",
+              "parameters": [
+                {
+                  "name": "vector",
+                  "type": {
+                    "text": "Vector2D"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "Canvas2DElement",
+                "module": "src/elements/canvas2d/element.ts"
+              }
             }
           ],
           "attributes": [
             {
-              "name": "size"
+              "name": "size",
+              "inheritedFrom": {
+                "name": "useFont",
+                "module": "src/mixins/font.ts"
+              }
             },
             {
-              "name": "align"
+              "name": "align",
+              "type": {
+                "text": "CanvasTextAlign | null"
+              },
+              "description": "Horizontal alignment. Options are \"center\", \"end\", \"left\", \"right\", or \"start\".",
+              "fieldName": "align"
             },
             {
               "name": "baseline"
@@ -20212,7 +21325,135 @@
               "name": "font"
             },
             {
-              "name": "stretch"
+              "name": "stretch",
+              "inheritedFrom": {
+                "name": "useFont",
+                "module": "src/mixins/font.ts"
+              }
+            },
+            {
+              "name": "fill",
+              "type": {
+                "text": "DrawStyle | null"
+              },
+              "description": "The rendering style inside the element. This may be a color or gradient.\r\nWhen set to null, the parent element's style is used. When\r\nset to \"none\", the inside will be transparent.",
+              "fieldName": "fill",
+              "inheritedFrom": {
+                "name": "fillable",
+                "module": "src/mixins/fill.ts"
+              }
+            },
+            {
+              "name": "stroke",
+              "type": {
+                "text": "DrawStyle | null"
+              },
+              "description": "The rendering style for lines. This may be a color or gradient.\r\nWhen set to null, the parent element's style is used. When\r\nset to \"none\", no lines will be drawn.",
+              "fieldName": "stroke",
+              "inheritedFrom": {
+                "name": "strokeable",
+                "module": "src/mixins/stroke.ts"
+              }
+            },
+            {
+              "name": "line-width",
+              "type": {
+                "text": "number | null"
+              },
+              "description": "Width in pixels for drawing lines.",
+              "fieldName": "lineWidth",
+              "inheritedFrom": {
+                "name": "strokeable",
+                "module": "src/mixins/stroke.ts"
+              }
+            },
+            {
+              "name": "angle",
+              "type": {
+                "text": "Angle"
+              },
+              "description": "Clockwise rotation of the element around its anchor.",
+              "fieldName": "angle",
+              "inheritedFrom": {
+                "name": "transformeable",
+                "module": "src/mixins/transform.ts"
+              }
+            },
+            {
+              "name": "angular-velocity",
+              "type": {
+                "text": "Angle"
+              },
+              "description": "Clockwise rotation per second.",
+              "fieldName": "angularVelocity",
+              "inheritedFrom": {
+                "name": "transformeable",
+                "module": "src/mixins/transform.ts"
+              }
+            },
+            {
+              "name": "anchor",
+              "type": {
+                "text": "Vector2D"
+              },
+              "description": "Base position of the element relative to its parent's anchor.",
+              "fieldName": "anchor",
+              "inheritedFrom": {
+                "name": "transformeable",
+                "module": "src/mixins/transform.ts"
+              }
+            },
+            {
+              "name": "scale",
+              "inheritedFrom": {
+                "name": "transformeable",
+                "module": "src/mixins/transform.ts"
+              }
+            },
+            {
+              "name": "velocity",
+              "type": {
+                "text": "Vector2D"
+              },
+              "description": "Anchor movement per second.",
+              "fieldName": "velocity",
+              "inheritedFrom": {
+                "name": "transformeable",
+                "module": "src/mixins/transform.ts"
+              }
+            },
+            {
+              "name": "offset",
+              "type": {
+                "text": "Vector2D"
+              },
+              "description": "Position of the element's origin relative to its anchor.",
+              "fieldName": "offset",
+              "inheritedFrom": {
+                "name": "offset",
+                "module": "src/mixins/offset.ts"
+              }
+            },
+            {
+              "name": "font-family",
+              "inheritedFrom": {
+                "name": "useFont",
+                "module": "src/mixins/font.ts"
+              }
+            },
+            {
+              "name": "font-style",
+              "inheritedFrom": {
+                "name": "useFont",
+                "module": "src/mixins/font.ts"
+              }
+            },
+            {
+              "name": "kerning",
+              "inheritedFrom": {
+                "name": "useFont",
+                "module": "src/mixins/font.ts"
+              }
             }
           ],
           "superclass": {
@@ -20220,7 +21461,79 @@
             "module": "src/elements/canvas2d/text.ts"
           },
           "tagName": "c2d-text",
-          "customElement": true
+          "customElement": true,
+          "events": [
+            {
+              "name": "click",
+              "type": {
+                "text": "PointerEvent"
+              },
+              "inheritedFrom": {
+                "name": "Canvas2DBaseRenderable",
+                "module": "src/elements/canvas2d/renderable.ts"
+              }
+            },
+            {
+              "name": "mouseout",
+              "type": {
+                "text": "MouseEvent"
+              },
+              "inheritedFrom": {
+                "name": "Canvas2DBaseRenderable",
+                "module": "src/elements/canvas2d/renderable.ts"
+              }
+            },
+            {
+              "name": "mouseover",
+              "type": {
+                "text": "MouseEvent"
+              },
+              "inheritedFrom": {
+                "name": "Canvas2DBaseRenderable",
+                "module": "src/elements/canvas2d/renderable.ts"
+              }
+            },
+            {
+              "name": "mousemove",
+              "type": {
+                "text": "MouseEvent"
+              },
+              "inheritedFrom": {
+                "name": "Canvas2DBaseRenderable",
+                "module": "src/elements/canvas2d/renderable.ts"
+              }
+            },
+            {
+              "name": "mouseenter",
+              "type": {
+                "text": "MouseEvent"
+              },
+              "inheritedFrom": {
+                "name": "Canvas2DBaseRenderable",
+                "module": "src/elements/canvas2d/renderable.ts"
+              }
+            },
+            {
+              "name": "mousedown",
+              "type": {
+                "text": "MouseEvent"
+              },
+              "inheritedFrom": {
+                "name": "Canvas2DBaseRenderable",
+                "module": "src/elements/canvas2d/renderable.ts"
+              }
+            },
+            {
+              "name": "mouseup",
+              "type": {
+                "text": "MouseEvent"
+              },
+              "inheritedFrom": {
+                "name": "Canvas2DBaseRenderable",
+                "module": "src/elements/canvas2d/renderable.ts"
+              }
+            }
+          ]
         }
       ],
       "exports": [

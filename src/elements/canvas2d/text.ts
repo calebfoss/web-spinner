@@ -7,9 +7,9 @@ import { offset } from "../../mixins/offset";
 import { Canvas2DCanvasElement } from "./canvas";
 import { LinearGradient, RadialGradient } from "../../classes/gradient";
 
-const Base = fillable(
+class Base extends fillable(
   strokeable(transformeable(offset(useFont(Canvas2DStandaloneRenderable))))
-);
+) {}
 
 export class Canvas2DText extends Base {
   static observedAttributes = [
@@ -28,7 +28,13 @@ export class Canvas2DText extends Base {
   #align: CanvasTextAlign | null = null;
   #baseline: CanvasTextBaseline | null = null;
 
-  get align() {
+  /**
+   * Horizontal alignment. Options are "center", "end", "left", "right", or "start".
+   *
+   * @attr
+   * @reflect
+   */
+  get align(): CanvasTextAlign | null {
     return this.#align;
   }
 
