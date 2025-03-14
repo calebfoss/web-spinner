@@ -14,9 +14,10 @@
   "main": "dist/webSpinner.js",
   "types": "dist/types/index.d.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "vite docs",
+    "docs": "npx cem analyze --globs src --outdir docs",
     "start": "vite docs",
-    "docs": "npx cem analyze --globs src --outdir docs"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Caleb Foss",
   "license": "ISC",
