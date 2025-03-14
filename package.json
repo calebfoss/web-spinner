@@ -14,7 +14,7 @@
   "main": "dist/webSpinner.js",
   "types": "dist/types/index.d.ts",
   "scripts": {
-    "build": "vite docs",
+    "build": "webpack && vite docs",
     "docs": "npx cem analyze --globs src --outdir docs",
     "start": "vite docs",
     "test": "echo \"Error: no test specified\" && exit 1"
