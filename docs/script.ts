@@ -2,9 +2,7 @@ import * as Schema from "custom-elements-manifest/schema";
 import data from "./custom-elements.json";
 import { createCanvas, Color } from "web-spinner";
 import * as WebSpinner from "web-spinner";
-import { Canvas2DImage } from "web-spinner/types/elements/canvas2d/image";
 import highlight from "highlight.js";
-import { Canvas2DText } from "web-spinner/types/elements/canvas2d/text";
 
 interface ClassFieldExtended extends Schema.ClassField {
   attribute?: string;
@@ -526,7 +524,7 @@ function renderDemo(element: ElementData): [HTMLDivElement, HTMLElement] {
   observer.observe(mainElement, { attributes: true });
 
   if (element.tag === "c2d-image") {
-    const image = mainElement as Canvas2DImage;
+    const image = mainElement as WebSpinner.WebSpinnerElement["Canvas2DImage"];
     image.source = "./Embia_major_mf.jpg";
     image.width = canvas.width;
     image.origin = "center";
@@ -541,7 +539,7 @@ function renderDemo(element: ElementData): [HTMLDivElement, HTMLElement] {
   if (element.tag === "c2d-text") {
     mainElement.textContent = "Web Spinner";
 
-    (mainElement as Canvas2DText).lineWidth = 1;
+    (mainElement as WebSpinner.WebSpinnerElement["Canvas2DText"]).lineWidth = 1;
 
     canvas.appendChild(mainElement);
   } else if (element.tag.slice(0, 10) === "c2d-shape-") {

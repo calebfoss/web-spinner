@@ -7,7 +7,7 @@
     "tsx": "^4.19.3",
     "typescript-declaration-webpack-plugin": "^0.3.0",
     "vite": "^6.2.2",
-    "web-spinner": "file:dist",
+    "web-spinner": "file:.",
     "webpack": "^5.97.1",
     "webpack-cli": "^6.0.1"
   },
@@ -17,7 +17,7 @@
   "main": "dist/webSpinner.js",
   "types": "dist/types/index.d.ts",
   "scripts": {
-    "build": "webpack && pushd package && tsx copyPackage.ts && popd && npm i && vite build docs",
+    "build": "webpack && npm i && vite build docs",
     "docs": "npx cem analyze --globs src --outdir docs",
     "start": "vite docs",
     "test": "echo \"Error: no test specified\" && exit 1"

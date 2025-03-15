@@ -101,7 +101,7 @@ const elementClasses = [
   Canvas2DShapeRectangle,
   Canvas2DText,
   Canvas2DVideo,
-];
+] as const;
 
 customElements.define("c2d-canvas", Canvas2DCanvasElement);
 
@@ -125,6 +125,22 @@ for (const elementClass of elementClasses) {
 function createCanvas(options?: Options<Canvas2DCanvasElement>) {
   return createCustomElement(Canvas2DCanvasElement, options);
 }
+
+export type WebSpinnerElement = {
+  Canvas2DCanvasElement: Canvas2DCanvasElement;
+  Canvas2DBezier: Canvas2DBezier;
+  Canvas2DEllipse: Canvas2DEllipse;
+  Canvas2DImage: Canvas2DImage;
+  Canvas2DLine: Canvas2DLine;
+  Canvas2DRectangle: Canvas2DRectangle;
+  Canvas2DShape: Canvas2DShape;
+  Canvas2DShapeBezier: Canvas2DShapeBezier;
+  Canvas2DShapeEllipse: Canvas2DShapeEllipse;
+  Canvas2DShapeLine: Canvas2DShapeLine;
+  Canvas2DShapeRectangle: Canvas2DShapeRectangle;
+  Canvas2DText: Canvas2DText;
+  Canvas2DVideo: Canvas2DVideo;
+};
 
 export {
   createCanvas,
