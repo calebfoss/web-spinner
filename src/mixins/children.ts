@@ -28,10 +28,16 @@ export function standaloneChildren<B extends typeof Canvas2DElement>(Base: B) {
       return this.createChild(Canvas2DBezier, options);
     }
 
+    /**
+     * Creates a `<c2d-ellipse>` child element and returns it.
+     */
     ellipse(options?: Options<Canvas2DEllipse>): Canvas2DEllipse {
       return this.createChild(Canvas2DEllipse, options);
     }
 
+    /**
+     * Creates a `<c2d-image>` child element and returns it.
+     */
     image(options?: Options<Canvas2DImage>): Canvas2DImage {
       return this.createChild(Canvas2DImage, options);
     }
@@ -67,22 +73,37 @@ export function standaloneChildren<B extends typeof Canvas2DElement>(Base: B) {
       return recurseChildren([], 0);
     }
 
+    /**
+     * Creates a `<c2d-line>` child element and returns it.
+     */
     line(options?: Options<Canvas2DLine>): Canvas2DLine {
       return this.createChild(Canvas2DLine, options);
     }
 
+    /**
+     * Creates a `<c2d-rectangle>` child element and returns it.
+     */
     rectangle(options?: Options<Canvas2DRectangle>): Canvas2DRectangle {
       return this.createChild(Canvas2DRectangle, options);
     }
 
+    /**
+     * Creates a `<c2d-shape>` child element and returns it.
+     */
     shape(options?: Options<Canvas2DShape>): Canvas2DShape {
       return this.createChild(Canvas2DShape, options);
     }
 
+    /**
+     * Creates a `<c2d-text>` child element and returns it.
+     */
     text(options?: Options<Canvas2DText>): Canvas2DText {
       return this.createChild(Canvas2DText, options);
     }
 
+    /**
+     * Creates a `<c2d-video>` child element and returns it.
+     */
     video(options?: Options<Canvas2DVideo>): Canvas2DVideo {
       return this.createChild(Canvas2DVideo, options);
     }

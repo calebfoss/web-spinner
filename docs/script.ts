@@ -163,55 +163,6 @@ function renderTableHeaders(...headerText: string[]) {
   return row;
 }
 
-const methodHeaders = ["Name", "Parameters", "Returns", "Description"] as const;
-
-function renderMethodTableCell(
-  header: (typeof methodHeaders)[number],
-  method: Schema.ClassMethod
-) {
-  const cell = document.createElement("td");
-
-  switch (header) {
-    case "Description":
-      cell.textContent = method.description ?? "";
-      break;
-    case "Name":
-      cell.textContent = method.name;
-      break;
-    case "Parameters": {
-      const params = method.parameters;
-
-      if (params === undefined) break;
-
-      const paramsTable = renderParametersTable(params);
-
-      cell.appendChild(paramsTable);
-
-      break;
-    }
-
-    case "Returns": {
-      const returnData = method.return;
-
-      if (returnData === undefined) break;
-
-      const { type, description } = returnData;
-
-      if (type !== undefined) {
-        cell.textContent = type.text;
-
-        if (description !== undefined) cell.textContent += ": ";
-      }
-
-      cell.textContent += description ?? "";
-
-      break;
-    }
-  }
-
-  return cell;
-}
-
 function renderMethodDoc(method: Schema.ClassMethod) {
   const div = document.createElement("div");
 
@@ -227,6 +178,8 @@ function renderMethodDoc(method: Schema.ClassMethod) {
     const descriptionPar = document.createElement("p");
 
     descriptionPar.textContent = method.description;
+
+    div.appendChild(descriptionPar);
   }
 
   const parameters = renderParametersTable(method.parameters ?? []);

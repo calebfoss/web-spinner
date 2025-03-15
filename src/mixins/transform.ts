@@ -112,9 +112,8 @@ export function transformeable<B extends typeof Canvas2DBaseRenderable>(
             if (!this.#anchor.equals(newAnchor)) this.anchor = newAnchor;
             break;
           case "scale":
-            const { x: scaleX, y: scaleY } = attributeParser.Vector2D(newValue);
-            this.#scale.x = scaleX;
-            this.#scale.y = scaleY;
+            const newScale = attributeParser.Vector2D(newValue);
+            if (!this.#scale.equals(newScale)) this.scale = newScale;
             break;
           case "velocity":
             this.velocity = attributeParser.Vector2D(newValue);
@@ -174,15 +173,29 @@ export function transformeable<B extends typeof Canvas2DBaseRenderable>(
       }
     }
 
+    /**
+     * @param angle - Angle to turn the element in the clockwise direction.
+     */
     rotateClockwise(angle: Angle) {
       this.angle = Angle.radians(this.#angle.radians + angle.radians);
     }
 
+    /**
+     * @param angle - Angle to turn the element in the counterclockwise direction.
+     */
     rotateCounterclockwise(angle: Angle) {
       this.angle = Angle.radians(this.#angle.radians - angle.radians);
     }
 
-    get scale() {
+    /**
+     * Multiplies the size of the element in the x and y direction. This also affects
+     * line width. Setting scale to a number will set both the x and y scale to that
+     * value.
+     *
+     * @attr
+     * @reflect
+     */
+    get scale(): Vector2D {
       return this.#scale;
     }
 

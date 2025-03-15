@@ -3,6 +3,11 @@
   src: url("fonts/opendyslexic/compiled/OpenDyslexic-Regular.otf");
 }
 
+@font-face {
+  font-family: "Open Dyslexic Mono";
+  src: url("fonts/openDyslexicMono/OpenDyslexicMono-Regular.otf");
+}
+
 :root {
   --hue: 260;
   --dark-gray: hsl(var(--hue) 10% 10%);
@@ -117,6 +122,10 @@ h6 {
 
       code {
         max-width: 600px;
+
+        * {
+          font-family: "Open Dyslexic Mono", monospace;
+        }
       }
 
       c2d-canvas {

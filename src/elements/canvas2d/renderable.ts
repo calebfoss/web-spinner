@@ -1,10 +1,9 @@
-import { ClickData } from "../../classes/click";
 import {
   ConicalGradient,
   LinearGradient,
   RadialGradient,
 } from "../../classes/gradient";
-import { MouseTracker, MouseData } from "../../classes/mouse";
+import { MouseData } from "../../classes/mouse";
 import { Shadow } from "../../classes/shadow";
 import { Vector2D } from "../../classes/vector2d";
 import { partChildren, standaloneChildren } from "../../mixins/children";
@@ -32,6 +31,9 @@ export class Canvas2DBaseRenderable extends Canvas2DElement {
     super();
   }
 
+  /**
+   * @private
+   */
   addEventListener(
     type: keyof HTMLElementEventMap,
     listener: EventListenerOrEventListenerObject,
@@ -95,6 +97,9 @@ export class Canvas2DBaseRenderable extends Canvas2DElement {
     return gradient.render(context, center.x, center.y, canvasRadius);
   }
 
+  /**
+   * @private
+   */
   removeEventListener(
     type: keyof HTMLElementEventMap,
     listener: EventListenerOrEventListenerObject,
@@ -240,7 +245,10 @@ export class Canvas2DBaseRenderable extends Canvas2DElement {
     this.registerChange("shadow", (this.#shadow = newValue));
   };
 
-  get shadow() {
+  /**
+   * Drop shadow rendered behind the element.
+   */
+  get shadow(): Shadow | null {
     return this.#shadow;
   }
 

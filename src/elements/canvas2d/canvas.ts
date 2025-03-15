@@ -56,6 +56,9 @@ export class Canvas2DCanvasElement extends standaloneChildren(Canvas2DElement) {
     this.#devicePixelRatio = window.devicePixelRatio;
   }
 
+  /**
+   * @private
+   */
   addEventListener(
     type: string,
     listener: EventListenerOrEventListenerObject,
@@ -71,7 +74,10 @@ export class Canvas2DCanvasElement extends standaloneChildren(Canvas2DElement) {
     }
   }
 
-  get animating() {
+  /**
+   * True if the canvas is rendering animation.
+   */
+  get animating(): boolean {
     return this.#animating;
   }
 
@@ -122,7 +128,10 @@ export class Canvas2DCanvasElement extends standaloneChildren(Canvas2DElement) {
     this.queueRender();
   }
 
-  get center() {
+  /**
+   * Center point of the canvas.
+   */
+  get center(): Vector2D {
     return Vector2D.xy(this.width / 2, this.height / 2);
   }
 
