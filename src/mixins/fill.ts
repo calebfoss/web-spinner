@@ -1,4 +1,3 @@
-import { NONE } from "..";
 import { Color } from "../classes/color";
 import {
   ConicalGradient,
@@ -73,7 +72,9 @@ export function fillable<B extends typeof Canvas2DBaseRenderable>(Base: B) {
     ) {
       if (name === "fill") {
         const fillValue =
-          newValue === null ? NONE : attributeParser.FillStrokeStyle(newValue);
+          newValue === null
+            ? "none"
+            : attributeParser.FillStrokeStyle(newValue);
 
         if (fillValue !== "gradient") this.fill = fillValue;
       }

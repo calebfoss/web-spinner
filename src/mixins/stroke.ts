@@ -1,4 +1,4 @@
-import { LinearGradient, NONE } from "..";
+import { LinearGradient } from "../classes/gradient";
 import { Color } from "../classes/color";
 import {
   ConicalGradient,
@@ -6,7 +6,6 @@ import {
   Gradient,
   RadialGradient,
 } from "../classes/gradient";
-import { MouseTracker } from "../classes/mouse";
 import { Canvas2DCanvasElement } from "../elements/canvas2d/canvas";
 import { Canvas2DBaseRenderable } from "../elements/canvas2d/renderable";
 import { attributeParser } from "../utlities/attributeParser";

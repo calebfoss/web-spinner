@@ -1,4 +1,3 @@
-import { NONE } from "..";
 import { Angle, AngleUnitShort } from "../classes/angle";
 import { Color } from "../classes/color";
 import { DrawStyle } from "../classes/gradient";
@@ -49,7 +48,8 @@ export const attributeParser: AttributeTypeParser = {
     }
   },
   FillStrokeStyle(stringValue) {
-    if (stringValue === NONE || stringValue === "gradient") return stringValue;
+    if (stringValue === "none" || stringValue === "gradient")
+      return stringValue;
 
     return attributeParser.Color(stringValue);
   },

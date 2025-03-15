@@ -31,8 +31,6 @@ import { Shadow } from "./classes/shadow";
 
 export type CSSLengthUnit = (typeof Units.size)[keyof typeof Units.size];
 
-export const NONE = "none";
-
 function range(stop: number): IterableIterator<number>;
 function range(start: number, stop: number): IterableIterator<number>;
 function range(arg1: number, arg2?: number): IterableIterator<number> {
