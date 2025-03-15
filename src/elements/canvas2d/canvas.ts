@@ -241,6 +241,8 @@ export class Canvas2DCanvasElement extends standaloneChildren(Canvas2DElement) {
 
     this.domCanvas.width = value * devicePixelRatio;
 
+    this.setAttribute("width", String(value));
+
     this.queueRender();
   }
 
@@ -260,6 +262,8 @@ export class Canvas2DCanvasElement extends standaloneChildren(Canvas2DElement) {
     if (value === this.domCanvas.height / devicePixelRatio) return;
 
     this.domCanvas.height = value * devicePixelRatio;
+
+    this.setAttribute("height", String(value));
 
     this.queueRender();
   }
