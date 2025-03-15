@@ -8,12 +8,12 @@ import {
   LinearGradient,
   RadialGradient,
   Shadow,
-} from "webSpinner";
+} from "web-spinner";
 
 const canvas = createCanvas({
   width: 500,
   height: 500,
-  background: Color.rgb(93, 172, 92),
+  background: Color.hsl(93, 50, 60),
 });
 
 const shadow = new Shadow({ offset: canvas.mouse, blur: 10 });
@@ -53,7 +53,6 @@ const rotatingSquare = canvas.rectangle({
   stroke: "none",
   width: 250,
   height: 250,
-  velocity: Vector2D.xy(10, 0),
 });
 
 rotatingSquare.text({

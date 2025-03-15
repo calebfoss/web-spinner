@@ -45,7 +45,7 @@ export class Color {
     return new Color(value, alpha);
   }
 
-  static colorString(value: string) {
+  static fromString(value: string) {
     return new Color(value);
   }
 
@@ -67,5 +67,18 @@ export class Color {
 
   static rgb(red: number, green: number, blue: number, alpha?: number) {
     return new Color(red, green, blue, alpha);
+  }
+
+  static hsl(
+    hue: number,
+    saturation: number,
+    lightness: number,
+    alpha?: number
+  ) {
+    return new Color(
+      `hsl(${hue} ${saturation} ${lightness}${
+        alpha === undefined ? "" : ` ${alpha}`
+      })`
+    );
   }
 }
