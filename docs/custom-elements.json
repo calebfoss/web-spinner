@@ -4,195 +4,6 @@
   "modules": [
     {
       "kind": "javascript-module",
-      "path": "demo/demo.js",
-      "declarations": [],
-      "exports": []
-    },
-    {
-      "kind": "javascript-module",
-      "path": "dist/webSpinner.js",
-      "declarations": [
-        {
-          "kind": "variable",
-          "name": "__webpack_exports__Angle",
-          "description": "***"
-        },
-        {
-          "kind": "variable",
-          "name": "__webpack_exports__Color",
-          "description": "***"
-        },
-        {
-          "kind": "variable",
-          "name": "__webpack_exports__ConicalGradient",
-          "description": "***"
-        },
-        {
-          "kind": "variable",
-          "name": "__webpack_exports__LinearGradient",
-          "description": "***"
-        },
-        {
-          "kind": "variable",
-          "name": "__webpack_exports__NONE",
-          "description": "***"
-        },
-        {
-          "kind": "variable",
-          "name": "__webpack_exports__RadialGradient",
-          "description": "***"
-        },
-        {
-          "kind": "variable",
-          "name": "__webpack_exports__Shadow",
-          "description": "***"
-        },
-        {
-          "kind": "variable",
-          "name": "__webpack_exports__State",
-          "description": "***"
-        },
-        {
-          "kind": "variable",
-          "name": "__webpack_exports__Vector2D",
-          "description": "***"
-        },
-        {
-          "kind": "variable",
-          "name": "__webpack_exports__createCanvas",
-          "description": "***"
-        },
-        {
-          "kind": "variable",
-          "name": "__webpack_exports__createCustomElement",
-          "description": "***"
-        },
-        {
-          "kind": "variable",
-          "name": "__webpack_exports__createMultiple",
-          "description": "***"
-        },
-        {
-          "kind": "variable",
-          "name": "__webpack_exports__createState",
-          "description": "***"
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "Angle",
-          "declaration": {
-            "name": "__webpack_exports__Angle",
-            "module": "dist/webSpinner.js"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "Color",
-          "declaration": {
-            "name": "__webpack_exports__Color",
-            "module": "dist/webSpinner.js"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "ConicalGradient",
-          "declaration": {
-            "name": "__webpack_exports__ConicalGradient",
-            "module": "dist/webSpinner.js"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "LinearGradient",
-          "declaration": {
-            "name": "__webpack_exports__LinearGradient",
-            "module": "dist/webSpinner.js"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "NONE",
-          "declaration": {
-            "name": "__webpack_exports__NONE",
-            "module": "dist/webSpinner.js"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "RadialGradient",
-          "declaration": {
-            "name": "__webpack_exports__RadialGradient",
-            "module": "dist/webSpinner.js"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "Shadow",
-          "declaration": {
-            "name": "__webpack_exports__Shadow",
-            "module": "dist/webSpinner.js"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "State",
-          "declaration": {
-            "name": "__webpack_exports__State",
-            "module": "dist/webSpinner.js"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "Vector2D",
-          "declaration": {
-            "name": "__webpack_exports__Vector2D",
-            "module": "dist/webSpinner.js"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "createCanvas",
-          "declaration": {
-            "name": "__webpack_exports__createCanvas",
-            "module": "dist/webSpinner.js"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "createCustomElement",
-          "declaration": {
-            "name": "__webpack_exports__createCustomElement",
-            "module": "dist/webSpinner.js"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "createMultiple",
-          "declaration": {
-            "name": "__webpack_exports__createMultiple",
-            "module": "dist/webSpinner.js"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "createState",
-          "declaration": {
-            "name": "__webpack_exports__createState",
-            "module": "dist/webSpinner.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "docs/script.ts",
-      "declarations": [],
-      "exports": []
-    },
-    {
-      "kind": "javascript-module",
       "path": "src/index.ts",
       "declarations": [
         {
@@ -368,6 +179,12 @@
           }
         }
       ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/tsconfig.json",
+      "declarations": [],
+      "exports": []
     },
     {
       "kind": "javascript-module",
@@ -5909,6 +5726,12 @@
             {
               "kind": "field",
               "name": "controlA",
+              "type": {
+                "text": "Vector2D"
+              },
+              "description": "Controls the shape at the beginning of the curve.",
+              "reflects": true,
+              "attribute": "control-a",
               "inheritedFrom": {
                 "name": "hasControlPoints",
                 "module": "src/elements/canvas2d/bezier.ts"
@@ -5917,6 +5740,12 @@
             {
               "kind": "field",
               "name": "controlB",
+              "type": {
+                "text": "Vector2D"
+              },
+              "description": "Controls the shape at the end of the curve.",
+              "reflects": true,
+              "attribute": "control-b",
               "inheritedFrom": {
                 "name": "hasControlPoints",
                 "module": "src/elements/canvas2d/bezier.ts"
@@ -6652,6 +6481,30 @@
           "customElement": true,
           "attributes": [
             {
+              "name": "control-a",
+              "type": {
+                "text": "Vector2D"
+              },
+              "description": "Controls the shape at the beginning of the curve.",
+              "fieldName": "controlA",
+              "inheritedFrom": {
+                "name": "hasControlPoints",
+                "module": "src/elements/canvas2d/bezier.ts"
+              }
+            },
+            {
+              "name": "control-b",
+              "type": {
+                "text": "Vector2D"
+              },
+              "description": "Controls the shape at the end of the curve.",
+              "fieldName": "controlB",
+              "inheritedFrom": {
+                "name": "hasControlPoints",
+                "module": "src/elements/canvas2d/bezier.ts"
+              }
+            },
+            {
               "name": "to",
               "description": "End point of the element relative to its anchor.",
               "fieldName": "to",
@@ -6831,6 +6684,55 @@
             },
             {
               "kind": "field",
+              "name": "#fill",
+              "privacy": "private",
+              "type": {
+                "text": "DrawStyle | null"
+              },
+              "default": "null",
+              "inheritedFrom": {
+                "name": "fillable",
+                "module": "src/mixins/fill.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "fill",
+              "type": {
+                "text": "DrawStyle | null"
+              },
+              "description": "The rendering style inside the element. This may be a color or gradient.\r\nWhen set to null, the parent element's style is used. When\r\nset to \"none\", the inside will be transparent.",
+              "reflects": true,
+              "attribute": "fill",
+              "inheritedFrom": {
+                "name": "fillable",
+                "module": "src/mixins/fill.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "afterRender",
+              "parameters": [
+                {
+                  "name": "canvas2D",
+                  "type": {
+                    "text": "Canvas2DCanvasElement"
+                  }
+                }
+              ],
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "Canvas2DBaseRenderable",
+                "module": "src/elements/canvas2d/renderable.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "#stroke",
               "privacy": "private",
               "type": {
@@ -6884,55 +6786,6 @@
               }
             },
             {
-              "kind": "method",
-              "name": "afterRender",
-              "parameters": [
-                {
-                  "name": "canvas2D",
-                  "type": {
-                    "text": "Canvas2DCanvasElement"
-                  }
-                }
-              ],
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "inheritedFrom": {
-                "name": "Canvas2DBaseRenderable",
-                "module": "src/elements/canvas2d/renderable.ts"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "#fill",
-              "privacy": "private",
-              "type": {
-                "text": "DrawStyle | null"
-              },
-              "default": "null",
-              "inheritedFrom": {
-                "name": "fillable",
-                "module": "src/mixins/fill.ts"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "fill",
-              "type": {
-                "text": "DrawStyle | null"
-              },
-              "description": "The rendering style inside the element. This may be a color or gradient.\r\nWhen set to null, the parent element's style is used. When\r\nset to \"none\", the inside will be transparent.",
-              "reflects": true,
-              "attribute": "fill",
-              "inheritedFrom": {
-                "name": "fillable",
-                "module": "src/mixins/fill.ts"
-              }
-            },
-            {
               "kind": "field",
               "name": "#from",
               "privacy": "private",
@@ -6976,6 +6829,12 @@
             {
               "kind": "field",
               "name": "controlA",
+              "type": {
+                "text": "Vector2D"
+              },
+              "description": "Controls the shape at the beginning of the curve.",
+              "reflects": true,
+              "attribute": "control-a",
               "inheritedFrom": {
                 "name": "hasControlPoints",
                 "module": "src/elements/canvas2d/bezier.ts"
@@ -6984,6 +6843,12 @@
             {
               "kind": "field",
               "name": "controlB",
+              "type": {
+                "text": "Vector2D"
+              },
+              "description": "Controls the shape at the end of the curve.",
+              "reflects": true,
+              "attribute": "control-b",
               "inheritedFrom": {
                 "name": "hasControlPoints",
                 "module": "src/elements/canvas2d/bezier.ts"
@@ -7815,12 +7680,12 @@
           ],
           "mixins": [
             {
-              "name": "strokeable",
-              "module": "/src/mixins/stroke"
-            },
-            {
               "name": "fillable",
               "module": "/src/mixins/fill"
+            },
+            {
+              "name": "strokeable",
+              "module": "/src/mixins/stroke"
             },
             {
               "name": "hasFrom",
@@ -7842,6 +7707,18 @@
           "tagName": "c2d-bezier",
           "customElement": true,
           "attributes": [
+            {
+              "name": "fill",
+              "type": {
+                "text": "DrawStyle | null"
+              },
+              "description": "The rendering style inside the element. This may be a color or gradient.\r\nWhen set to null, the parent element's style is used. When\r\nset to \"none\", the inside will be transparent.",
+              "fieldName": "fill",
+              "inheritedFrom": {
+                "name": "fillable",
+                "module": "src/mixins/fill.ts"
+              }
+            },
             {
               "name": "stroke",
               "type": {
@@ -7867,18 +7744,6 @@
               }
             },
             {
-              "name": "fill",
-              "type": {
-                "text": "DrawStyle | null"
-              },
-              "description": "The rendering style inside the element. This may be a color or gradient.\r\nWhen set to null, the parent element's style is used. When\r\nset to \"none\", the inside will be transparent.",
-              "fieldName": "fill",
-              "inheritedFrom": {
-                "name": "fillable",
-                "module": "src/mixins/fill.ts"
-              }
-            },
-            {
               "name": "from",
               "type": {
                 "text": "Vector2D"
@@ -7888,6 +7753,30 @@
               "inheritedFrom": {
                 "name": "hasFrom",
                 "module": "src/mixins/fromTo.ts"
+              }
+            },
+            {
+              "name": "control-a",
+              "type": {
+                "text": "Vector2D"
+              },
+              "description": "Controls the shape at the beginning of the curve.",
+              "fieldName": "controlA",
+              "inheritedFrom": {
+                "name": "hasControlPoints",
+                "module": "src/elements/canvas2d/bezier.ts"
+              }
+            },
+            {
+              "name": "control-b",
+              "type": {
+                "text": "Vector2D"
+              },
+              "description": "Controls the shape at the end of the curve.",
+              "fieldName": "controlB",
+              "inheritedFrom": {
+                "name": "hasControlPoints",
+                "module": "src/elements/canvas2d/bezier.ts"
               }
             },
             {

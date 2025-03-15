@@ -550,6 +550,8 @@ function renderDemo(element: ElementData): [HTMLDivElement, HTMLElement] {
     fill: Color.random,
     stroke: Color.random,
     lineWidth: Math.ceil(Math.random() * 10),
+    controlA: WebSpinner.Vector2D.xy(100, 0),
+    controlB: WebSpinner.Vector2D.xy(0, 100),
   };
 
   const mainElement = document.createElement(element.tag);

@@ -9,13 +9,26 @@ import {
 } from "./renderable";
 import { Canvas2DCanvasElement } from "./canvas";
 import { transformeable } from "../../mixins/transform";
+import { attributeParser } from "../../utlities/attributeParser";
 
 function hasControlPoints<B extends typeof Canvas2DBaseRenderable>(Base: B) {
   return class extends hasTo(Base) {
+    static observedAttributes = [
+      ...Base.observedAttributes,
+      "control-a",
+      "control-b",
+    ];
+
     #controlA = Vector2D.zero;
     #controlB = Vector2D.zero;
 
-    get controlA() {
+    /**
+     * Controls the shape at the beginning of the curve.
+     *
+     * @attr control-a
+     * @reflect
+     */
+    get controlA(): Vector2D {
       return this.#controlA;
     }
 
@@ -25,14 +38,42 @@ function hasControlPoints<B extends typeof Canvas2DBaseRenderable>(Base: B) {
       this.registerChange("controlA", (this.#controlA = value));
     }
 
-    get controlB() {
+    /**
+     * Controls the shape at the end of the curve.
+     *
+     * @attr control-b
+     * @reflect
+     */
+    get controlB(): Vector2D {
       return this.#controlB;
     }
 
     set controlB(value) {
       if (this.#controlB.equals(value)) return;
 
-      this.registerChange("controlA", (this.#controlB = value));
+      this.registerChange("controlB", (this.#controlB = value));
+    }
+
+    attributeChangedCallback(
+      name: string,
+      oldValue: string | null,
+      newValue: string | null
+    ): void {
+      if (newValue === null)
+        return super.attributeChangedCallback(name, oldValue, newValue);
+
+      switch (name) {
+        case "control-a":
+          this.controlA = attributeParser.Vector2D(newValue);
+          return;
+
+        case "control-b":
+          this.controlB = attributeParser.Vector2D(newValue);
+          return;
+
+        default:
+          return super.attributeChangedCallback(name, oldValue, newValue);
+      }
     }
   };
 }
@@ -64,8 +105,8 @@ export class Canvas2DShapeBezier extends hasControlPoints(
 
 customElements.define("c2d-shape-bezier", Canvas2DShapeBezier);
 
-export class Canvas2DBezier extends strokeable(
-  fillable(
+export class Canvas2DBezier extends fillable(
+  strokeable(
     hasFrom(hasControlPoints(transformeable(Canvas2DStandaloneRenderable)))
   )
 ) {
