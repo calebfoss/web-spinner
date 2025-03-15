@@ -168,7 +168,14 @@ export function useFont<B extends typeof Canvas2DBaseRenderable>(Base: B) {
       super.render(canvas2D);
     }
 
-    get size() {
+    /**
+     * Font size using the current sizeUnit. When set to null, the last rendered
+     * element's setting is used.
+     *
+     * @attr
+     * @reflect
+     */
+    get size(): number | null {
       return this.#size;
     }
 
@@ -178,7 +185,13 @@ export function useFont<B extends typeof Canvas2DBaseRenderable>(Base: B) {
       this.registerChange("size", (this.#size = value));
     }
 
-    get sizeUnit() {
+    /**
+     * Unit for font size: "cm" | "mm" | "Q" | "in" | "pc" | "pt" | "px" | "vh" |
+     * "vw" | "cap" | "ch" | "em" | "ex" | "ic" | "lh" | "rcap" | "rch" | "rem" |
+     * "rex" | "rlh"
+     *
+     */
+    get sizeUnit(): FontSizeUnit {
       return this.#sizeUnit;
     }
 
