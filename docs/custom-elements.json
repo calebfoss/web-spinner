@@ -7,14 +7,6 @@
       "path": "src/index.ts",
       "declarations": [
         {
-          "kind": "variable",
-          "name": "NONE",
-          "type": {
-            "text": "string"
-          },
-          "default": "\"none\""
-        },
-        {
           "kind": "function",
           "name": "createMultiple",
           "parameters": [
@@ -66,14 +58,6 @@
         }
       ],
       "exports": [
-        {
-          "kind": "js",
-          "name": "NONE",
-          "declaration": {
-            "name": "NONE",
-            "module": "src/index.ts"
-          }
-        },
         {
           "kind": "js",
           "name": "createCustomElement",
@@ -1119,7 +1103,7 @@
             },
             {
               "kind": "method",
-              "name": "colorString",
+              "name": "fromString",
               "static": true,
               "parameters": [
                 {
@@ -1171,6 +1155,38 @@
                 },
                 {
                   "name": "blue",
+                  "type": {
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "alpha",
+                  "optional": true,
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "hsl",
+              "static": true,
+              "parameters": [
+                {
+                  "name": "hue",
+                  "type": {
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "saturation",
+                  "type": {
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "lightness",
                   "type": {
                     "text": "number"
                   }
@@ -3838,11 +3854,21 @@
             },
             {
               "kind": "field",
-              "name": "size"
+              "name": "size",
+              "type": {
+                "text": "number | null"
+              },
+              "description": "Font size using the current sizeUnit. When set to null, the last rendered\r\nelement's setting is used.",
+              "reflects": true,
+              "attribute": "size"
             },
             {
               "kind": "field",
-              "name": "sizeUnit"
+              "name": "sizeUnit",
+              "type": {
+                "text": "FontSizeUnit"
+              },
+              "description": "Unit for font size: \"cm\" | \"mm\" | \"Q\" | \"in\" | \"pc\" | \"pt\" | \"px\" | \"vh\" |\r\n\"vw\" | \"cap\" | \"ch\" | \"em\" | \"ex\" | \"ic\" | \"lh\" | \"rcap\" | \"rch\" | \"rem\" |\r\n\"rex\" | \"rlh\""
             },
             {
               "kind": "field",
@@ -3856,7 +3882,12 @@
           ],
           "attributes": [
             {
-              "name": "size"
+              "name": "size",
+              "type": {
+                "text": "number | null"
+              },
+              "description": "Font size using the current sizeUnit. When set to null, the last rendered\r\nelement's setting is used.",
+              "fieldName": "size"
             },
             {
               "name": "stretch"
@@ -5108,7 +5139,13 @@
             },
             {
               "kind": "field",
-              "name": "source"
+              "name": "source",
+              "type": {
+                "text": "string"
+              },
+              "description": "URL or local path to the media file source for this element.",
+              "reflects": true,
+              "attribute": "source"
             },
             {
               "kind": "method",
@@ -5616,31 +5653,15 @@
               }
             }
           ],
-          "mixins": [
-            {
-              "name": "transformeable",
-              "module": "/src/mixins/transform"
-            },
-            {
-              "name": "hasRectangleBounds",
-              "module": "/src/mixins/rectangleBounds"
-            }
-          ],
-          "parameters": [
-            {
-              "name": "Base",
-              "type": {
-                "text": "B"
-              }
-            },
-            {
-              "name": "mediaTag",
-              "type": {
-                "text": "T"
-              }
-            }
-          ],
           "attributes": [
+            {
+              "name": "source",
+              "type": {
+                "text": "string"
+              },
+              "description": "URL or local path to the media file source for this element.",
+              "fieldName": "source"
+            },
             {
               "name": "angle",
               "type": {
@@ -5737,6 +5758,30 @@
                 "module": "src/mixins/offset.ts"
               }
             }
+          ],
+          "mixins": [
+            {
+              "name": "transformeable",
+              "module": "/src/mixins/transform"
+            },
+            {
+              "name": "hasRectangleBounds",
+              "module": "/src/mixins/rectangleBounds"
+            }
+          ],
+          "parameters": [
+            {
+              "name": "Base",
+              "type": {
+                "text": "B"
+              }
+            },
+            {
+              "name": "mediaTag",
+              "type": {
+                "text": "T"
+              }
+            }
           ]
         }
       ],
@@ -5761,7 +5806,7 @@
           "type": {
             "text": "AttributeTypeParser"
           },
-          "default": "{ number(stringValue) { return parseFloat(stringValue); }, Color(stringValue) { const args = stringValue.split(\",\"); const numbers = args.map(attributeParser.number); switch (numbers.length) { case 1: return isNaN(numbers[0]) ? new Color(args[0]) : new Color(numbers[0]); case 2: return new Color(numbers[0], numbers[1]); case 3: return new Color(numbers[0], numbers[1], numbers[2]); case 5: console.warn( `Found ${numbers.length} arguments passed to Color attribute, but the maximum is 4` ); default: return new Color(numbers[0], numbers[1], numbers[2], numbers[3]); } }, FillStrokeStyle(stringValue) { if (stringValue === NONE || stringValue === \"gradient\") return stringValue; return attributeParser.Color(stringValue); }, Vector2D(stringValue) { const numbers = stringValue.split(\",\").map(attributeParser.number); if (numbers.some(Number.isNaN)) throw new Error(`NaN: ${stringValue}`); switch (numbers.length) { case 0: return new Vector2D(); case 1: return new Vector2D(numbers[0]); case 3: console.warn( `Found ${numbers.length} arguments passed to Vecto2D attribute, but the maximum is 2` ); default: return new Vector2D(numbers[0], numbers[1]); } }, Angle(stringValue) { const args = stringValue.match(angleMatch); if (args === null) throw new Error(`Angle arguments could not be parsed: ${stringValue}`); const value = attributeParser.number(args[1]); const unit = args[2] as AngleUnitShort; return new Angle(unit, value); }, }"
+          "default": "{ number(stringValue) { return parseFloat(stringValue); }, Color(stringValue) { const args = stringValue.split(\",\"); const numbers = args.map(attributeParser.number); switch (numbers.length) { case 1: return isNaN(numbers[0]) ? new Color(args[0]) : new Color(numbers[0]); case 2: return new Color(numbers[0], numbers[1]); case 3: return new Color(numbers[0], numbers[1], numbers[2]); case 5: console.warn( `Found ${numbers.length} arguments passed to Color attribute, but the maximum is 4` ); default: return new Color(numbers[0], numbers[1], numbers[2], numbers[3]); } }, FillStrokeStyle(stringValue) { if (stringValue === \"none\" || stringValue === \"gradient\") return stringValue; return attributeParser.Color(stringValue); }, Vector2D(stringValue) { const numbers = stringValue.split(\",\").map(attributeParser.number); if (numbers.some(Number.isNaN)) throw new Error(`NaN: ${stringValue}`); switch (numbers.length) { case 0: return new Vector2D(); case 1: return new Vector2D(numbers[0]); case 3: console.warn( `Found ${numbers.length} arguments passed to Vecto2D attribute, but the maximum is 2` ); default: return new Vector2D(numbers[0], numbers[1]); } }, Angle(stringValue) { const args = stringValue.match(angleMatch); if (args === null) throw new Error(`Angle arguments could not be parsed: ${stringValue}`); const value = attributeParser.number(args[1]); const unit = args[2] as AngleUnitShort; return new Angle(unit, value); }, }"
         }
       ],
       "exports": [
@@ -11668,6 +11713,12 @@
             {
               "kind": "field",
               "name": "source",
+              "type": {
+                "text": "string"
+              },
+              "description": "URL or local path to the media file source for this element.",
+              "reflects": true,
+              "attribute": "source",
               "inheritedFrom": {
                 "name": "rendersVisualMedia",
                 "module": "src/mixins/visualMedia.ts"
@@ -12767,6 +12818,18 @@
           "tagName": "c2d-image",
           "customElement": true,
           "attributes": [
+            {
+              "name": "source",
+              "type": {
+                "text": "string"
+              },
+              "description": "URL or local path to the media file source for this element.",
+              "fieldName": "source",
+              "inheritedFrom": {
+                "name": "rendersVisualMedia",
+                "module": "src/mixins/visualMedia.ts"
+              }
+            },
             {
               "name": "angle",
               "type": {
@@ -21277,11 +21340,12 @@
             {
               "kind": "field",
               "name": "sizeUnit",
+              "type": {
+                "text": "FontSizeUnit"
+              },
+              "description": "Unit for font size: \"cm\" | \"mm\" | \"Q\" | \"in\" | \"pc\" | \"pt\" | \"px\" | \"vh\" |\r\n\"vw\" | \"cap\" | \"ch\" | \"em\" | \"ex\" | \"ic\" | \"lh\" | \"rcap\" | \"rch\" | \"rem\" |\r\n\"rex\" | \"rlh\"",
               "static": true,
               "default": "{ ...Units.size, capHeight: \"cap\", characterWidth: \"ch\", calculated: \"em\", xHeight: \"ex\", characterHeight: \"ic\", lineHeight: \"lh\", rootCapHeight: \"rcap\", rootCharacterWidth: \"rch\", rootSize: \"rem\", rootXHeight: \"rex\", rootCharacterHeight: \"ic\", rootLineHeight: \"rlh\", }",
-              "type": {
-                "text": "{\r\n  ...Units.size,\r\n  capHeight: \"cap\",\r\n  characterWidth: \"ch\",\r\n  calculated: \"em\",\r\n  xHeight: \"ex\",\r\n  characterHeight: \"ic\",\r\n  lineHeight: \"lh\",\r\n  rootCapHeight: \"rcap\",\r\n  rootCharacterWidth: \"rch\",\r\n  rootSize: \"rem\",\r\n  rootXHeight: \"rex\",\r\n  rootCharacterHeight: \"ic\",\r\n  rootLineHeight: \"rlh\",\r\n}"
-              },
               "inheritedFrom": {
                 "name": "useFont",
                 "module": "src/mixins/font.ts"
@@ -21340,6 +21404,12 @@
             {
               "kind": "field",
               "name": "size",
+              "type": {
+                "text": "number | null"
+              },
+              "description": "Font size using the current sizeUnit. When set to null, the last rendered\r\nelement's setting is used.",
+              "reflects": true,
+              "attribute": "size",
               "inheritedFrom": {
                 "name": "useFont",
                 "module": "src/mixins/font.ts"
@@ -21921,6 +21991,11 @@
           "attributes": [
             {
               "name": "size",
+              "type": {
+                "text": "number | null"
+              },
+              "description": "Font size using the current sizeUnit. When set to null, the last rendered\r\nelement's setting is used.",
+              "fieldName": "size",
               "inheritedFrom": {
                 "name": "useFont",
                 "module": "src/mixins/font.ts"
@@ -22280,6 +22355,12 @@
             {
               "kind": "field",
               "name": "source",
+              "type": {
+                "text": "string"
+              },
+              "description": "URL or local path to the media file source for this element.",
+              "reflects": true,
+              "attribute": "source",
               "inheritedFrom": {
                 "name": "rendersVisualMedia",
                 "module": "src/mixins/visualMedia.ts"
@@ -23379,6 +23460,18 @@
           "tagName": "c2d-video",
           "customElement": true,
           "attributes": [
+            {
+              "name": "source",
+              "type": {
+                "text": "string"
+              },
+              "description": "URL or local path to the media file source for this element.",
+              "fieldName": "source",
+              "inheritedFrom": {
+                "name": "rendersVisualMedia",
+                "module": "src/mixins/visualMedia.ts"
+              }
+            },
             {
               "name": "angle",
               "type": {

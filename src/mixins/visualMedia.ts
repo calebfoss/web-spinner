@@ -1,5 +1,6 @@
 import { Canvas2DCanvasElement } from "../elements/canvas2d/canvas";
 import { Canvas2DBaseRenderable } from "../elements/canvas2d/renderable";
+import { attributeParser } from "../utlities/attributeParser";
 import { hasRectangleBounds } from "./rectangleBounds";
 import { transformeable } from "./transform";
 
@@ -8,6 +9,8 @@ export function rendersVisualMedia<
   T extends "img" | "video"
 >(Base: B, mediaTag: T) {
   return class extends transformeable(hasRectangleBounds(Base)) {
+    static observedAttributes = [...super.observedAttributes, "source"];
+
     #mediaElement: HTMLElementTagNameMap[T];
     #widthSet = false;
     #heightSet = false;
@@ -16,6 +19,32 @@ export function rendersVisualMedia<
       super(...args);
 
       this.#mediaElement = document.createElement(mediaTag);
+    }
+
+    attributeChangedCallback(
+      name: string,
+      oldValue: string | null,
+      newValue: string | null
+    ): void {
+      if (newValue === null)
+        return super.attributeChangedCallback(name, oldValue, newValue);
+
+      switch (name) {
+        case "source":
+          this.source = newValue;
+          return;
+
+        case "width":
+          this.width = attributeParser.number(newValue);
+          return;
+
+        case "height":
+          this.height = attributeParser.number(newValue);
+          return;
+
+        default:
+          return super.attributeChangedCallback(name, oldValue, newValue);
+      }
     }
 
     connectedCallback() {
@@ -29,7 +58,13 @@ export function rendersVisualMedia<
       return this.#mediaElement;
     }
 
-    get source() {
+    /**
+     * URL or local path to the media file source for this element.
+     *
+     * @attr
+     * @reflect
+     */
+    get source(): string {
       return this.#mediaElement.src;
     }
 

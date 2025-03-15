@@ -145,6 +145,10 @@ h6 {
       display: inline-block;
     }
 
+    input {
+      width: 100%;
+    }
+
     table {
       display: table;
       box-shadow: var(--dark-gray) 5px 5px;
