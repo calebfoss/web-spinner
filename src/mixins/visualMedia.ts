@@ -81,11 +81,11 @@ export function rendersVisualMedia<
 
             const widthRatio = this.width / this.mediaWidth;
 
-            this.height *= widthRatio;
+            this.height = this.mediaHeight * widthRatio;
           } else if (this.#heightSet) {
             const heightRatio = this.height / this.mediaHeight;
 
-            this.width *= heightRatio;
+            this.width = this.mediaWidth * heightRatio;
           } else {
             this.width = this.mediaWidth;
             this.height = this.mediaHeight;
@@ -126,17 +126,19 @@ export function rendersVisualMedia<
     }
 
     set width(value) {
-      if (value === this.#mediaElement.width) return;
+      const roundedValue = Math.floor(value);
+
+      if (roundedValue === this.width) return;
 
       this.#widthSet = true;
 
-      this.registerChange("width", (this.#mediaElement.width = value));
+      this.registerChange("width", (this.#mediaElement.width = roundedValue));
 
       if (this.#heightSet || this.mediaWidth === 0) return;
 
       const widthRatio = value / this.mediaWidth;
 
-      this.height = this.mediaHeight * widthRatio;
+      this.height *= widthRatio;
     }
 
     get mediaHeight() {
@@ -150,17 +152,19 @@ export function rendersVisualMedia<
     }
 
     set height(value) {
-      if (value === this.#mediaElement.height) return;
+      const roundedValue = Math.round(value);
+
+      if (roundedValue === this.height) return;
 
       this.#heightSet = true;
 
-      this.registerChange("height", (this.#mediaElement.height = value));
+      this.registerChange("height", (this.#mediaElement.height = roundedValue));
 
       if (this.#widthSet || this.mediaHeight === 0) return;
 
       const heightRatio = value / this.mediaHeight;
 
-      this.width = this.mediaWidth * heightRatio;
+      this.width *= heightRatio;
     }
   };
 }

@@ -523,17 +523,24 @@ function renderDemo(element: ElementData): [HTMLDivElement, HTMLElement] {
 
   observer.observe(mainElement, { attributes: true });
 
+  for (const [name, value] of Object.entries(defaults)) {
+    if (name in mainElement) {
+      Reflect.set(mainElement, name, value);
+    }
+  }
+
   if (element.tag === "c2d-image") {
     const image = mainElement as WebSpinner.WebSpinnerElement["Canvas2DImage"];
     image.source = "./Embia_major_mf.jpg";
     image.width = canvas.width;
     image.origin = "center";
-  }
-
-  for (const [name, value] of Object.entries(defaults)) {
-    if (name in mainElement) {
-      Reflect.set(mainElement, name, value);
-    }
+  } else if (element.tag === "c2d-video") {
+    const video = mainElement as WebSpinner.WebSpinnerElement["Canvas2DVideo"];
+    video.source =
+      "https://download.blender.org/peach/bigbuckbunny_movies/BigBuckBunny_320x180.mp4";
+    video.width = canvas.width;
+    video.anchor = WebSpinner.Vector2D.zero;
+    canvas.listen.click(() => video.play());
   }
 
   if (element.tag === "c2d-text") {

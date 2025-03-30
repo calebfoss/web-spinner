@@ -18,6 +18,7 @@
   "types": "dist/types/index.d.ts",
   "scripts": {
     "build": "webpack && npm i && vite build docs",
+    "dev": "webpack --watch",
     "docs": "npx cem analyze --globs src --outdir docs",
     "start": "vite docs",
     "test": "echo \"Error: no test specified\" && exit 1"
