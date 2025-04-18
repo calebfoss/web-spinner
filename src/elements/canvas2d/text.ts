@@ -1,6 +1,6 @@
 import { useFont } from "../../mixins/font";
 import { c2dFill } from "../../mixins/fill";
-import { strokeable } from "../../mixins/stroke";
+import { c2dStroke } from "../../mixins/stroke";
 import { transformeable } from "../../mixins/transform";
 import { Canvas2DStandaloneRenderable, changedEvent } from "./renderable";
 import { offset } from "../../mixins/offset";
@@ -8,7 +8,7 @@ import { Canvas2DCanvasElement } from "./canvas";
 import { LinearGradient, RadialGradient } from "../../classes/gradient";
 
 class Base extends c2dFill(
-  strokeable(transformeable(offset(useFont(Canvas2DStandaloneRenderable))))
+  c2dStroke(transformeable(offset(useFont(Canvas2DStandaloneRenderable))))
 ) {}
 
 export class Canvas2DText extends Base {

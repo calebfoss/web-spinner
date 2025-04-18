@@ -2,7 +2,7 @@ import { Angle } from "../../classes/angle";
 import { LinearGradient, RadialGradient } from "../../classes/gradient";
 import { c2dFill } from "../../mixins/fill";
 import { hasRectangleBounds } from "../../mixins/rectangleBounds";
-import { strokeable } from "../../mixins/stroke";
+import { c2dStroke } from "../../mixins/stroke";
 import { transformeable } from "../../mixins/transform";
 import { Canvas2DCanvasElement } from "./canvas";
 import {
@@ -78,7 +78,7 @@ function renderEllipse<B extends typeof Canvas2DBaseRenderable>(Base: B) {
 }
 
 export class Canvas2DEllipse extends renderEllipse(
-  strokeable(c2dFill(Canvas2DStandaloneRenderable))
+  c2dStroke(c2dFill(Canvas2DStandaloneRenderable))
 ) {
   static get tag() {
     return "c2d-ellipse";

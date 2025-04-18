@@ -61,10 +61,11 @@ export function createSVGController<T extends keyof SVGElementTagNameMap>(
       for (const [propertyName, attributeName] of Object.entries(
         this._styleAttributes
       )) {
-        this.#group.setAttribute(
-          attributeName,
-          String(Reflect.get(this, propertyName))
-        );
+        const value = Reflect.get(this, propertyName);
+
+        if (value === null) continue;
+
+        this.#group.setAttribute(attributeName, String(value));
 
         this.mainElement.removeAttribute(attributeName);
       }

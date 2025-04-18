@@ -9,9 +9,10 @@ import {
 import { Canvas2DCanvasElement } from "../elements/canvas2d/canvas";
 import { Canvas2DBaseRenderable } from "../elements/canvas2d/renderable";
 import { attributeParser } from "../utlities/attributeParser";
+import { SVGElementController } from "../elements/svg/base";
 
-export function strokeable<B extends typeof Canvas2DBaseRenderable>(Base: B) {
-  return class Strokeable extends Base {
+function baseStroke<B extends MixableHTMLElement>(Base: B) {
+  return class extends Base {
     static observedAttributes: string[] = [
       ...Base.observedAttributes,
       "stroke",
@@ -62,42 +63,6 @@ export function strokeable<B extends typeof Canvas2DBaseRenderable>(Base: B) {
       this.registerChange("stroke", (this.#stroke = value));
     }
 
-    render(canvas2D: Canvas2DCanvasElement): void {
-      super.render(canvas2D);
-
-      const { context } = canvas2D;
-
-      if (this.#stroke !== "none" && this.#stroke !== null) {
-        if (this.#stroke instanceof Color)
-          context.strokeStyle = this.#stroke.toString();
-        else if (this.#stroke instanceof Gradient) {
-          if (this.#stroke instanceof ConicalGradient) {
-            context.strokeStyle = this.renderConicalGradient(
-              context,
-              this.#stroke
-            );
-          } else if (this.#stroke instanceof LinearGradient)
-            context.strokeStyle = this.renderLinearGradient(
-              context,
-              this.#stroke
-            );
-          else if (this.#stroke instanceof RadialGradient)
-            context.strokeStyle = this.renderRadialGradient(
-              context,
-              this.#stroke
-            );
-        }
-      }
-
-      if (this.#lineWidth !== null) context.lineWidth = this.#lineWidth;
-    }
-
-    afterRender(canvas2D: Canvas2DCanvasElement): void {
-      if (this.#stroke !== "none") canvas2D.context.stroke();
-
-      super.afterRender(canvas2D);
-    }
-
     attributeChangedCallback(
       name: string,
       oldValue: string | null,
@@ -121,6 +86,88 @@ export function strokeable<B extends typeof Canvas2DBaseRenderable>(Base: B) {
 
         super.attributeChangedCallback(name, oldValue, newValue);
       }
+    }
+  };
+}
+
+export function c2dStroke<B extends typeof Canvas2DBaseRenderable>(Base: B) {
+  return class Strokeable extends baseStroke(Base) {
+    render(canvas2D: Canvas2DCanvasElement): void {
+      super.render(canvas2D);
+
+      const { context } = canvas2D;
+
+      if (this.stroke !== "none" && this.stroke !== null) {
+        if (this.stroke instanceof Color)
+          context.strokeStyle = this.stroke.toString();
+        else if (this.stroke instanceof Gradient) {
+          if (this.stroke instanceof ConicalGradient) {
+            context.strokeStyle = this.renderConicalGradient(
+              context,
+              this.stroke
+            );
+          } else if (this.stroke instanceof LinearGradient)
+            context.strokeStyle = this.renderLinearGradient(
+              context,
+              this.stroke
+            );
+          else if (this.stroke instanceof RadialGradient)
+            context.strokeStyle = this.renderRadialGradient(
+              context,
+              this.stroke
+            );
+        }
+      }
+
+      if (this.lineWidth !== null) context.lineWidth = this.lineWidth;
+    }
+
+    afterRender(canvas2D: Canvas2DCanvasElement): void {
+      if (this.stroke !== "none") canvas2D.context.stroke();
+
+      super.afterRender(canvas2D);
+    }
+  };
+}
+
+export function svgStroke<B extends SVGElementController>(Base: B) {
+  return class extends baseStroke(Base) {
+    get lineWidth() {
+      return super.lineWidth;
+    }
+
+    set lineWidth(value) {
+      if (super.lineWidth === value) return;
+
+      super.lineWidth = value;
+
+      const lineWidth = super.lineWidth;
+
+      if (lineWidth === null) return;
+
+      this._setStyleAttribute("stroke-width", lineWidth.toString());
+    }
+
+    get stroke() {
+      return super.stroke;
+    }
+
+    set stroke(value) {
+      if (super.stroke?.toString() === value?.toString()) return;
+
+      super.stroke = value;
+
+      if (this.stroke === null) return;
+
+      this._setStyleAttribute("stroke", this.stroke.toString());
+    }
+
+    get _styleAttributes(): { [Key in keyof this]?: string } {
+      return {
+        ...super._styleAttributes,
+        stroke: "stroke",
+        lineWidth: "stroke-width",
+      };
     }
   };
 }

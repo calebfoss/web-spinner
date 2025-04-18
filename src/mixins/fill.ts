@@ -104,13 +104,8 @@ export function svgFill<B extends SVGElementController>(Base: B) {
       this._setStyleAttribute("fill", this.fill.toString());
     }
 
-    #styleAttributes = {
-      ...super._styleAttributes,
-      fill: "fill",
-    };
-
     get _styleAttributes(): { [Key in keyof this]?: string } {
-      return this.#styleAttributes;
+      return { ...super._styleAttributes, fill: "fill" };
     }
   };
 }

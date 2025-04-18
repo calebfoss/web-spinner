@@ -1,13 +1,13 @@
 import { MouseTracker } from "../../classes/mouse";
 import { c2dFill } from "../../mixins/fill";
 import { offset } from "../../mixins/offset";
-import { strokeable } from "../../mixins/stroke";
+import { c2dStroke } from "../../mixins/stroke";
 import { transformeable } from "../../mixins/transform";
 import { Canvas2DCanvasElement } from "./canvas";
 import { Canvas2DShapePartRenderable } from "./renderable";
 
 export class Canvas2DShape extends c2dFill(
-  strokeable(transformeable(offset(Canvas2DShapePartRenderable)))
+  c2dStroke(transformeable(offset(Canvas2DShapePartRenderable)))
 ) {
   static get tag() {
     return "c2d-shape";

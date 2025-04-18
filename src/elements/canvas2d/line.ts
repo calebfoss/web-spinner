@@ -1,5 +1,5 @@
 import { Vector2D } from "../../classes/vector2d";
-import { strokeable } from "../../mixins/stroke";
+import { c2dStroke } from "../../mixins/stroke";
 import { hasFrom, hasTo } from "../../mixins/fromTo";
 import {
   Canvas2DBaseRenderable,
@@ -31,7 +31,7 @@ export class Canvas2DShapeLine extends hasTo(Canvas2DShapePartRenderable) {
 
 customElements.define("c2d-shape-line", Canvas2DShapeLine);
 
-export class Canvas2DLine extends strokeable(
+export class Canvas2DLine extends c2dStroke(
   hasTo(hasFrom(Canvas2DStandaloneRenderable))
 ) {
   static get tag() {

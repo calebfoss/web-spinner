@@ -22,6 +22,8 @@ const parentRect = svg.rectangle({
 const childRect = parentRect.rectangle({
   width: 25,
   height: 25,
+  stroke: "black",
+  lineWidth: 10,
 });
 
 document.body.appendChild(svg);
