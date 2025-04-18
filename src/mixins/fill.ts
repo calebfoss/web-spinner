@@ -8,9 +8,10 @@ import {
 } from "../classes/gradient";
 import { Canvas2DCanvasElement } from "../elements/canvas2d/canvas";
 import { Canvas2DBaseRenderable } from "../elements/canvas2d/renderable";
+import { SVGElementController } from "../elements/svg/base";
 import { attributeParser } from "../utlities/attributeParser";
 
-export function fillable<B extends typeof Canvas2DBaseRenderable>(Base: B) {
+function baseFill<B extends MixableHTMLElement>(Base: B) {
   return class Fillable extends Base {
     static observedAttributes: string[] = [...Base.observedAttributes, "fill"];
 
@@ -41,30 +42,6 @@ export function fillable<B extends typeof Canvas2DBaseRenderable>(Base: B) {
       this.registerChange("fill", (this.#fill = value));
     }
 
-    render(canvas2D: Canvas2DCanvasElement): void {
-      super.render(canvas2D);
-
-      const { context } = canvas2D;
-
-      if (this.#fill instanceof Color)
-        context.fillStyle = this.#fill.toString();
-      else if (this.#fill instanceof Gradient) {
-        if (this.#fill instanceof ConicalGradient) {
-          context.fillStyle = this.renderConicalGradient(context, this.#fill);
-        } else if (this.#fill instanceof LinearGradient) {
-          context.fillStyle = this.renderLinearGradient(context, this.#fill);
-        } else if (this.#fill instanceof RadialGradient) {
-          context.fillStyle = this.renderRadialGradient(context, this.#fill);
-        }
-      }
-    }
-
-    afterRender(canvas2D: Canvas2DCanvasElement): void {
-      if (this.#fill !== "none") canvas2D.context.fill();
-
-      super.afterRender(canvas2D);
-    }
-
     attributeChangedCallback(
       name: string,
       oldValue: string | null,
@@ -80,6 +57,60 @@ export function fillable<B extends typeof Canvas2DBaseRenderable>(Base: B) {
       }
 
       super.attributeChangedCallback(name, oldValue, newValue);
+    }
+  };
+}
+
+export function c2dFill<B extends typeof Canvas2DBaseRenderable>(Base: B) {
+  return class Fillable extends baseFill(Base) {
+    render(canvas2D: Canvas2DCanvasElement): void {
+      super.render(canvas2D);
+
+      const { context } = canvas2D;
+
+      if (this.fill instanceof Color) context.fillStyle = this.fill.toString();
+      else if (this.fill instanceof Gradient) {
+        if (this.fill instanceof ConicalGradient) {
+          context.fillStyle = this.renderConicalGradient(context, this.fill);
+        } else if (this.fill instanceof LinearGradient) {
+          context.fillStyle = this.renderLinearGradient(context, this.fill);
+        } else if (this.fill instanceof RadialGradient) {
+          context.fillStyle = this.renderRadialGradient(context, this.fill);
+        }
+      }
+    }
+
+    afterRender(canvas2D: Canvas2DCanvasElement): void {
+      if (this.fill !== "none") canvas2D.context.fill();
+
+      super.afterRender(canvas2D);
+    }
+  };
+}
+
+export function svgFill<B extends SVGElementController>(Base: B) {
+  return class extends baseFill(Base) {
+    get fill() {
+      return super.fill;
+    }
+
+    set fill(value) {
+      if (super.fill?.toString() === value?.toString()) return;
+
+      super.fill = value;
+
+      if (this.fill === null) return;
+
+      this._setStyleAttribute("fill", this.fill.toString());
+    }
+
+    #styleAttributes = {
+      ...super._styleAttributes,
+      fill: "fill",
+    };
+
+    get _styleAttributes(): { [Key in keyof this]?: string } {
+      return this.#styleAttributes;
     }
   };
 }

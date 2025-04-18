@@ -1,3 +1,4 @@
+import { createCustomElement } from "..";
 import {
   Canvas2DBezier,
   Canvas2DShapeBezier,
@@ -16,10 +17,14 @@ import {
 import { Canvas2DShape } from "../elements/canvas2d/shape";
 import { Canvas2DText } from "../elements/canvas2d/text";
 import { Canvas2DVideo } from "../elements/canvas2d/video";
+import { SVGElementController } from "../elements/svg/base";
+import { SVGRectangleController } from "../elements/svg/rectangle";
 
 type MultipleCallback = (index: number) => Node | undefined;
 
-export function standaloneChildren<B extends typeof Canvas2DElement>(Base: B) {
+export function c2dStandaloneChildren<B extends typeof Canvas2DElement>(
+  Base: B
+) {
   return class extends Base {
     /**
      * Creates a `<c2d-bezier>` child element and returns it.
@@ -110,7 +115,7 @@ export function standaloneChildren<B extends typeof Canvas2DElement>(Base: B) {
   };
 }
 
-export function partChildren<B extends typeof Canvas2DElement>(Base: B) {
+export function c2dShapeChildren<B extends typeof Canvas2DElement>(Base: B) {
   return class extends Base {
     bezier(options?: Options<Canvas2DShapeBezier>) {
       return this.createChild(Canvas2DShapeBezier, options);
@@ -126,6 +131,30 @@ export function partChildren<B extends typeof Canvas2DElement>(Base: B) {
 
     rectangle(options?: Options<Canvas2DShapeRectangle>) {
       return this.createChild(Canvas2DShapeRectangle, options);
+    }
+  };
+}
+
+export function svgChildren<B extends SVGElementController>(Base: B) {
+  return class extends Base {
+    /**
+     * @private
+     */
+    createChild<E extends SVGElementController>(
+      ElementClass: E,
+      options?: Options<InstanceType<E>>
+    ) {
+      const element = createCustomElement(ElementClass, options);
+
+      this.appendChild(element);
+
+      this.appendChild(element.mainElement);
+
+      return element;
+    }
+
+    rectangle(options?: Partial<SVGRectangleController>) {
+      return this.createChild(SVGRectangleController, options);
     }
   };
 }

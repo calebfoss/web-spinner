@@ -21,13 +21,16 @@ export function createSVGController<T extends keyof SVGElementTagNameMap>(
     }
 
     appendChild<T extends Node>(node: T): T {
-      if (node instanceof SVGElementController === false)
-        return super.appendChild(node);
+      if (node instanceof SVGElement === false) return super.appendChild(node);
 
       const group = this.#group ?? this.#createGroup();
 
-      return group.appendChild(node);
+      group.appendChild(node);
+
+      return node;
     }
+
+    attributeChangedCallback() {}
 
     #attachMain() {
       const { svgContainer } = this;
@@ -45,6 +48,8 @@ export function createSVGController<T extends keyof SVGElementTagNameMap>(
     }
 
     #createGroup() {
+      if (this.#group !== null) return this.#group;
+
       this.#group = document.createElementNS("http://www.w3.org/2000/svg", "g");
 
       const { parentElement } = this.mainElement;
@@ -52,6 +57,17 @@ export function createSVGController<T extends keyof SVGElementTagNameMap>(
       if (parentElement !== null) parentElement.appendChild(this.#group);
 
       this.#group.appendChild(this.mainElement);
+
+      for (const [propertyName, attributeName] of Object.entries(
+        this._styleAttributes
+      )) {
+        this.#group.setAttribute(
+          attributeName,
+          String(Reflect.get(this, propertyName))
+        );
+
+        this.mainElement.removeAttribute(attributeName);
+      }
 
       return this.#group;
     }
@@ -92,6 +108,26 @@ export function createSVGController<T extends keyof SVGElementTagNameMap>(
       if (currentAttributeValue === stringValue) return;
 
       this.setAttribute(attributeName, stringValue);
+    }
+
+    /**
+     * @private
+     */
+    _setStyleAttribute(attributeName: string, value: string) {
+      const { group } = this;
+
+      if (group === null) {
+        this.mainElement.setAttribute(attributeName, value);
+        return;
+      }
+
+      group.setAttribute(attributeName, value);
+    }
+
+    get _styleAttributes(): {
+      [Key in keyof this]?: string;
+    } {
+      return {};
     }
 
     get svgContainer() {

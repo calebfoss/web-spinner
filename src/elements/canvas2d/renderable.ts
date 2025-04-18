@@ -6,7 +6,7 @@ import {
 import { MouseData } from "../../classes/mouse";
 import { Shadow } from "../../classes/shadow";
 import { Vector2D } from "../../classes/vector2d";
-import { partChildren, standaloneChildren } from "../../mixins/children";
+import { c2dShapeChildren, c2dStandaloneChildren } from "../../mixins/children";
 import { camelToKebabCase } from "../../utlities/camelToKebab";
 import { Canvas2DCanvasElement } from "./canvas";
 import { Canvas2DElement } from "./element";
@@ -270,7 +270,7 @@ export class Canvas2DBaseRenderable extends Canvas2DElement {
   }
 }
 
-export class Canvas2DStandaloneRenderable extends standaloneChildren(
+export class Canvas2DStandaloneRenderable extends c2dStandaloneChildren(
   Canvas2DBaseRenderable
 ) {
   render(canvas2D: Canvas2DCanvasElement) {
@@ -280,6 +280,6 @@ export class Canvas2DStandaloneRenderable extends standaloneChildren(
   }
 }
 
-export class Canvas2DShapePartRenderable extends partChildren(
+export class Canvas2DShapePartRenderable extends c2dShapeChildren(
   Canvas2DBaseRenderable
 ) {}

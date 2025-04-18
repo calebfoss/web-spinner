@@ -1,5 +1,5 @@
 import { Vector2D } from "../../classes/vector2d";
-import { fillable } from "../../mixins/fill";
+import { c2dFill } from "../../mixins/fill";
 import { strokeable } from "../../mixins/stroke";
 import { hasFrom, hasTo } from "../../mixins/fromTo";
 import {
@@ -105,7 +105,7 @@ export class Canvas2DShapeBezier extends hasControlPoints(
 
 customElements.define("c2d-shape-bezier", Canvas2DShapeBezier);
 
-export class Canvas2DBezier extends fillable(
+export class Canvas2DBezier extends c2dFill(
   strokeable(
     hasFrom(hasControlPoints(transformeable(Canvas2DStandaloneRenderable)))
   )

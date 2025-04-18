@@ -3,7 +3,7 @@ import {
   LinearGradient,
   RadialGradient,
 } from "../../classes/gradient";
-import { fillable } from "../../mixins/fill";
+import { c2dFill } from "../../mixins/fill";
 import { hasRectangleBounds } from "../../mixins/rectangleBounds";
 import { strokeable } from "../../mixins/stroke";
 import { transformeable } from "../../mixins/transform";
@@ -46,7 +46,7 @@ function renderCanvasRectangle<B extends typeof Canvas2DBaseRenderable>(
 }
 
 export class Canvas2DRectangle extends renderCanvasRectangle(
-  strokeable(fillable(Canvas2DStandaloneRenderable))
+  strokeable(c2dFill(Canvas2DStandaloneRenderable))
 ) {
   static get tag() {
     return "c2d-rectangle";
