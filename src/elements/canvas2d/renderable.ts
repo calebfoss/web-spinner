@@ -7,18 +7,12 @@ import { MouseData } from "../../classes/mouse";
 import { Shadow } from "../../classes/shadow";
 import { Vector2D } from "../../classes/vector2d";
 import { partChildren, standaloneChildren } from "../../mixins/children";
+import { camelToKebabCase } from "../../utlities/camelToKebab";
 import { Canvas2DCanvasElement } from "./canvas";
 import { Canvas2DElement } from "./element";
 import { Canvas2DShape } from "./shape";
 
 export const changedEvent = new Event("change", { bubbles: true });
-
-const camelToKebabCase = (camel: string) =>
-  camel.replace(
-    /(.)([A-Z])/g,
-    (_, beforeCharacter: string, upperCharacter: string) =>
-      `${beforeCharacter}-${upperCharacter.toLowerCase()}`
-  );
 
 export class Canvas2DBaseRenderable extends Canvas2DElement {
   #changedSinceRender = false;

@@ -25,3 +25,11 @@ type Writeable<T> = {
 };
 
 type Options<T> = Partial<Writeable<T>>;
+
+interface Mixable<T> extends T {
+  new (...args: any): any;
+}
+
+interface MixableHTMLElement extends Mixable<typeof HTMLElement> {
+  observedAttributes: string[];
+}

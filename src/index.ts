@@ -28,6 +28,8 @@ import {
 } from "./classes/gradient";
 import { Canvas2DElement } from "./elements/canvas2d/element";
 import { Shadow } from "./classes/shadow";
+import { SVGSVGController } from "./elements/svg/svg";
+import { SVGRectangleController } from "./elements/svg/rectangle";
 
 export type CSSLengthUnit = (typeof Units.size)[keyof typeof Units.size];
 
@@ -99,6 +101,8 @@ const elementClasses = [
   Canvas2DShapeRectangle,
   Canvas2DText,
   Canvas2DVideo,
+  SVGSVGController,
+  SVGRectangleController,
 ] as const;
 
 customElements.define("c2d-canvas", Canvas2DCanvasElement);
@@ -124,6 +128,10 @@ function createCanvas(options?: Options<Canvas2DCanvasElement>) {
   return createCustomElement(Canvas2DCanvasElement, options);
 }
 
+function createSVG(options?: Options<SVGSVGController>) {
+  return createCustomElement(SVGSVGController, options);
+}
+
 export type WebSpinnerElement = {
   Canvas2DCanvasElement: Canvas2DCanvasElement;
   Canvas2DBezier: Canvas2DBezier;
@@ -142,6 +150,7 @@ export type WebSpinnerElement = {
 
 export {
   createCanvas,
+  createSVG,
   createMultiple,
   Color,
   Vector2D,

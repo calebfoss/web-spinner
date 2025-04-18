@@ -1,9 +1,7 @@
-import { Canvas2DBaseRenderable } from "../elements/canvas2d/renderable";
+import { SVGElementController } from "../elements/svg/base";
 import { attributeParser } from "../utlities/attributeParser";
 
-export function hasDimensions<B extends typeof Canvas2DBaseRenderable>(
-  Base: B
-) {
+export function hasDimensions<B extends MixableHTMLElement>(Base: B) {
   return class extends Base {
     static observedAttributes = [...Base.observedAttributes, "width", "height"];
 
@@ -62,6 +60,41 @@ export function hasDimensions<B extends typeof Canvas2DBaseRenderable>(
         default:
           return super.attributeChangedCallback(name, oldValue, newValue);
       }
+    }
+  };
+}
+
+export function svgDimensions<B extends SVGElementController>(Base: B) {
+  return class extends hasDimensions(Base) {
+    connectedCallback(): void {
+      this.mainElement.setAttribute("width", this.width.toString());
+      this.mainElement.setAttribute("height", this.height.toString());
+
+      super.connectedCallback();
+    }
+
+    get height() {
+      return super.height;
+    }
+
+    set height(value) {
+      if (value === super.height) return;
+
+      super.height = value;
+
+      this.mainElement.setAttribute("height", value.toString());
+    }
+
+    get width() {
+      return super.width;
+    }
+
+    set width(value) {
+      if (value === super.width) return;
+
+      super.width = value;
+
+      this.mainElement.setAttribute("width", value.toString());
     }
   };
 }
