@@ -30,6 +30,7 @@ import { Canvas2DElement } from "./elements/canvas2d/element";
 import { Shadow } from "./classes/shadow";
 import { SVGSVGController } from "./elements/svg/svg";
 import { SVGRectangleController } from "./elements/svg/rectangle";
+import { CustomHTMLElement } from "./elements/mixable";
 
 export type CSSLengthUnit = (typeof Units.size)[keyof typeof Units.size];
 
@@ -77,9 +78,10 @@ declare global {
   }
 }
 
-export function createCustomElement<
-  E extends typeof HTMLElement & { tag: string }
->(ElementClass: E, options?: Options<InstanceType<E>>) {
+export function createCustomElement<E extends typeof CustomHTMLElement>(
+  ElementClass: E,
+  options?: Options<InstanceType<E>>
+) {
   const element = document.createElement(ElementClass.tag) as InstanceType<E>;
 
   Object.assign(element, options);

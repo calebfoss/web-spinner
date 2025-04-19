@@ -1,7 +1,8 @@
+import { CustomHTMLElement } from "../elements/mixable";
 import { SVGElementController } from "../elements/svg/base";
 import { attributeParser } from "../utlities/attributeParser";
 
-export function hasDimensions<B extends MixableHTMLElement>(Base: B) {
+export function hasDimensions<B extends typeof CustomHTMLElement>(Base: B) {
   return class extends Base {
     static observedAttributes = [...Base.observedAttributes, "width", "height"];
 

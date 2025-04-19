@@ -1,10 +1,10 @@
-import { camelToKebabCase } from "../../utlities/camelToKebab";
+import { CustomHTMLElement } from "../mixable";
 
 export function createSVGController<T extends keyof SVGElementTagNameMap>(
   svgTag: T,
   controllerTag: string
 ) {
-  return class SVGElementController extends HTMLElement {
+  return class SVGElementController extends CustomHTMLElement {
     static observedAttributes: string[] = [];
     static tag = controllerTag;
 
@@ -91,24 +91,6 @@ export function createSVGController<T extends keyof SVGElementTagNameMap>(
 
     get mainElement() {
       return this.#main;
-    }
-
-    /**
-     * @private
-     */
-    registerChange<P extends keyof this, V extends this[P]>(
-      propertyName: P,
-      newValue: V
-    ) {
-      const attributeName = camelToKebabCase(propertyName as string);
-
-      const currentAttributeValue = this.getAttribute(attributeName);
-
-      const stringValue = String(newValue);
-
-      if (currentAttributeValue === stringValue) return;
-
-      this.setAttribute(attributeName, stringValue);
     }
 
     /**

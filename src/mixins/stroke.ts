@@ -10,8 +10,9 @@ import { Canvas2DCanvasElement } from "../elements/canvas2d/canvas";
 import { Canvas2DBaseRenderable } from "../elements/canvas2d/renderable";
 import { attributeParser } from "../utlities/attributeParser";
 import { SVGElementController } from "../elements/svg/base";
+import { CustomHTMLElement } from "../elements/mixable";
 
-function baseStroke<B extends MixableHTMLElement>(Base: B) {
+function baseStroke<B extends typeof CustomHTMLElement>(Base: B) {
   return class extends Base {
     static observedAttributes: string[] = [
       ...Base.observedAttributes,

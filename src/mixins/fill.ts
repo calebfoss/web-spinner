@@ -8,10 +8,11 @@ import {
 } from "../classes/gradient";
 import { Canvas2DCanvasElement } from "../elements/canvas2d/canvas";
 import { Canvas2DBaseRenderable } from "../elements/canvas2d/renderable";
+import { CustomHTMLElement } from "../elements/mixable";
 import { SVGElementController } from "../elements/svg/base";
 import { attributeParser } from "../utlities/attributeParser";
 
-function baseFill<B extends MixableHTMLElement>(Base: B) {
+function baseFill<B extends typeof CustomHTMLElement>(Base: B) {
   return class Fillable extends Base {
     static observedAttributes: string[] = [...Base.observedAttributes, "fill"];
 

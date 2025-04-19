@@ -1,5 +1,6 @@
 import { createCustomElement } from "../..";
 import { Vector2D } from "../../classes/vector2d";
+import { CustomHTMLElement } from "../mixable";
 import { Canvas2DCanvasElement } from "./canvas";
 
 type EventListenerAdder = {
@@ -8,17 +9,11 @@ type EventListenerAdder = {
   ) => void;
 };
 
-export class Canvas2DElement extends HTMLElement {
-  static observedAttributes: string[] = [];
-
+export class Canvas2DElement extends CustomHTMLElement {
   /**
    * The element's custom HTML tag. This can be passed into document.createElement().
    */
   static tag: string;
-
-  constructor(...args: any[]) {
-    super();
-  }
 
   #eventProxy = (() => {
     const element = this;
@@ -30,12 +25,6 @@ export class Canvas2DElement extends HTMLElement {
     });
   })();
   #everyFrame: Updater | null = null;
-
-  attributeChangedCallback(
-    name: string,
-    oldValue: string | null,
-    newValue: string | null
-  ) {}
 
   /**
    * The <c2d-canvas> element that is rendering this element. The <c2d-canvas>
@@ -53,20 +42,6 @@ export class Canvas2DElement extends HTMLElement {
     if (parentElement instanceof Canvas2DCanvasElement) return parentElement;
 
     return parentElement.canvas;
-  }
-
-  /**
-   * @private
-   */
-  createChild<E extends typeof Canvas2DElement>(
-    ElementClass: E,
-    options?: Options<InstanceType<E>>
-  ) {
-    const element = createCustomElement(ElementClass, options);
-
-    this.appendChild(element);
-
-    return element;
   }
 
   /**

@@ -140,7 +140,7 @@ export function svgChildren<B extends SVGElementController>(Base: B) {
     /**
      * @private
      */
-    createChild<E extends SVGElementController>(
+    createSVGControllerChild<E extends SVGElementController>(
       ElementClass: E,
       options?: Options<InstanceType<E>>
     ) {
@@ -154,7 +154,7 @@ export function svgChildren<B extends SVGElementController>(Base: B) {
     }
 
     rectangle(options?: Partial<SVGRectangleController>) {
-      return this.createChild(SVGRectangleController, options);
+      return this.createSVGControllerChild(SVGRectangleController, options);
     }
   };
 }

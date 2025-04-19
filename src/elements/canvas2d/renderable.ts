@@ -7,7 +7,6 @@ import { MouseData } from "../../classes/mouse";
 import { Shadow } from "../../classes/shadow";
 import { Vector2D } from "../../classes/vector2d";
 import { c2dShapeChildren, c2dStandaloneChildren } from "../../mixins/children";
-import { camelToKebabCase } from "../../utlities/camelToKebab";
 import { Canvas2DCanvasElement } from "./canvas";
 import { Canvas2DElement } from "./element";
 import { Canvas2DShape } from "./shape";
@@ -175,24 +174,16 @@ export class Canvas2DBaseRenderable extends Canvas2DElement {
   /**
    * @private
    */
-  registerChange<P extends keyof this, V extends this[P]>(
+  registerChange<P extends keyof Writeable<this>>(
     propertyName: P,
-    newValue: V
+    newValue: this[P]
   ) {
     if (!this.#changedSinceRender) {
       this.#changedSinceRender = true;
       this.dispatchEvent(changedEvent);
     }
 
-    const attributeName = camelToKebabCase(propertyName as string);
-
-    const currentAttributeValue = this.getAttribute(attributeName);
-
-    const stringValue = String(newValue);
-
-    if (currentAttributeValue === stringValue) return;
-
-    this.setAttribute(attributeName, stringValue);
+    super.registerChange(propertyName, newValue);
   }
 
   /**
