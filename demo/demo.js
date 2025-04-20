@@ -20,6 +20,7 @@ const parentRect = svg.rectangle({
 });
 
 const childRect = parentRect.rectangle({
+  offset: Vector2D.xy(50, 25),
   width: 25,
   height: 25,
   stroke: "black",

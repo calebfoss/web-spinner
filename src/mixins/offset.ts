@@ -60,11 +60,14 @@ export function extendSVGOffset<
   B extends SVGElementController & ReturnType<typeof offset>
 >(Base: B) {
   return class extends Base {
+    connectedCallback(): void {
+      super.connectedCallback();
+    }
+
     moveOffset(x: number, y: number): void {
       super.moveOffset(x, y);
 
-      this.mainElement.setAttribute("x", x.toString());
-      this.mainElement.setAttribute("y", y.toString());
+      this.#updateOffset();
     }
 
     get offset() {
@@ -74,8 +77,12 @@ export function extendSVGOffset<
     set offset(value) {
       super.offset = value;
 
-      this.mainElement.setAttribute("x", value.x.toString());
-      this.mainElement.setAttribute("y", value.y.toString());
+      this.#updateOffset();
+    }
+
+    #updateOffset() {
+      this.mainElement.setAttribute("x", this.offset.x.toString());
+      this.mainElement.setAttribute("y", this.offset.y.toString());
     }
   };
 }
