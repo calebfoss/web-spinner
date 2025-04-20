@@ -1,8 +1,8 @@
 import { SVGElementController } from "../elements/svg/base";
-import { hasDimensions } from "./dimensions";
+import { dimensions } from "./dimensions";
 
 export function viewBox<B extends SVGElementController>(Base: B) {
-  return class extends hasDimensions(Base) {
+  return class extends dimensions(Base) {
     /**
      * @private
      */

@@ -1,14 +1,14 @@
 import { Canvas2DCanvasElement } from "../elements/canvas2d/canvas";
 import { Canvas2DBaseRenderable } from "../elements/canvas2d/renderable";
 import { attributeParser } from "../utlities/attributeParser";
-import { hasRectangleBounds } from "./rectangleBounds";
+import { c2dRectangleBounds } from "./rectangleBounds";
 import { transformeable } from "./transform";
 
 export function rendersVisualMedia<
   B extends typeof Canvas2DBaseRenderable,
   T extends "img" | "video"
 >(Base: B, mediaTag: T) {
-  return class extends transformeable(hasRectangleBounds(Base)) {
+  return class extends transformeable(c2dRectangleBounds(Base)) {
     static observedAttributes = [...super.observedAttributes, "source"];
 
     #mediaElement: HTMLElementTagNameMap[T];

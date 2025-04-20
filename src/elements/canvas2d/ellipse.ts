@@ -1,7 +1,7 @@
 import { Angle } from "../../classes/angle";
 import { LinearGradient, RadialGradient } from "../../classes/gradient";
 import { c2dFill } from "../../mixins/fill";
-import { hasRectangleBounds } from "../../mixins/rectangleBounds";
+import { c2dRectangleBounds } from "../../mixins/rectangleBounds";
 import { c2dStroke } from "../../mixins/stroke";
 import { transformeable } from "../../mixins/transform";
 import { Canvas2DCanvasElement } from "./canvas";
@@ -12,7 +12,7 @@ import {
 } from "./renderable";
 
 function renderEllipse<B extends typeof Canvas2DBaseRenderable>(Base: B) {
-  return class extends transformeable(hasRectangleBounds(Base)) {
+  return class extends transformeable(c2dRectangleBounds(Base)) {
     #startAngle = Angle.zero;
     #endAngle = Angle.radians(Math.PI * 2);
 

@@ -2,7 +2,7 @@ import { CustomHTMLElement } from "../elements/mixable";
 import { SVGElementController } from "../elements/svg/base";
 import { attributeParser } from "../utlities/attributeParser";
 
-export function hasDimensions<B extends typeof CustomHTMLElement>(Base: B) {
+export function dimensions<B extends typeof CustomHTMLElement>(Base: B) {
   return class extends Base {
     static observedAttributes = [...Base.observedAttributes, "width", "height"];
 
@@ -65,8 +65,10 @@ export function hasDimensions<B extends typeof CustomHTMLElement>(Base: B) {
   };
 }
 
-export function svgDimensions<B extends SVGElementController>(Base: B) {
-  return class extends hasDimensions(Base) {
+export function extendSVGDimensions<
+  B extends SVGElementController & ReturnType<typeof dimensions>
+>(Base: B) {
+  return class extends Base {
     connectedCallback(): void {
       this.mainElement.setAttribute("width", this.width.toString());
       this.mainElement.setAttribute("height", this.height.toString());
@@ -98,4 +100,8 @@ export function svgDimensions<B extends SVGElementController>(Base: B) {
       this.mainElement.setAttribute("width", value.toString());
     }
   };
+}
+
+export function svgDimensions<B extends SVGElementController>(Base: B) {
+  return extendSVGDimensions(dimensions(Base));
 }

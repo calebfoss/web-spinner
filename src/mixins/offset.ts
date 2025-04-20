@@ -1,8 +1,9 @@
 import { Vector2D, Vector2DBase } from "../classes/vector2d";
-import { Canvas2DBaseRenderable } from "../elements/canvas2d/renderable";
+import { CustomHTMLElement } from "../elements/mixable";
+import { SVGElementController } from "../elements/svg/base";
 import { attributeParser } from "../utlities/attributeParser";
 
-export function offset<B extends typeof Canvas2DBaseRenderable>(Base: B) {
+export function offset<B extends typeof CustomHTMLElement>(Base: B) {
   return class extends Base {
     static observedAttributes = [...Base.observedAttributes, "offset"];
 
@@ -48,4 +49,32 @@ export function offset<B extends typeof Canvas2DBaseRenderable>(Base: B) {
       this.#offset = this.#offset.replace(value, this.#offsetChangeListener);
     }
   };
+}
+
+export function extendSVGOffset<
+  B extends SVGElementController & ReturnType<typeof offset>
+>(Base: B) {
+  return class extends Base {
+    moveOffset(x: number, y: number): void {
+      super.moveOffset(x, y);
+
+      this.mainElement.setAttribute("x", x.toString());
+      this.mainElement.setAttribute("y", y.toString());
+    }
+
+    get offset() {
+      return super.offset;
+    }
+
+    set offset(value) {
+      super.offset = value;
+
+      this.mainElement.setAttribute("x", value.x.toString());
+      this.mainElement.setAttribute("y", value.y.toString());
+    }
+  };
+}
+
+export function svgOffset<B extends SVGElementController>(Base: B) {
+  return extendSVGOffset(offset(Base));
 }

@@ -1,15 +1,15 @@
 import { ConicalGradient, LinearGradient } from "../classes/gradient";
 import { Vector2D } from "../classes/vector2d";
 import { Canvas2DBaseRenderable } from "../elements/canvas2d/renderable";
-import { hasDimensions } from "./dimensions";
-import { offset } from "./offset";
+import { CustomHTMLElement } from "../elements/mixable";
+import { SVGElementController } from "../elements/svg/base";
+import { dimensions, extendSVGDimensions } from "./dimensions";
+import { extendSVGOffset, offset } from "./offset";
 
 type Origin = "center" | "topLeft";
 
-export function hasRectangleBounds<B extends typeof Canvas2DBaseRenderable>(
-  Base: B
-) {
-  return class extends hasDimensions(offset(Base)) {
+function baseRectangleBounds<B extends typeof CustomHTMLElement>(Base: B) {
+  return class extends dimensions(offset(Base)) {
     #origin: Origin = "topLeft";
 
     get topLeft() {
@@ -50,7 +50,13 @@ export function hasRectangleBounds<B extends typeof Canvas2DBaseRenderable>(
     set origin(value) {
       this.#origin = value;
     }
+  };
+}
 
+export function c2dRectangleBounds<B extends typeof Canvas2DBaseRenderable>(
+  Base: B
+) {
+  return class extends baseRectangleBounds(Base) {
     renderConicalGradient(
       context: CanvasRenderingContext2D,
       gradient: ConicalGradient
@@ -69,4 +75,10 @@ export function hasRectangleBounds<B extends typeof Canvas2DBaseRenderable>(
       return gradient.render(context, x0, y0, x1 - x0, y1 - y0);
     }
   };
+}
+
+export function svgRectangleBounds<B extends SVGElementController>(Base: B) {
+  return class extends extendSVGOffset(
+    extendSVGDimensions(baseRectangleBounds(Base))
+  ) {};
 }
