@@ -31,8 +31,13 @@ export function offset<B extends typeof CustomHTMLElement>(Base: B) {
       this.registerChange("offset", this.#offset);
     }
 
-    #offsetChangeListener: ChangeListener<Vector2DBase> = () => {
-      this.registerChange("offset", this.#offset);
+    #offsetChangeListener: ChangeListener<Vector2DBase> = (
+      value: Vector2DBase
+    ) => {
+      this.registerChange(
+        "offset",
+        value instanceof Vector2D ? value : new Vector2D(value.x, value.y)
+      );
     };
 
     /**
