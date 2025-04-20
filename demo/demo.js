@@ -27,4 +27,8 @@ const childRect = parentRect.rectangle({
   lineWidth: 10,
 });
 
+childRect.addEventListener("click", () => {
+  childRect.moveOffset(10, 0);
+});
+
 document.body.appendChild(svg);

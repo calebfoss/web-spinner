@@ -20,6 +20,22 @@ export function createSVGController<T extends keyof SVGElementTagNameMap>(
       );
     }
 
+    addEventListener(
+      type: keyof SVGElementEventMap,
+      listener: EventListenerOrEventListenerObject,
+      options?: boolean | AddEventListenerOptions
+    ): void {
+      return this.mainElement.addEventListener(type, listener, options);
+    }
+
+    removeEventListener(
+      type: keyof HTMLElementEventMap,
+      listener: EventListenerOrEventListenerObject,
+      options?: boolean | AddEventListenerOptions
+    ): void {
+      return this.mainElement.removeEventListener(type, listener, options);
+    }
+
     appendChild<T extends Node>(node: T): T {
       if (node instanceof SVGElement === false) return super.appendChild(node);
 
