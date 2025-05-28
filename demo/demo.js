@@ -13,6 +13,12 @@ import {
 
 const svg = createSVG({ width: 100, height: 100 });
 
+const gradient = new LinearGradient();
+
+gradient.addColorStop(0, Color.rgb(255, 0, 0));
+
+gradient.addColorStop(1, Color.rgb(0, 0, 255));
+
 const parentRect = svg.rectangle({
   width: 50,
   height: 50,
@@ -27,10 +33,13 @@ const childRect = parentRect.rectangle({
   height: 25,
   stroke: "black",
   lineWidth: 10,
+  fill: gradient,
 });
 
 childRect.addEventListener("click", () => {
   childRect.moveOffset(10, 0);
 });
+
+svg.rectangle({ fill: "pink", width: 20, height: 20 });
 
 document.body.appendChild(svg);

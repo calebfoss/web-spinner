@@ -36,6 +36,23 @@ export class Gradient {
     }
   }
 
+  protected defineSVGStops(definition: SVGGradientElement) {
+    const { stops } = this;
+
+    for (const stop of stops) {
+      const stopElement = document.createElementNS(
+        "http://www.w3.org/2000/svg",
+        "stop"
+      );
+
+      stopElement.setAttribute("offset", stop.offset.toString());
+
+      stopElement.setAttribute("stop-color", stop.color.toString());
+
+      definition.appendChild(stopElement);
+    }
+  }
+
   render(context: CanvasRenderingContext2D, ...args: any[]): CanvasGradient {
     throw new Error("Render called on base Gradient class");
   }
@@ -47,6 +64,10 @@ export class Gradient {
   toString() {
     return "gradient";
   }
+
+  get svg(): SVGGradientElement {
+    throw new Error("This type of gradient is not yet supported for SVG.");
+  }
 }
 
 export class LinearGradient extends Gradient {
@@ -54,6 +75,7 @@ export class LinearGradient extends Gradient {
   #colorStartY: number;
   #colorEndX: number;
   #colorEndY: number;
+  #svg: SVGLinearGradientElement | null = null;
 
   constructor(startX = 0, startY = 0, endX = 1, endY = 1) {
     super();
@@ -81,6 +103,27 @@ export class LinearGradient extends Gradient {
     this.applyStops(gradient);
 
     return gradient;
+  }
+
+  get svg() {
+    if (this.#svg !== null) return this.#svg;
+
+    const svgElement = document.createElementNS(
+      "http://www.w3.org/2000/svg",
+      "linearGradient"
+    );
+
+    svgElement.setAttribute("x1", this.#colorStartX.toString());
+
+    svgElement.setAttribute("y1", this.#colorStartY.toString());
+
+    svgElement.setAttribute("x2", this.#colorEndX.toString());
+
+    svgElement.setAttribute("y2", this.#colorEndY.toString());
+
+    this.defineSVGStops(svgElement);
+
+    return (this.#svg = svgElement);
   }
 }
 

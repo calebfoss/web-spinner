@@ -140,8 +140,6 @@ export function svgChildren<B extends SVGElementController>(Base: B) {
 
       this.appendChild(element);
 
-      this.appendChild(element.mainElement);
-
       return element;
     }
 

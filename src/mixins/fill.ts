@@ -40,7 +40,9 @@ function baseFill<B extends typeof CustomHTMLElement>(Base: B) {
       )
         return;
 
-      this.registerChange("fill", (this.#fill = value));
+      if (typeof value === "string")
+        this.registerChange("fill", (this.#fill = Color.fromString(value)));
+      else this.registerChange("fill", (this.#fill = value));
     }
 
     attributeChangedCallback(
@@ -91,6 +93,22 @@ export function c2dFill<B extends typeof Canvas2DBaseRenderable>(Base: B) {
 
 export function svgFill<B extends SVGElementController>(Base: B) {
   return class extends baseFill(Base) {
+    #fillGradient(gradient: Gradient) {
+      const { svgContainerController } = this;
+
+      if (svgContainerController === null) return;
+
+      const gradientId = svgContainerController._defineGradient(gradient);
+
+      this._setStyleAttribute("fill", `url(#${gradientId})`);
+    }
+
+    connectedCallback(): void {
+      super.connectedCallback();
+
+      if (this.fill instanceof Gradient) this.#fillGradient(this.fill);
+    }
+
     get fill() {
       return super.fill;
     }
@@ -100,9 +118,11 @@ export function svgFill<B extends SVGElementController>(Base: B) {
 
       super.fill = value;
 
-      if (this.fill === null) return;
+      const { fill } = this;
 
-      this._setStyleAttribute("fill", this.fill.toString());
+      if (fill instanceof Color)
+        this._setStyleAttribute("fill", fill.toString());
+      else if (value instanceof Gradient) this.#fillGradient(value);
     }
 
     get _styleAttributes(): { [Key in keyof this]?: string } {

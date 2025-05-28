@@ -1,4 +1,5 @@
 import { CustomHTMLElement } from "./mixable";
+import { SVGSVGController } from "./svgSVG";
 
 export function createSVGController<T extends keyof SVGElementTagNameMap>(
   svgTag: T,
@@ -37,13 +38,20 @@ export function createSVGController<T extends keyof SVGElementTagNameMap>(
     }
 
     appendChild<T extends Node>(node: T): T {
-      if (node instanceof SVGElement === false) return super.appendChild(node);
+      if (node instanceof SVGElement) {
+        const group = this.#group ?? this.#createGroup();
 
-      const group = this.#group ?? this.#createGroup();
+        return group.appendChild(node);
+      }
 
-      group.appendChild(node);
+      if (node instanceof SVGElementController) {
+        const child = node.group ?? node.mainElement;
 
-      return node;
+        const group = this.#group ?? this.#createGroup();
+
+        group.appendChild(child);
+      }
+      return super.appendChild(node);
     }
 
     attributeChangedCallback() {}
@@ -142,6 +150,21 @@ export function createSVGController<T extends keyof SVGElementTagNameMap>(
       if (parentMain instanceof SVGSVGElement) return parentMain;
 
       return (parentElement as SVGElementController).svgContainer;
+    }
+
+    get svgContainerController(): SVGSVGController | null {
+      if (this instanceof SVGSVGController) return this;
+
+      const { parentElement } = this;
+
+      if (parentElement === null) return parentElement;
+
+      const parentController = (parentElement as SVGElementController)
+        .svgContainerController;
+
+      if (parentController !== undefined) return parentController;
+
+      return null;
     }
   };
 }
