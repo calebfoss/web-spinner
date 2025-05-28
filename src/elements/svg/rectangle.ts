@@ -3,13 +3,16 @@ import { svgDimensions } from "../../mixins/dimensions";
 import { svgFill } from "../../mixins/fill";
 import { svgRectangleBounds } from "../../mixins/rectangleBounds";
 import { svgStroke } from "../../mixins/stroke";
+import { svgTransform } from "../../mixins/transform";
 import { createSVGController } from "./base";
 
 export class SVGRectangleController extends svgStroke(
   svgFill(
     svgDimensions(
-      svgRectangleBounds(
-        svgChildren(createSVGController("rect", "svg-rectangle"))
+      svgTransform(
+        svgRectangleBounds(
+          svgChildren(createSVGController("rect", "svg-rectangle"))
+        )
       )
     )
   )

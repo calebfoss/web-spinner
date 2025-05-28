@@ -3,6 +3,8 @@ import { MouseTracker } from "../classes/mouse";
 import { Vector2D, Vector2DBase } from "../classes/vector2d";
 import { Canvas2DCanvasElement } from "../elements/canvas2d/canvas";
 import { Canvas2DBaseRenderable } from "../elements/canvas2d/renderable";
+import { CustomHTMLElement } from "../elements/mixable";
+import { SVGElementController } from "../elements/svg/base";
 import { attributeParser } from "../utlities/attributeParser";
 import { isReadOnly } from "../utlities/readOnly";
 
@@ -10,10 +12,8 @@ const matchAngle = new RegExp(
   `(\d*)\s?(${Object.values(Angle.unit).join("|")})`
 );
 
-export function transformeable<B extends typeof Canvas2DBaseRenderable>(
-  Base: B
-) {
-  return class Transformed extends Base {
+export function baseTransform<B extends typeof CustomHTMLElement>(Base: B) {
+  return class BaseTransform extends Base {
     static observedAttributes: string[] = [
       ...Base.observedAttributes,
       "angle",
@@ -92,6 +92,32 @@ export function transformeable<B extends typeof Canvas2DBaseRenderable>(
       this.#anchor = this.#anchor.replace(value, this.#anchorChangeListener);
     }
 
+    _applyMovement(deltaTime: number) {
+      const now = performance.now();
+
+      if (this.#angularVelocity.radians !== 0) {
+        const angleChange =
+          (this.#angularVelocity[this.#angle.unit] *
+            Math.min(deltaTime, now - this.#angularVelocityChangedTime)) /
+          1000;
+
+        this.angle[this.#angle.unit] += angleChange;
+      }
+
+      if (this.#velocity.x !== 0 || this.#velocity.y !== 0) {
+        const velocityDelta =
+          Math.min(deltaTime, now - this.#velocityChangedTime) / 1000;
+
+        if (isReadOnly(this.#anchor, "x") || isReadOnly(this.#anchor, "y"))
+          this.#anchor = this.#anchor.copy();
+
+        this.moveAnchor(
+          this.#velocity.x * velocityDelta,
+          this.#velocity.y * velocityDelta
+        );
+      }
+    }
+
     attributeChangedCallback(
       name: string,
       oldValue: string | null,
@@ -131,46 +157,6 @@ export function transformeable<B extends typeof Canvas2DBaseRenderable>(
       this.#anchor.y += y;
 
       this.registerChange("anchor", this.#anchor);
-    }
-
-    render(canvas2D: Canvas2DCanvasElement): void {
-      super.render(canvas2D);
-
-      const { context } = canvas2D;
-
-      context.translate(this.#anchor.x, this.#anchor.y);
-      context.rotate(this.#angle.radians);
-      context.scale(this.#scale.x, this.#scale.y);
-    }
-
-    afterRender(canvas2D: Canvas2DCanvasElement): void {
-      super.afterRender(canvas2D);
-
-      const { deltaTime } = canvas2D;
-
-      const now = performance.now();
-
-      if (this.#angularVelocity.radians !== 0) {
-        const angleChange =
-          (this.#angularVelocity[this.#angle.unit] *
-            Math.min(deltaTime, now - this.#angularVelocityChangedTime)) /
-          1000;
-
-        this.angle[this.#angle.unit] += angleChange;
-      }
-
-      if (this.#velocity.x !== 0 || this.#velocity.y !== 0) {
-        const velocityDelta =
-          Math.min(deltaTime, now - this.#velocityChangedTime) / 1000;
-
-        if (isReadOnly(this.#anchor, "x") || isReadOnly(this.#anchor, "y"))
-          this.#anchor = this.#anchor.copy();
-
-        this.moveAnchor(
-          this.#velocity.x * velocityDelta,
-          this.#velocity.y * velocityDelta
-        );
-      }
     }
 
     /**
@@ -231,6 +217,74 @@ export function transformeable<B extends typeof Canvas2DBaseRenderable>(
       this.registerChange("velocity", (this.#velocity = value));
 
       this.#velocityChangedTime = performance.now();
+    }
+  };
+}
+
+export function c2dTransform<B extends typeof Canvas2DBaseRenderable>(Base: B) {
+  return class C2DTransform extends baseTransform(Base) {
+    render(canvas2D: Canvas2DCanvasElement): void {
+      super.render(canvas2D);
+
+      const { context } = canvas2D;
+
+      context.translate(this.anchor.x, this.anchor.y);
+      context.rotate(this.angle.radians);
+      context.scale(this.scale.x, this.scale.y);
+    }
+
+    afterRender(canvas2D: Canvas2DCanvasElement): void {
+      super.afterRender(canvas2D);
+
+      this._applyMovement(canvas2D.deltaTime);
+    }
+  };
+}
+
+export function svgTransform<B extends SVGElementController>(Base: B) {
+  return class SVGControllerTransform extends baseTransform(Base) {
+    get anchor() {
+      return super.anchor;
+    }
+
+    set anchor(value) {
+      const change = !super.anchor.equals(value);
+
+      super.anchor = value;
+
+      if (change) this.#updateTransformAttribute();
+    }
+
+    get angle() {
+      return super.angle;
+    }
+
+    set angle(value) {
+      const change = !super.angle.equals(value);
+
+      super.angle = value;
+
+      if (change) this.#updateTransformAttribute();
+    }
+
+    connectedCallback(): void {
+      super.connectedCallback();
+
+      this.#updateTransformAttribute();
+    }
+
+    #updateTransformAttribute() {
+      const transform = new DOMMatrix()
+        .translateSelf(this.anchor.x, this.anchor.y)
+        .rotateSelf(this.angle.degrees)
+        .scaleSelf(this.scale.x, this.scale.y);
+
+      const { a, b, c, d, e, f } = transform;
+
+      this.mainElement.setAttribute(
+        "transform",
+        `matrix(${a} ${b} ${c} ${d} ${e} ${f})`
+      );
     }
   };
 }

@@ -96,9 +96,7 @@ export function createSVGController<T extends keyof SVGElementTagNameMap>(
 
       if (parentElement === null) return parentElement;
 
-      const { group } = parentElement as typeof parentElement & {
-        group: unknown;
-      };
+      const { group } = parentElement as SVGElementController;
 
       if (group instanceof SVGGElement) return group;
 
@@ -129,7 +127,7 @@ export function createSVGController<T extends keyof SVGElementTagNameMap>(
       return {};
     }
 
-    get svgContainer() {
+    get svgContainer(): SVGSVGElement | null {
       const { group, parentElement } = this;
 
       if (group !== null) {
@@ -143,16 +141,13 @@ export function createSVGController<T extends keyof SVGElementTagNameMap>(
       if (parentElement === null) return null;
 
       const { group: parentGroup, mainElement: parentMain } =
-        parentElement as typeof parentElement & {
-          group: unknown;
-          mainElement: unknown;
-        };
+        parentElement as SVGElementController;
 
       if (parentGroup instanceof SVGSVGElement) return parentGroup;
 
       if (parentMain instanceof SVGSVGElement) return parentMain;
 
-      return null;
+      return (parentElement as SVGElementController).svgContainer;
     }
   };
 }
