@@ -1,7 +1,6 @@
-import { createCustomElement } from "../..";
-import { svgChildren } from "../../mixins/children";
-import { viewBox } from "../../mixins/viewBox";
-import { createSVGController, SVGElementController } from "./base";
+import { svgChildren } from "../mixins/children";
+import { viewBox } from "../mixins/viewBox";
+import { createSVGController, SVGElementController } from "./svgBase";
 import { SVGRectangleController } from "./rectangle";
 
 export class SVGSVGController extends viewBox(

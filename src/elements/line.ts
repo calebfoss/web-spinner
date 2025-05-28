@@ -1,6 +1,6 @@
-import { Vector2D } from "../../classes/vector2d";
-import { c2dStroke } from "../../mixins/stroke";
-import { hasFrom, hasTo } from "../../mixins/fromTo";
+import { Vector2D } from "../classes/vector2d";
+import { c2dStroke } from "../mixins/stroke";
+import { hasFrom, hasTo } from "../mixins/fromTo";
 import {
   Canvas2DBaseRenderable,
   Canvas2DShapePartRenderable,
@@ -11,7 +11,7 @@ import {
   ConicalGradient,
   LinearGradient,
   RadialGradient,
-} from "../../classes/gradient";
+} from "../classes/gradient";
 
 export class Canvas2DShapeLine extends hasTo(Canvas2DShapePartRenderable) {
   static get tag() {

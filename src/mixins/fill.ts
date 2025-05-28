@@ -6,10 +6,10 @@ import {
   LinearGradient,
   RadialGradient,
 } from "../classes/gradient";
-import { Canvas2DCanvasElement } from "../elements/canvas2d/canvas";
-import { Canvas2DBaseRenderable } from "../elements/canvas2d/renderable";
+import { Canvas2DCanvasElement } from "../elements/canvas";
+import { Canvas2DBaseRenderable } from "../elements/renderable";
 import { CustomHTMLElement } from "../elements/mixable";
-import { SVGElementController } from "../elements/svg/base";
+import { SVGElementController } from "../elements/svgBase";
 import { attributeParser } from "../utlities/attributeParser";
 
 function baseFill<B extends typeof CustomHTMLElement>(Base: B) {

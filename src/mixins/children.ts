@@ -1,30 +1,22 @@
 import { createCustomElement } from "..";
-import {
-  Canvas2DBezier,
-  Canvas2DShapeBezier,
-} from "../elements/canvas2d/bezier";
-import { Canvas2DElement } from "../elements/canvas2d/element";
-import {
-  Canvas2DEllipse,
-  Canvas2DShapeEllipse,
-} from "../elements/canvas2d/ellipse";
-import { Canvas2DImage } from "../elements/canvas2d/image";
-import { Canvas2DLine, Canvas2DShapeLine } from "../elements/canvas2d/line";
+import { Canvas2DBezier, Canvas2DShapeBezier } from "../elements/bezier";
+import { C2DBase } from "../elements/c2dBase";
+import { Canvas2DEllipse, Canvas2DShapeEllipse } from "../elements/ellipse";
+import { Canvas2DImage } from "../elements/image";
+import { Canvas2DLine, Canvas2DShapeLine } from "../elements/line";
 import {
   Canvas2DRectangle,
   Canvas2DShapeRectangle,
-} from "../elements/canvas2d/rectangle";
-import { Canvas2DShape } from "../elements/canvas2d/shape";
-import { Canvas2DText } from "../elements/canvas2d/text";
-import { Canvas2DVideo } from "../elements/canvas2d/video";
-import { SVGElementController } from "../elements/svg/base";
-import { SVGRectangleController } from "../elements/svg/rectangle";
+} from "../elements/rectangle";
+import { Canvas2DShape } from "../elements/shape";
+import { Canvas2DText } from "../elements/text";
+import { Canvas2DVideo } from "../elements/video";
+import { SVGElementController } from "../elements/svgBase";
+import { SVGRectangleController } from "../elements/rectangle";
 
 type MultipleCallback = (index: number) => Node | undefined;
 
-export function c2dStandaloneChildren<B extends typeof Canvas2DElement>(
-  Base: B
-) {
+export function c2dStandaloneChildren<B extends typeof C2DBase>(Base: B) {
   return class extends Base {
     /**
      * Creates a `<c2d-bezier>` child element and returns it.
@@ -115,7 +107,7 @@ export function c2dStandaloneChildren<B extends typeof Canvas2DElement>(
   };
 }
 
-export function c2dShapeChildren<B extends typeof Canvas2DElement>(Base: B) {
+export function c2dShapeChildren<B extends typeof C2DBase>(Base: B) {
   return class extends Base {
     bezier(options?: Options<Canvas2DShapeBezier>) {
       return this.createChild(Canvas2DShapeBezier, options);

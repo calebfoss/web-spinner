@@ -1,5 +1,5 @@
 import { CustomHTMLElement } from "../elements/mixable";
-import { SVGElementController } from "../elements/svg/base";
+import { SVGElementController } from "../elements/svgBase";
 import { attributeParser } from "../utlities/attributeParser";
 
 export function dimensions<B extends typeof CustomHTMLElement>(Base: B) {

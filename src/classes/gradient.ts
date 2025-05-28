@@ -1,4 +1,4 @@
-import { Canvas2DElement } from "../elements/canvas2d/element";
+import { C2DBase } from "../elements/c2dBase";
 import { Angle } from "./angle";
 import { Color } from "./color";
 import { Vector2D } from "./vector2d";

@@ -1,35 +1,29 @@
-import { Canvas2DCanvasElement } from "./elements/canvas2d/canvas";
+import { Canvas2DCanvasElement } from "./elements/canvas";
 import {
   Canvas2DRectangle,
   Canvas2DShapeRectangle,
-} from "./elements/canvas2d/rectangle";
+} from "./elements/rectangle";
 import { Color } from "./classes/color";
 import { Vector2D } from "./classes/vector2d";
 import { Angle } from "./classes/angle";
-import { Canvas2DText } from "./elements/canvas2d/text";
+import { Canvas2DText } from "./elements/text";
 import { Units } from "./classes/units";
 import { State, createState } from "./classes/state";
-import { Canvas2DLine, Canvas2DShapeLine } from "./elements/canvas2d/line";
-import { Canvas2DShape } from "./elements/canvas2d/shape";
-import {
-  Canvas2DEllipse,
-  Canvas2DShapeEllipse,
-} from "./elements/canvas2d/ellipse";
-import {
-  Canvas2DBezier,
-  Canvas2DShapeBezier,
-} from "./elements/canvas2d/bezier";
-import { Canvas2DImage } from "./elements/canvas2d/image";
-import { Canvas2DVideo } from "./elements/canvas2d/video";
+import { Canvas2DLine, Canvas2DShapeLine } from "./elements/line";
+import { Canvas2DShape } from "./elements/shape";
+import { Canvas2DEllipse, Canvas2DShapeEllipse } from "./elements/ellipse";
+import { Canvas2DBezier, Canvas2DShapeBezier } from "./elements/bezier";
+import { Canvas2DImage } from "./elements/image";
+import { Canvas2DVideo } from "./elements/video";
 import {
   ConicalGradient,
   LinearGradient,
   RadialGradient,
 } from "./classes/gradient";
-import { Canvas2DElement } from "./elements/canvas2d/element";
+import { C2DBase } from "./elements/c2dBase";
 import { Shadow } from "./classes/shadow";
-import { SVGSVGController } from "./elements/svg/svg";
-import { SVGRectangleController } from "./elements/svg/rectangle";
+import { SVGSVGController } from "./elements/svgSVG";
+import { SVGRectangleController } from "./elements/rectangle";
 import { CustomHTMLElement } from "./elements/mixable";
 
 export type CSSLengthUnit = (typeof Units.size)[keyof typeof Units.size];
@@ -71,10 +65,7 @@ function createMultiple<R extends Node>(
 
 declare global {
   interface CustomElementRegistry {
-    define<E extends typeof Canvas2DElement>(
-      tag: E["tag"],
-      ElementClass: E
-    ): void;
+    define<E extends typeof C2DBase>(tag: E["tag"], ElementClass: E): void;
   }
 }
 

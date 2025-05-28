@@ -1,11 +1,11 @@
-import { useFont } from "../../mixins/font";
-import { c2dFill } from "../../mixins/fill";
-import { c2dStroke } from "../../mixins/stroke";
-import { c2dTransform } from "../../mixins/transform";
+import { useFont } from "../mixins/font";
+import { c2dFill } from "../mixins/fill";
+import { c2dStroke } from "../mixins/stroke";
+import { c2dTransform } from "../mixins/transform";
 import { Canvas2DStandaloneRenderable, changedEvent } from "./renderable";
-import { offset } from "../../mixins/offset";
+import { offset } from "../mixins/offset";
 import { Canvas2DCanvasElement } from "./canvas";
-import { LinearGradient, RadialGradient } from "../../classes/gradient";
+import { LinearGradient, RadialGradient } from "../classes/gradient";
 
 class Base extends c2dFill(
   c2dStroke(c2dTransform(offset(useFont(Canvas2DStandaloneRenderable))))

@@ -1,4 +1,4 @@
-import { rendersVisualMedia } from "../../mixins/visualMedia";
+import { rendersVisualMedia } from "../mixins/visualMedia";
 import { Canvas2DStandaloneRenderable, changedEvent } from "./renderable";
 
 export class Canvas2DVideo extends rendersVisualMedia(

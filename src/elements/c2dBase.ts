@@ -1,5 +1,5 @@
-import { Vector2D } from "../../classes/vector2d";
-import { CustomHTMLElement } from "../mixable";
+import { Vector2D } from "../classes/vector2d";
+import { CustomHTMLElement } from "./mixable";
 import { Canvas2DCanvasElement } from "./canvas";
 
 type EventListenerAdder = {
@@ -8,7 +8,7 @@ type EventListenerAdder = {
   ) => void;
 };
 
-export class Canvas2DElement extends CustomHTMLElement {
+export class C2DBase extends CustomHTMLElement {
   /**
    * The element's custom HTML tag. This can be passed into document.createElement().
    */
@@ -32,10 +32,7 @@ export class Canvas2DElement extends CustomHTMLElement {
   get canvas(): Canvas2DCanvasElement {
     const { parentElement } = this;
 
-    if (
-      parentElement === null ||
-      parentElement instanceof Canvas2DElement === false
-    )
+    if (parentElement === null || parentElement instanceof C2DBase === false)
       throw new Error("Canvas2D renderable is not a child of a Canvas2DCanvas");
 
     if (parentElement instanceof Canvas2DCanvasElement) return parentElement;

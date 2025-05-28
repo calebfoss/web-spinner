@@ -2,17 +2,23 @@ import {
   ConicalGradient,
   LinearGradient,
   RadialGradient,
-} from "../../classes/gradient";
-import { c2dFill } from "../../mixins/fill";
-import { c2dRectangleBounds } from "../../mixins/rectangleBounds";
-import { c2dStroke } from "../../mixins/stroke";
-import { c2dTransform } from "../../mixins/transform";
+} from "../classes/gradient";
+import { svgChildren } from "../mixins/children";
+import { svgDimensions } from "../mixins/dimensions";
+import { c2dFill, svgFill } from "../mixins/fill";
+import {
+  c2dRectangleBounds,
+  svgRectangleBounds,
+} from "../mixins/rectangleBounds";
+import { c2dStroke, svgStroke } from "../mixins/stroke";
+import { c2dTransform, svgTransform } from "../mixins/transform";
 import { Canvas2DCanvasElement } from "./canvas";
 import {
   Canvas2DBaseRenderable,
   Canvas2DShapePartRenderable,
   Canvas2DStandaloneRenderable,
 } from "./renderable";
+import { createSVGController } from "./svgBase";
 
 function renderCanvasRectangle<B extends typeof Canvas2DBaseRenderable>(
   Base: B
@@ -64,3 +70,17 @@ export class Canvas2DShapeRectangle extends renderCanvasRectangle(
 }
 
 customElements.define("c2d-shape-rectangle", Canvas2DShapeRectangle);
+
+export class SVGRectangleController extends svgStroke(
+  svgFill(
+    svgDimensions(
+      svgTransform(
+        svgRectangleBounds(
+          svgChildren(createSVGController("rect", "svg-rectangle"))
+        )
+      )
+    )
+  )
+) {}
+
+customElements.define("svg-rectangle", SVGRectangleController);

@@ -1,8 +1,8 @@
 import { ConicalGradient, LinearGradient } from "../classes/gradient";
 import { Vector2D } from "../classes/vector2d";
-import { Canvas2DBaseRenderable } from "../elements/canvas2d/renderable";
+import { Canvas2DBaseRenderable } from "../elements/renderable";
 import { CustomHTMLElement } from "../elements/mixable";
-import { SVGElementController } from "../elements/svg/base";
+import { SVGElementController } from "../elements/svgBase";
 import { dimensions, extendSVGDimensions } from "./dimensions";
 import { extendSVGOffset, offset } from "./offset";
 

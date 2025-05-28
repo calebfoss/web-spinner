@@ -1,6 +1,6 @@
 import { Vector2D, Vector2DBase } from "../classes/vector2d";
 import { CustomHTMLElement } from "../elements/mixable";
-import { SVGElementController } from "../elements/svg/base";
+import { SVGElementController } from "../elements/svgBase";
 import { attributeParser } from "../utlities/attributeParser";
 
 export function offset<B extends typeof CustomHTMLElement>(Base: B) {

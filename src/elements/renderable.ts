@@ -2,18 +2,18 @@ import {
   ConicalGradient,
   LinearGradient,
   RadialGradient,
-} from "../../classes/gradient";
-import { MouseData } from "../../classes/mouse";
-import { Shadow } from "../../classes/shadow";
-import { Vector2D } from "../../classes/vector2d";
-import { c2dShapeChildren, c2dStandaloneChildren } from "../../mixins/children";
+} from "../classes/gradient";
+import { MouseData } from "../classes/mouse";
+import { Shadow } from "../classes/shadow";
+import { Vector2D } from "../classes/vector2d";
+import { c2dShapeChildren, c2dStandaloneChildren } from "../mixins/children";
 import { Canvas2DCanvasElement } from "./canvas";
-import { Canvas2DElement } from "./element";
+import { C2DBase } from "./c2dBase";
 import { Canvas2DShape } from "./shape";
 
 export const changedEvent = new Event("change", { bubbles: true });
 
-export class Canvas2DBaseRenderable extends Canvas2DElement {
+export class Canvas2DBaseRenderable extends C2DBase {
   #changedSinceRender = false;
   #clickListeners = new Set<EventListenerOrEventListenerObject>();
   #localMouse = new MouseData();

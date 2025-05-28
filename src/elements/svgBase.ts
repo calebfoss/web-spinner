@@ -1,4 +1,4 @@
-import { CustomHTMLElement } from "../mixable";
+import { CustomHTMLElement } from "./mixable";
 
 export function createSVGController<T extends keyof SVGElementTagNameMap>(
   svgTag: T,
