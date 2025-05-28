@@ -279,9 +279,11 @@ export function svgTransform<B extends SVGElementController>(Base: B) {
         .rotateSelf(this.angle.degrees)
         .scaleSelf(this.scale.x, this.scale.y);
 
+      if (transform.isIdentity) return;
+
       const { a, b, c, d, e, f } = transform;
 
-      this.mainElement.setAttribute(
+      this._setStyleAttribute(
         "transform",
         `matrix(${a} ${b} ${c} ${d} ${e} ${f})`
       );

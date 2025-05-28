@@ -49,14 +49,18 @@ export function createSVGController<T extends keyof SVGElementTagNameMap>(
     attributeChangedCallback() {}
 
     #attachMain() {
-      const { svgContainer } = this;
+      const { parentElement } = this;
 
-      if (svgContainer === null) return;
+      if (parentElement === null) return;
+
+      const parentController = parentElement as SVGElementController;
+
+      const target = parentController.group ?? parentController.mainElement;
 
       const { group } = this;
 
-      if (group === null) svgContainer.appendChild(this.mainElement);
-      else svgContainer.appendChild(group);
+      if (group === null) target.appendChild(this.mainElement);
+      else target.appendChild(group);
     }
 
     connectedCallback() {
@@ -90,17 +94,7 @@ export function createSVGController<T extends keyof SVGElementTagNameMap>(
     }
 
     get group(): SVGGElement | null {
-      if (this.#group !== null) return this.#group;
-
-      const { parentElement } = this;
-
-      if (parentElement === null) return parentElement;
-
-      const { group } = parentElement as SVGElementController;
-
-      if (group instanceof SVGGElement) return group;
-
-      return null;
+      return this.#group;
     }
 
     get mainElement() {

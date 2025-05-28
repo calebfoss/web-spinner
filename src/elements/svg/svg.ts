@@ -7,6 +7,10 @@ import { SVGRectangleController } from "./rectangle";
 export class SVGSVGController extends viewBox(
   svgChildren(createSVGController("svg", "svg-svg"))
 ) {
+  appendChild<T extends Node>(node: T): T {
+    return this.mainElement.appendChild(node);
+  }
+
   connectedCallback(): void {
     const shadow = this.attachShadow({ mode: "closed" });
 
