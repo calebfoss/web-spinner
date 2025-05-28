@@ -134,6 +134,7 @@ export class RadialGradient extends Gradient {
   #endX: number;
   #endY: number;
   #endRadius: number;
+  #svg: SVGRadialGradientElement | null = null;
 
   constructor(
     startX = 0,
@@ -172,6 +173,29 @@ export class RadialGradient extends Gradient {
     this.applyStops(gradient);
 
     return gradient;
+  }
+
+  get svg() {
+    if (this.#svg !== null) return this.#svg;
+
+    const svgElement = document.createElementNS(
+      "http://www.w3.org/2000/svg",
+      "radialGradient"
+    );
+
+    svgElement.setAttribute("fr", this.#startRadius.toString());
+
+    svgElement.setAttribute("fx", this.#startX.toString());
+
+    svgElement.setAttribute("cx", this.#endX.toString());
+
+    svgElement.setAttribute("cy", this.#endY.toString());
+
+    svgElement.setAttribute("r", this.#endRadius.toString());
+
+    this.defineSVGStops(svgElement);
+
+    return (this.#svg = svgElement);
   }
 }
 

@@ -61,7 +61,9 @@ function baseStroke<B extends typeof CustomHTMLElement>(Base: B) {
       )
         return;
 
-      this.registerChange("stroke", (this.#stroke = value));
+      if (typeof value === "string")
+        this.registerChange("stroke", (this.#stroke = Color.fromString(value)));
+      else this.registerChange("stroke", (this.#stroke = value));
     }
 
     attributeChangedCallback(
@@ -133,6 +135,12 @@ export function c2dStroke<B extends typeof Canvas2DBaseRenderable>(Base: B) {
 
 export function svgStroke<B extends SVGElementController>(Base: B) {
   return class extends baseStroke(Base) {
+    connectedCallback() {
+      super.connectedCallback();
+
+      if (this.stroke instanceof Gradient) this.#strokeGradient(this.stroke);
+    }
+
     get lineWidth() {
       return super.lineWidth;
     }
@@ -158,9 +166,23 @@ export function svgStroke<B extends SVGElementController>(Base: B) {
 
       super.stroke = value;
 
-      if (this.stroke === null) return;
+      const { stroke } = this;
 
-      this._setStyleAttribute("stroke", this.stroke.toString());
+      if (stroke === null) return;
+
+      if (stroke instanceof Color)
+        this._setStyleAttribute("stroke", stroke.toString());
+      else if (stroke instanceof Gradient) this.#strokeGradient(stroke);
+    }
+
+    #strokeGradient(gradient: Gradient) {
+      const { svgContainerController } = this;
+
+      if (svgContainerController === null) return;
+
+      const gradientId = svgContainerController._defineGradient(gradient);
+
+      this._setStyleAttribute("stroke", `url(#${gradientId})`);
     }
 
     get _styleAttributes(): { [Key in keyof this]?: string } {

@@ -13,7 +13,7 @@ import {
 
 const svg = createSVG({ width: 100, height: 100 });
 
-const gradient = new LinearGradient();
+const gradient = new RadialGradient(0.5, 0.5, 0, 0.5, 0.5, 0.5);
 
 gradient.addColorStop(0, Color.rgb(255, 0, 0));
 
@@ -31,9 +31,8 @@ const childRect = parentRect.rectangle({
   scale: Vector2D.xy(0.5, 1),
   width: 25,
   height: 25,
-  stroke: "black",
-  lineWidth: 10,
-  fill: gradient,
+  stroke: gradient,
+  fill: "black",
 });
 
 childRect.addEventListener("click", () => {

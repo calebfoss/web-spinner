@@ -93,16 +93,6 @@ export function c2dFill<B extends typeof Canvas2DBaseRenderable>(Base: B) {
 
 export function svgFill<B extends SVGElementController>(Base: B) {
   return class extends baseFill(Base) {
-    #fillGradient(gradient: Gradient) {
-      const { svgContainerController } = this;
-
-      if (svgContainerController === null) return;
-
-      const gradientId = svgContainerController._defineGradient(gradient);
-
-      this._setStyleAttribute("fill", `url(#${gradientId})`);
-    }
-
     connectedCallback(): void {
       super.connectedCallback();
 
@@ -120,9 +110,21 @@ export function svgFill<B extends SVGElementController>(Base: B) {
 
       const { fill } = this;
 
+      if (fill === null) return;
+
       if (fill instanceof Color)
         this._setStyleAttribute("fill", fill.toString());
-      else if (value instanceof Gradient) this.#fillGradient(value);
+      else if (fill instanceof Gradient) this.#fillGradient(fill);
+    }
+
+    #fillGradient(gradient: Gradient) {
+      const { svgContainerController } = this;
+
+      if (svgContainerController === null) return;
+
+      const gradientId = svgContainerController._defineGradient(gradient);
+
+      this._setStyleAttribute("fill", `url(#${gradientId})`);
     }
 
     get _styleAttributes(): { [Key in keyof this]?: string } {
