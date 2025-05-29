@@ -80,42 +80,7 @@ export function createCustomElement<E extends typeof CustomHTMLElement>(
   return element;
 }
 
-const elementClasses = [
-  Canvas2DCanvasElement,
-  Canvas2DBezier,
-  Canvas2DEllipse,
-  Canvas2DImage,
-  Canvas2DLine,
-  Canvas2DRectangle,
-  Canvas2DShape,
-  Canvas2DShapeBezier,
-  Canvas2DShapeEllipse,
-  Canvas2DShapeLine,
-  Canvas2DShapeRectangle,
-  Canvas2DText,
-  Canvas2DVideo,
-  SVGSVGController,
-  SVGRectangleController,
-] as const;
-
 customElements.define("c2d-canvas", Canvas2DCanvasElement);
-
-for (const elementClass of elementClasses) {
-  const tag = customElements.getName(elementClass);
-  const ctor = customElements.get(elementClass.tag);
-
-  if (tag === null || ctor === undefined) {
-    throw new Error(
-      `Constructor ${elementClass.name} has not been registered.`
-    );
-  } else if (tag !== elementClass.tag) {
-    throw new Error(
-      `Tag mismatch detected. Constructor's tag: ${elementClass.tag} Registered tag: ${tag}.`
-    );
-  } else if (ctor !== elementClass) {
-    throw new Error(`Constructor mismatch.`);
-  }
-}
 
 function createCanvas(options?: Options<Canvas2DCanvasElement>) {
   return createCustomElement(Canvas2DCanvasElement, options);

@@ -1,6 +1,6 @@
-const path = require("path");
+import path from "path";
 
-module.exports = {
+export default {
   entry: "./src/index.ts",
   module: {
     rules: [{ use: "ts-loader", exclude: "/node_modules/" }],
@@ -12,7 +12,7 @@ module.exports = {
   experiments: { outputModule: true },
   output: {
     filename: "webSpinner.js",
-    path: path.resolve(__dirname, "dist"),
+    path: path.resolve(import.meta.dirname, "dist"),
     libraryTarget: "module",
   },
 };
