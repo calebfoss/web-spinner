@@ -138,7 +138,7 @@ export class Canvas2DCanvasElement extends c2dStandaloneChildren(C2DBase) {
   connectedCallback() {
     const pixelRatioQuery = `(resolution: ${window.devicePixelRatio}dppx)`;
 
-    const media = matchMedia(pixelRatioQuery);
+    const media = window.matchMedia(pixelRatioQuery);
 
     media.addEventListener("change", this.#updateScale.bind(this));
 

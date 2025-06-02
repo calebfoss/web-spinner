@@ -3,7 +3,15 @@ import path from "path";
 export default {
   entry: "./src/index.ts",
   module: {
-    rules: [{ use: "ts-loader", exclude: "/node_modules/" }],
+    rules: [
+      {
+        test: /\.ts?$/,
+        use: {
+          loader: "ts-loader",
+        },
+        exclude: [/node_modules/, /tests/, /docs/],
+      },
+    ],
   },
   mode: "development",
   resolve: {

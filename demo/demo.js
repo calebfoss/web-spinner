@@ -1,5 +1,5 @@
 import {
-  createCanvas,
+  createRoot,
   Color,
   Vector2D,
   Angle,
@@ -8,10 +8,11 @@ import {
   LinearGradient,
   RadialGradient,
   Shadow,
-  createSVG,
 } from "web-spinner";
 
-const svg = createSVG({ width: 100, height: 100 });
+const root = createRoot();
+
+const svg = root.svg({ width: 100, height: 100 });
 
 const gradient = new RadialGradient(0.5, 0.5, 0, 0.5, 0.5, 0.5);
 
@@ -41,4 +42,4 @@ childRect.addEventListener("click", () => {
 
 svg.rectangle({ fill: "pink", width: 20, height: 20 });
 
-document.body.appendChild(svg);
+root.canvas2D({ width: 50, height: 50, background: "yellow" });

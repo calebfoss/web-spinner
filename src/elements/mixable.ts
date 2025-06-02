@@ -1,4 +1,3 @@
-import { createCustomElement } from "..";
 import { camelToKebabCase } from "../utlities/camelToKebab";
 
 export class CustomHTMLElement extends HTMLElement {
@@ -46,4 +45,15 @@ export class CustomHTMLElement extends HTMLElement {
 
     this.setAttribute(attributeName, stringValue);
   }
+}
+
+export function createCustomElement<E extends typeof CustomHTMLElement>(
+  ElementClass: E,
+  options?: Options<InstanceType<E>>
+) {
+  const element = document.createElement(ElementClass.tag) as InstanceType<E>;
+
+  Object.assign(element, options);
+
+  return element;
 }

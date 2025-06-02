@@ -22,9 +22,7 @@ import {
 } from "./classes/gradient";
 import { C2DBase } from "./elements/c2dBase";
 import { Shadow } from "./classes/shadow";
-import { SVGSVGController } from "./elements/svgSVG";
-import { SVGRectangleController } from "./elements/rectangle";
-import { CustomHTMLElement } from "./elements/mixable";
+import { createRoot } from "./elements/domBase";
 
 export type CSSLengthUnit = (typeof Units.size)[keyof typeof Units.size];
 
@@ -69,26 +67,7 @@ declare global {
   }
 }
 
-export function createCustomElement<E extends typeof CustomHTMLElement>(
-  ElementClass: E,
-  options?: Options<InstanceType<E>>
-) {
-  const element = document.createElement(ElementClass.tag) as InstanceType<E>;
-
-  Object.assign(element, options);
-
-  return element;
-}
-
 customElements.define("c2d-canvas", Canvas2DCanvasElement);
-
-function createCanvas(options?: Options<Canvas2DCanvasElement>) {
-  return createCustomElement(Canvas2DCanvasElement, options);
-}
-
-function createSVG(options?: Options<SVGSVGController>) {
-  return createCustomElement(SVGSVGController, options);
-}
 
 export type WebSpinnerElement = {
   Canvas2DCanvasElement: Canvas2DCanvasElement;
@@ -107,8 +86,6 @@ export type WebSpinnerElement = {
 };
 
 export {
-  createCanvas,
-  createSVG,
   createMultiple,
   Color,
   Vector2D,
@@ -119,10 +96,5 @@ export {
   RadialGradient,
   Shadow,
   createState,
+  createRoot,
 };
-
-// declare global {
-//   interface Window {
-//     webSpinner: typeof webSpinner;
-//   }
-// }

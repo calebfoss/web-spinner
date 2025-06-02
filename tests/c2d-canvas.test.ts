@@ -1,9 +1,22 @@
 import { expect, jest, test } from "@jest/globals";
 import { setupJestCanvasMock } from "jest-canvas-mock";
-import { Color, createCanvas } from "web-spinner";
+import { Color, createRoot } from "web-spinner";
+
+Object.defineProperty(window, "matchMedia", {
+  writable: true,
+  value: jest.fn().mockImplementation((query) => ({
+    matches: false,
+    media: query,
+    onchange: null,
+    addEventListener: jest.fn(),
+    removeEventListener: jest.fn(),
+    dispatchEvent: jest.fn(),
+  })),
+});
 
 beforeEach(() => {
   jest.resetAllMocks();
+
   setupJestCanvasMock();
 });
 
@@ -42,7 +55,9 @@ function dimensions(element: { width: number; height: number }) {
 describe("c2d-canvas", () => {
   const background = Color.rgb(50, 100, 150);
 
-  const canvas = createCanvas({ width, height, background });
+  const root = createRoot();
+
+  const canvas = root.canvas2D({ width, height, background });
 
   dimensions(canvas);
 

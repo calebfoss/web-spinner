@@ -1,4 +1,4 @@
-import { createCustomElement } from "..";
+import { createCustomElement } from "../elements/mixable";
 import { Canvas2DBezier, Canvas2DShapeBezier } from "../elements/bezier";
 import { C2DBase } from "../elements/c2dBase";
 import { Canvas2DEllipse, Canvas2DShapeEllipse } from "../elements/ellipse";
