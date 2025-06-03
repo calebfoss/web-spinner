@@ -10,14 +10,14 @@ import {
   Shadow,
 } from "web-spinner";
 
-const testState = createState(1);
+const angle = Angle.degrees(0);
 
 const root = createRoot();
 
-const paragraph = root.paragraph()`The current value is ${testState}`;
+const paragraph = root.paragraph()`The current angle is ${angle} degrees`;
 
-paragraph.addEventListener("click", () => {
-  testState.value++;
+root.addEventListener("click", () => {
+  angle.degrees += 15;
 });
 
 const svg = root.svg({ width: 100, height: 100 });
@@ -36,12 +36,13 @@ const parentRect = svg.rectangle({
 
 const childRect = parentRect.rectangle({
   anchor: Vector2D.xy(50, 25),
-  angle: Angle.degrees(45),
+  angle,
   scale: Vector2D.xy(0.5, 1),
   width: 25,
   height: 25,
   stroke: gradient,
   fill: "black",
+  origin: "center",
 });
 
 childRect.addEventListener("click", () => {

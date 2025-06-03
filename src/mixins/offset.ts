@@ -67,7 +67,7 @@ export function extendSVGOffset<
     moveOffset(x: number, y: number): void {
       super.moveOffset(x, y);
 
-      this.#updateOffset();
+      this._updateOffset();
     }
 
     get offset() {
@@ -77,10 +77,10 @@ export function extendSVGOffset<
     set offset(value) {
       super.offset = value;
 
-      this.#updateOffset();
+      this._updateOffset();
     }
 
-    #updateOffset() {
+    _updateOffset() {
       this.mainElement.setAttribute("x", this.offset.x.toString());
       this.mainElement.setAttribute("y", this.offset.y.toString());
     }

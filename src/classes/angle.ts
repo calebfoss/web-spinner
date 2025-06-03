@@ -107,7 +107,7 @@ export class Angle extends State<number> implements AngleConverter {
 
     this.#conversions.clear();
 
-    this.value = value;
+    super.value = value;
   }
 
   get turn() {
@@ -145,6 +145,14 @@ export class Angle extends State<number> implements AngleConverter {
 
   static get unitsInCircle() {
     return unitsInCircle;
+  }
+
+  get value() {
+    return super.value;
+  }
+
+  set value(value) {
+    this.radians = value;
   }
 
   static get zero() {

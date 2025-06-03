@@ -255,6 +255,10 @@ export function svgTransform<B extends SVGElementController>(Base: B) {
       if (change) this.#updateTransformAttribute();
     }
 
+    #angleChangeListener = () => {
+      this.#updateTransformAttribute();
+    };
+
     get angle() {
       return super.angle;
     }
@@ -263,6 +267,8 @@ export function svgTransform<B extends SVGElementController>(Base: B) {
       const change = !super.angle.equals(value);
 
       super.angle = value;
+
+      super.angle.addChangeListener(this.#angleChangeListener);
 
       if (change) this.#updateTransformAttribute();
     }

@@ -81,6 +81,14 @@ export class SVGRectangleController extends svgStroke(
       )
     )
   )
-) {}
+) {
+  get origin() {
+    return super.origin;
+  }
+
+  set origin(value) {
+    super.origin = value;
+  }
+}
 
 customElements.define("svg-rectangle", SVGRectangleController);

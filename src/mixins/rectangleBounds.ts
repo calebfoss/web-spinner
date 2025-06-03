@@ -80,5 +80,21 @@ export function c2dRectangleBounds<B extends typeof Canvas2DBaseRenderable>(
 export function svgRectangleBounds<B extends SVGElementController>(Base: B) {
   return class extends extendSVGOffset(
     extendSVGDimensions(baseRectangleBounds(Base))
-  ) {};
+  ) {
+    _updateOffset() {
+      const { x, y } = this.topLeft;
+      this.mainElement.setAttribute("x", x.toString());
+      this.mainElement.setAttribute("y", y.toString());
+    }
+
+    get origin() {
+      return super.origin;
+    }
+
+    set origin(value) {
+      super.origin = value;
+
+      this._updateOffset();
+    }
+  };
 }
