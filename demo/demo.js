@@ -14,7 +14,7 @@ const root = createRoot();
 
 root.paragraph({
   style: { color: "red", backgroundColor: "black" },
-})`Hello world!`;
+})`Hello `.span({ style: { color: "yellow" } })`World`;
 
 const svg = root.svg({ width: 100, height: 100 });
 

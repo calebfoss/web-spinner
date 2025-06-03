@@ -25,6 +25,10 @@ import {
   DocumentParagraphController,
   DocumentParagraphWrapper,
 } from "../elements/document/paragraph";
+import {
+  DocumentSpanController,
+  DocumentSpanWrapper,
+} from "../elements/document/span";
 
 type MultipleCallback = (index: number) => Node | undefined;
 
@@ -176,6 +180,10 @@ export function documentChildren<
       options?: Options<DocumentParagraphController>
     ): DocumentParagraphController {
       return this.createWrappedChild(DocumentParagraphWrapper, options);
+    }
+
+    span(options?: Options<DocumentSpanController>) {
+      return this.createWrappedChild(DocumentSpanWrapper, options);
     }
   };
 }
