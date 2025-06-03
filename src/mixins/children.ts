@@ -13,6 +13,18 @@ import { Canvas2DText } from "../elements/text";
 import { Canvas2DVideo } from "../elements/video";
 import { SVGElementController } from "../elements/svgBase";
 import { SVGRectangleController } from "../elements/rectangle";
+import {
+  HTMLElementController,
+  HTMLElementWrapperConstructor,
+} from "../elements/document/domBase";
+import {
+  DocumentContainerController,
+  DocumentContainerWrapper,
+} from "../elements/document/container";
+import {
+  DocumentParagraphController,
+  DocumentParagraphWrapper,
+} from "../elements/document/paragraph";
 
 type MultipleCallback = (index: number) => Node | undefined;
 
@@ -145,6 +157,25 @@ export function svgChildren<B extends SVGElementController>(Base: B) {
 
     rectangle(options?: Partial<SVGRectangleController>) {
       return this.createSVGControllerChild(SVGRectangleController, options);
+    }
+  };
+}
+
+export function documentChildren<
+  T extends keyof HTMLElementTagNameMap,
+  W extends HTMLElementWrapperConstructor<T>
+>(WrapperConstructor: W) {
+  return class extends WrapperConstructor {
+    container(
+      options?: Options<DocumentContainerController>
+    ): DocumentContainerController {
+      return this.createWrappedChild(DocumentContainerWrapper, options);
+    }
+
+    paragraph(
+      options?: Options<DocumentParagraphController>
+    ): DocumentParagraphController {
+      return this.createWrappedChild(DocumentParagraphWrapper, options);
     }
   };
 }

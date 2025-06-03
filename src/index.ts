@@ -22,7 +22,7 @@ import {
 } from "./classes/gradient";
 import { C2DBase } from "./elements/c2dBase";
 import { Shadow } from "./classes/shadow";
-import { createRoot } from "./elements/domBase";
+import { createRoot } from "./elements/document/domBase";
 
 export type CSSLengthUnit = (typeof Units.size)[keyof typeof Units.size];
 

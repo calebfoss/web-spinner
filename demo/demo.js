@@ -12,6 +12,10 @@ import {
 
 const root = createRoot();
 
+root.paragraph({
+  style: { color: "red", backgroundColor: "black" },
+})`Hello world!`;
+
 const svg = root.svg({ width: 100, height: 100 });
 
 const gradient = new RadialGradient(0.5, 0.5, 0, 0.5, 0.5, 0.5);
