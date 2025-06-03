@@ -1,6 +1,6 @@
 import * as Schema from "custom-elements-manifest/schema";
 import data from "./custom-elements.json";
-import { createCanvas, Color } from "web-spinner";
+import { createRoot, Color } from "web-spinner";
 import * as WebSpinner from "web-spinner";
 import highlight from "highlight.js";
 
@@ -452,17 +452,15 @@ function renderDemo(element: ElementData): [HTMLDivElement, HTMLElement] {
 
   div.classList.add("demo");
 
-  const canvas = createCanvas({
+  const root = createRoot(div);
+
+  const canvas = root.canvas2D({
     background: Color.gray(230),
     height: 200,
     width: 500,
   });
 
-  div.appendChild(canvas);
-
-  const htmlPre = document.createElement("pre");
-
-  div.appendChild(htmlPre);
+  const htmlPre = root.createChild("pre");
 
   const htmlCode = document.createElement("code");
 

@@ -37,21 +37,25 @@ export function createHTMLElementWrapperConstructor<
       const wrapper = this;
 
       const controller = new Proxy(applyTemplate, {
-        get(target, propertyKey) {
+        get(_, propertyKey) {
           return (
-            Reflect.get(target, propertyKey) ??
-            Reflect.get(wrapper, propertyKey)
+            Reflect.get(wrapper, propertyKey) ??
+            Reflect.get(element, propertyKey)
           );
         },
-        set(target, propertyKey, value) {
+        set(_, propertyKey, value) {
           if (propertyKey in wrapper)
             return Reflect.set(wrapper, propertyKey, value);
 
-          return Reflect.set(target, propertyKey, value);
+          return Reflect.set(element, propertyKey, value);
         },
       }) as HTMLElementController<T, this>;
 
       this.#controller = controller;
+    }
+
+    appendChild<N extends Node>(node: N) {
+      return this.element.appendChild(node);
     }
 
     canvas2D(options?: Options<Canvas2DCanvasElement>) {
