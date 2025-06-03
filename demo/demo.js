@@ -10,11 +10,15 @@ import {
   Shadow,
 } from "web-spinner";
 
+const testState = createState(1);
+
 const root = createRoot();
 
-root.paragraph({
-  style: { color: "red", backgroundColor: "black" },
-})`Hello `.span({ style: { color: "yellow" } })`World`;
+const paragraph = root.paragraph()`The current value is ${testState}`;
+
+paragraph.addEventListener("click", () => {
+  testState.value++;
+});
 
 const svg = root.svg({ width: 100, height: 100 });
 

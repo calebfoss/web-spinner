@@ -2,6 +2,7 @@ import { createCustomElement } from "../mixable";
 import { Canvas2DCanvasElement } from "../canvas";
 import { DocumentContainerWrapper } from "./container";
 import { SVGSVGController } from "../svgSVG";
+import { State } from "../../classes/state";
 
 export function createHTMLElementWrapperConstructor<
   T extends keyof HTMLElementTagNameMap
@@ -81,6 +82,16 @@ export type HTMLElementController<
   W extends InstanceType<HTMLElementWrapperConstructor<T>>
 > = HTMLElementTagNameMap[T] & W & TemplateApplier<T, W>;
 
+type StateListener<T> = {
+  state: State<T>;
+  changeListener: (newValue: T) => void;
+};
+
+const createStateListener = <T>(
+  state: State<T>,
+  changeListener: (newValue: T) => void
+): StateListener<T> => ({ state, changeListener });
+
 export function createWrappedController<
   T extends keyof HTMLElementTagNameMap,
   W extends HTMLElementWrapperConstructor<T>
@@ -88,6 +99,8 @@ export function createWrappedController<
   const wrapper = new WrapperConstructor();
 
   const { element } = wrapper;
+
+  const stateMap = new Map<PropertyKey, StateListener<any>>();
 
   function applyTemplate(strings: TemplateStringsArray, ...values: any[]) {
     for (const [index, str] of strings.entries()) {
@@ -98,9 +111,25 @@ export function createWrappedController<
       if (index < values.length) {
         const value = values[index];
 
-        const neighborNode = value instanceof Node ? value : new Text(value);
+        if (value instanceof State) {
+          let mutableTextNode = new Text(value.value);
 
-        element.appendChild(neighborNode);
+          element.appendChild(mutableTextNode);
+
+          const stateListener = createStateListener(value, (newValue) => {
+            const newText = new Text(newValue);
+
+            element.replaceChild(newText, mutableTextNode);
+
+            mutableTextNode = newText;
+          });
+
+          value.addChangeListener(stateListener.changeListener);
+        } else {
+          const neighborNode = value instanceof Node ? value : new Text(value);
+
+          element.appendChild(neighborNode);
+        }
       }
     }
 
@@ -125,8 +154,41 @@ export function createWrappedController<
       return elementValue;
     },
     set(_, propertyKey, value) {
-      if (propertyKey in wrapper)
+      const oldStateListener = stateMap.get(propertyKey);
+
+      if (oldStateListener !== undefined) {
+        oldStateListener.state.removeChangeListener(
+          oldStateListener.changeListener
+        );
+      }
+
+      if (propertyKey in wrapper) {
+        if (value instanceof State) {
+          const newStateListener = createStateListener(value, (newValue) => {
+            Reflect.set(wrapper, propertyKey, newValue);
+          });
+
+          value.addChangeListener(newStateListener.changeListener);
+
+          stateMap.set(propertyKey, newStateListener);
+
+          return Reflect.set(wrapper, propertyKey, value.value);
+        }
+
         return Reflect.set(wrapper, propertyKey, value);
+      }
+
+      if (value instanceof State) {
+        const newStateListener = createStateListener(value, (newValue) => {
+          Reflect.set(element, propertyKey, newValue);
+        });
+
+        value.addChangeListener(newStateListener.changeListener);
+
+        stateMap.set(propertyKey, newStateListener);
+
+        return Reflect.set(element, propertyKey, value.value);
+      }
 
       return Reflect.set(element, propertyKey, value);
     },
