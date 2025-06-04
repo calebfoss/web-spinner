@@ -20,7 +20,7 @@ export default {
   experiments: { outputModule: true },
   output: {
     filename: "webSpinner.js",
-    path: path.resolve(import.meta.dirname, "dist"),
+    path: path.resolve(import.meta.dirname || __dirname, "dist"),
     libraryTarget: "module",
   },
 };
