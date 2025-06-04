@@ -13,7 +13,11 @@ import {
 } from "../elements/visual/rectangle";
 import { Canvas2DShape } from "../elements/visual/shape";
 import { Canvas2DText } from "../elements/visual/text";
-import { Canvas2DVideo } from "../elements/visual/video";
+import {
+  Canvas2DVideo,
+  HTMLVideoController,
+  HTMLVideoWrapper,
+} from "../elements/visual/video";
 import { SVGElementController } from "../elements/visual/svgBase";
 import { SVGRectangleController } from "../elements/visual/rectangle";
 import {
@@ -187,6 +191,10 @@ export function documentChildren<
 
     span(options?: Options<DocumentSpanController>) {
       return this.createWrappedChild(DocumentSpanWrapper, options);
+    }
+
+    video(options?: Options<HTMLVideoController>): HTMLVideoController {
+      return this.createWrappedChild(HTMLVideoWrapper, options);
     }
   };
 }

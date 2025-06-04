@@ -1,4 +1,8 @@
 import { rendersVisualMedia } from "../../mixins/visualMedia";
+import {
+  createHTMLElementWrapperConstructor,
+  HTMLElementController,
+} from "../document/domBase";
 import { Canvas2DStandaloneRenderable, changedEvent } from "./renderable";
 
 export class Canvas2DVideo extends rendersVisualMedia(
@@ -48,3 +52,12 @@ export class Canvas2DVideo extends rendersVisualMedia(
 }
 
 customElements.define("c2d-video", Canvas2DVideo);
+
+export class HTMLVideoWrapper extends createHTMLElementWrapperConstructor(
+  "video"
+) {}
+
+export type HTMLVideoController = HTMLElementController<
+  "video",
+  HTMLVideoWrapper
+>;

@@ -20,6 +20,11 @@ root.addEventListener("click", () => {
   angle.degrees += 15;
 });
 
+const video = root.video({
+  src: "https://download.blender.org/peach/bigbuckbunny_movies/BigBuckBunny_320x180.mp4",
+  controls: true,
+});
+
 const svg = root.svg({ width: 100, height: 100 });
 
 const gradient = new RadialGradient(0.5, 0.5, 0, 0.5, 0.5, 0.5);
