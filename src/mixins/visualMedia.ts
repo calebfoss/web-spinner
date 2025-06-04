@@ -1,5 +1,5 @@
-import { Canvas2DCanvasElement } from "../elements/canvas";
-import { Canvas2DBaseRenderable } from "../elements/renderable";
+import { Canvas2DCanvasElement } from "../elements/visual/canvas";
+import { Canvas2DBaseRenderable } from "../elements/visual/renderable";
 import { attributeParser } from "../utlities/attributeParser";
 import { c2dRectangleBounds } from "./rectangleBounds";
 import { c2dTransform } from "./transform";

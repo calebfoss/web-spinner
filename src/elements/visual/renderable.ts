@@ -2,11 +2,11 @@ import {
   ConicalGradient,
   LinearGradient,
   RadialGradient,
-} from "../classes/gradient";
-import { MouseData } from "../classes/mouse";
-import { Shadow } from "../classes/shadow";
-import { Vector2D } from "../classes/vector2d";
-import { c2dShapeChildren, c2dStandaloneChildren } from "../mixins/children";
+} from "../../classes/gradient";
+import { MouseData } from "../../classes/mouse";
+import { Shadow } from "../../classes/shadow";
+import { Vector2D } from "../../classes/vector2d";
+import { c2dShapeChildren, c2dStandaloneChildren } from "../../mixins/children";
 import { Canvas2DCanvasElement } from "./canvas";
 import { C2DBase } from "./c2dBase";
 import { Canvas2DShape } from "./shape";

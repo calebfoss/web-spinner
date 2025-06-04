@@ -1,18 +1,21 @@
 import { createCustomElement } from "../elements/mixable";
-import { Canvas2DBezier, Canvas2DShapeBezier } from "../elements/bezier";
-import { C2DBase } from "../elements/c2dBase";
-import { Canvas2DEllipse, Canvas2DShapeEllipse } from "../elements/ellipse";
-import { Canvas2DImage } from "../elements/image";
-import { Canvas2DLine, Canvas2DShapeLine } from "../elements/line";
+import { Canvas2DBezier, Canvas2DShapeBezier } from "../elements/visual/bezier";
+import { C2DBase } from "../elements/visual/c2dBase";
+import {
+  Canvas2DEllipse,
+  Canvas2DShapeEllipse,
+} from "../elements/visual/ellipse";
+import { Canvas2DImage } from "../elements/visual/image";
+import { Canvas2DLine, Canvas2DShapeLine } from "../elements/visual/line";
 import {
   Canvas2DRectangle,
   Canvas2DShapeRectangle,
-} from "../elements/rectangle";
-import { Canvas2DShape } from "../elements/shape";
-import { Canvas2DText } from "../elements/text";
-import { Canvas2DVideo } from "../elements/video";
-import { SVGElementController } from "../elements/svgBase";
-import { SVGRectangleController } from "../elements/rectangle";
+} from "../elements/visual/rectangle";
+import { Canvas2DShape } from "../elements/visual/shape";
+import { Canvas2DText } from "../elements/visual/text";
+import { Canvas2DVideo } from "../elements/visual/video";
+import { SVGElementController } from "../elements/visual/svgBase";
+import { SVGRectangleController } from "../elements/visual/rectangle";
 import {
   HTMLElementController,
   HTMLElementWrapperConstructor,

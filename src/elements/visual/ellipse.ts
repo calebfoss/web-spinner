@@ -1,9 +1,9 @@
-import { Angle } from "../classes/angle";
-import { LinearGradient, RadialGradient } from "../classes/gradient";
-import { c2dFill } from "../mixins/fill";
-import { c2dRectangleBounds } from "../mixins/rectangleBounds";
-import { c2dStroke } from "../mixins/stroke";
-import { c2dTransform } from "../mixins/transform";
+import { Angle } from "../../classes/angle";
+import { LinearGradient, RadialGradient } from "../../classes/gradient";
+import { c2dFill } from "../../mixins/fill";
+import { c2dRectangleBounds } from "../../mixins/rectangleBounds";
+import { c2dStroke } from "../../mixins/stroke";
+import { c2dTransform } from "../../mixins/transform";
 import { Canvas2DCanvasElement } from "./canvas";
 import {
   Canvas2DBaseRenderable,

@@ -1,10 +1,10 @@
 import { Angle } from "../classes/angle";
 import { MouseTracker } from "../classes/mouse";
 import { Vector2D, Vector2DBase } from "../classes/vector2d";
-import { Canvas2DCanvasElement } from "../elements/canvas";
-import { Canvas2DBaseRenderable } from "../elements/renderable";
+import { Canvas2DCanvasElement } from "../elements/visual/canvas";
+import { Canvas2DBaseRenderable } from "../elements/visual/renderable";
 import { CustomHTMLElement } from "../elements/mixable";
-import { SVGElementController } from "../elements/svgBase";
+import { SVGElementController } from "../elements/visual/svgBase";
 import { attributeParser } from "../utlities/attributeParser";
 import { isReadOnly } from "../utlities/readOnly";
 

@@ -1,4 +1,4 @@
-import { C2DBase } from "../elements/c2dBase";
+import { C2DBase } from "../elements/visual/c2dBase";
 import { Angle } from "./angle";
 import { Color } from "./color";
 import { Vector2D } from "./vector2d";

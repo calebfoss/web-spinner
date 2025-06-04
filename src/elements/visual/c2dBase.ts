@@ -1,5 +1,5 @@
-import { Vector2D } from "../classes/vector2d";
-import { CustomHTMLElement } from "./mixable";
+import { Vector2D } from "../../classes/vector2d";
+import { CustomHTMLElement } from "../mixable";
 import { Canvas2DCanvasElement } from "./canvas";
 
 type EventListenerAdder = {

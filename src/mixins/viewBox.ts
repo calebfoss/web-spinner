@@ -1,4 +1,4 @@
-import { SVGElementController } from "../elements/svgBase";
+import { SVGElementController } from "../elements/visual/svgBase";
 import { dimensions } from "./dimensions";
 
 export function viewBox<B extends SVGElementController>(Base: B) {

@@ -1,26 +1,29 @@
-import { Canvas2DCanvasElement } from "./elements/canvas";
+import { Canvas2DCanvasElement } from "./elements/visual/canvas";
 import {
   Canvas2DRectangle,
   Canvas2DShapeRectangle,
-} from "./elements/rectangle";
+} from "./elements/visual/rectangle";
 import { Color } from "./classes/color";
 import { Vector2D } from "./classes/vector2d";
 import { Angle } from "./classes/angle";
-import { Canvas2DText } from "./elements/text";
+import { Canvas2DText } from "./elements/visual/text";
 import { Units } from "./classes/units";
 import { State, createState } from "./classes/state";
-import { Canvas2DLine, Canvas2DShapeLine } from "./elements/line";
-import { Canvas2DShape } from "./elements/shape";
-import { Canvas2DEllipse, Canvas2DShapeEllipse } from "./elements/ellipse";
-import { Canvas2DBezier, Canvas2DShapeBezier } from "./elements/bezier";
-import { Canvas2DImage } from "./elements/image";
-import { Canvas2DVideo } from "./elements/video";
+import { Canvas2DLine, Canvas2DShapeLine } from "./elements/visual/line";
+import { Canvas2DShape } from "./elements/visual/shape";
+import {
+  Canvas2DEllipse,
+  Canvas2DShapeEllipse,
+} from "./elements/visual/ellipse";
+import { Canvas2DBezier, Canvas2DShapeBezier } from "./elements/visual/bezier";
+import { Canvas2DImage } from "./elements/visual/image";
+import { Canvas2DVideo } from "./elements/visual/video";
 import {
   ConicalGradient,
   LinearGradient,
   RadialGradient,
 } from "./classes/gradient";
-import { C2DBase } from "./elements/c2dBase";
+import { C2DBase } from "./elements/visual/c2dBase";
 import { Shadow } from "./classes/shadow";
 import { createRoot } from "./elements/document/domBase";
 

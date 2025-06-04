@@ -2,16 +2,16 @@ import {
   ConicalGradient,
   LinearGradient,
   RadialGradient,
-} from "../classes/gradient";
-import { svgChildren } from "../mixins/children";
-import { svgDimensions } from "../mixins/dimensions";
-import { c2dFill, svgFill } from "../mixins/fill";
+} from "../../classes/gradient";
+import { svgChildren } from "../../mixins/children";
+import { svgDimensions } from "../../mixins/dimensions";
+import { c2dFill, svgFill } from "../../mixins/fill";
 import {
   c2dRectangleBounds,
   svgRectangleBounds,
-} from "../mixins/rectangleBounds";
-import { c2dStroke, svgStroke } from "../mixins/stroke";
-import { c2dTransform, svgTransform } from "../mixins/transform";
+} from "../../mixins/rectangleBounds";
+import { c2dStroke, svgStroke } from "../../mixins/stroke";
+import { c2dTransform, svgTransform } from "../../mixins/transform";
 import { Canvas2DCanvasElement } from "./canvas";
 import {
   Canvas2DBaseRenderable,

@@ -1,8 +1,8 @@
-import { svgChildren } from "../mixins/children";
-import { viewBox } from "../mixins/viewBox";
+import { svgChildren } from "../../mixins/children";
+import { viewBox } from "../../mixins/viewBox";
 import { createSVGController, SVGElementController } from "./svgBase";
 import { SVGRectangleController } from "./rectangle";
-import { Gradient } from "../classes/gradient";
+import { Gradient } from "../../classes/gradient";
 
 export class SVGSVGController extends viewBox(
   svgChildren(createSVGController("svg", "svg-svg"))

@@ -1,13 +1,12 @@
-import { Vector2D } from "../classes/vector2d";
-import { ClickTracker } from "../classes/click";
-import { Color } from "../classes/color";
-import { KeyboardTracker } from "../classes/keyboard";
-import { MouseTracker } from "../classes/mouse";
-import { c2dStandaloneChildren } from "../mixins/children";
-import { attributeParser } from "../utlities/attributeParser";
+import { Vector2D } from "../../classes/vector2d";
+import { ClickTracker } from "../../classes/click";
+import { KeyboardTracker } from "../../classes/keyboard";
+import { MouseTracker } from "../../classes/mouse";
+import { c2dStandaloneChildren } from "../../mixins/children";
+import { attributeParser } from "../../utlities/attributeParser";
 import { C2DBase } from "./c2dBase";
 import { Canvas2DBaseRenderable } from "./renderable";
-import { DrawStyle } from "../classes/gradient";
+import { DrawStyle } from "../../classes/gradient";
 
 export class Canvas2DCanvasElement extends c2dStandaloneChildren(C2DBase) {
   static observedAttributes: string[] = [

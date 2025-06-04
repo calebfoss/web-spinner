@@ -1,9 +1,9 @@
-import { Canvas2DBaseRenderable } from "../elements/renderable";
+import { Canvas2DBaseRenderable } from "../elements/visual/renderable";
 import { attributeParser } from "../utlities/attributeParser";
 import { Angle } from "../classes/angle";
 import { Units } from "../classes/units";
 import { MouseTracker } from "../classes/mouse";
-import { Canvas2DCanvasElement } from "../elements/canvas";
+import { Canvas2DCanvasElement } from "../elements/visual/canvas";
 
 export const fontSizeUnits = {
   ...Units.size,

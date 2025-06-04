@@ -1,7 +1,7 @@
 import { createCustomElement } from "../mixable";
-import { Canvas2DCanvasElement } from "../canvas";
+import { Canvas2DCanvasElement } from "../visual/canvas";
 import { DocumentContainerWrapper } from "./container";
-import { SVGSVGController } from "../svgSVG";
+import { SVGSVGController } from "../visual/svgSVG";
 import { State } from "../../classes/state";
 
 export function createHTMLElementWrapperConstructor<

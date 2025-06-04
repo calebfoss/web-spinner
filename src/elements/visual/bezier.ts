@@ -1,15 +1,15 @@
-import { Vector2D } from "../classes/vector2d";
-import { c2dFill } from "../mixins/fill";
-import { c2dStroke } from "../mixins/stroke";
-import { hasFrom, hasTo } from "../mixins/fromTo";
+import { Vector2D } from "../../classes/vector2d";
+import { c2dFill } from "../../mixins/fill";
+import { c2dStroke } from "../../mixins/stroke";
+import { hasFrom, hasTo } from "../../mixins/fromTo";
 import {
   Canvas2DBaseRenderable,
   Canvas2DShapePartRenderable,
   Canvas2DStandaloneRenderable,
 } from "./renderable";
 import { Canvas2DCanvasElement } from "./canvas";
-import { c2dTransform } from "../mixins/transform";
-import { attributeParser } from "../utlities/attributeParser";
+import { c2dTransform } from "../../mixins/transform";
+import { attributeParser } from "../../utlities/attributeParser";
 
 function hasControlPoints<B extends typeof Canvas2DBaseRenderable>(Base: B) {
   return class extends hasTo(Base) {

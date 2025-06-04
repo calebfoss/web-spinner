@@ -1,8 +1,7 @@
-import { MouseTracker } from "../classes/mouse";
-import { c2dFill } from "../mixins/fill";
-import { offset } from "../mixins/offset";
-import { c2dStroke } from "../mixins/stroke";
-import { c2dTransform } from "../mixins/transform";
+import { c2dFill } from "../../mixins/fill";
+import { offset } from "../../mixins/offset";
+import { c2dStroke } from "../../mixins/stroke";
+import { c2dTransform } from "../../mixins/transform";
 import { Canvas2DCanvasElement } from "./canvas";
 import { Canvas2DShapePartRenderable } from "./renderable";
 
