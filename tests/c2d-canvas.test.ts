@@ -1,6 +1,7 @@
 import { expect, jest, test } from "@jest/globals";
 import { setupJestCanvasMock } from "jest-canvas-mock";
 import { Color, createRoot } from "web-spinner";
+import { testDimensions } from "./dimensions";
 
 Object.defineProperty(window, "matchMedia", {
   writable: true,
@@ -20,46 +21,18 @@ beforeEach(() => {
   setupJestCanvasMock();
 });
 
-const width = 150;
-
-const height = 250;
-
-function dimensions(element: { width: number; height: number }) {
-  test("width and height initialized", () => {
-    expect(element.width).toBe(width);
-
-    expect(element.height).toBe(height);
-  });
-
-  test("width and height modified", () => {
-    const change = 50;
-
-    element.width += change;
-
-    element.height += change;
-
-    expect(element.width).toBe(width + change);
-
-    expect(element.height).toBe(height + change);
-
-    element.width -= change;
-
-    element.height -= change;
-
-    expect(element.width).toBe(width);
-
-    expect(element.height).toBe(height);
-  });
-}
-
 describe("c2d-canvas", () => {
+  const width = 150;
+
+  const height = 250;
+
   const background = Color.rgb(50, 100, 150);
 
   const root = createRoot();
 
   const canvas = root.canvas2D({ width, height, background });
 
-  dimensions(canvas);
+  testDimensions(canvas, width, height);
 
   test("background", () => {
     expect(canvas.background instanceof Color).toBe(true);

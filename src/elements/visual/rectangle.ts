@@ -1,3 +1,4 @@
+import { BorderRadius } from "../../classes/borderRadius";
 import {
   ConicalGradient,
   LinearGradient,
@@ -12,6 +13,7 @@ import {
 } from "../../mixins/rectangleBounds";
 import { c2dStroke, svgStroke } from "../../mixins/stroke";
 import { c2dTransform, svgTransform } from "../../mixins/transform";
+import { attributeParser } from "../../utlities/attributeParser";
 import { Canvas2DCanvasElement } from "./canvas";
 import {
   Canvas2DBaseRenderable,
@@ -24,6 +26,69 @@ function renderCanvasRectangle<B extends typeof Canvas2DBaseRenderable>(
   Base: B
 ) {
   return class extends c2dTransform(c2dRectangleBounds(Base)) {
+    static observedAttributes = [...Base.observedAttributes, "border-radius"];
+
+    #borderRadius: BorderRadius | null = null;
+
+    attributeChangedCallback(
+      name: string,
+      oldValue: string | null,
+      newValue: string | null
+    ): void {
+      if (name === "border-radius") {
+        if (newValue === null) this.borderRadius = null;
+        else this.borderRadius = attributeParser.BorderRadius(newValue);
+      }
+
+      super.attributeChangedCallback(name, oldValue, newValue);
+    }
+
+    #borderRadiusChangeListener = () => {
+      this.registerChange("borderRadius", this.#borderRadius);
+    };
+    /**
+     *
+     */
+    get borderRadius(): BorderRadius | null {
+      return this.#borderRadius;
+    }
+
+    set borderRadius(value: BorderRadius | number | null) {
+      const currentBorderRadius = this.borderRadius;
+
+      if (value === currentBorderRadius) return;
+      if (value === null) {
+        if (currentBorderRadius === null) return;
+        currentBorderRadius.removeChangeListener(
+          this.#borderRadiusChangeListener
+        );
+
+        this.registerChange("borderRadius", (this.#borderRadius = value));
+
+        return;
+      }
+      const newBorderRadius =
+        typeof value === "number" ? new BorderRadius(value) : value;
+
+      if (currentBorderRadius === null) {
+        newBorderRadius.addChangeListener(this.#borderRadiusChangeListener);
+
+        this.registerChange(
+          "borderRadius",
+          (this.#borderRadius = newBorderRadius)
+        );
+
+        return;
+      }
+
+      this.#borderRadius = newBorderRadius;
+
+      currentBorderRadius.replace(
+        newBorderRadius,
+        this.#borderRadiusChangeListener
+      );
+    }
+
     render(canvas2D: Canvas2DCanvasElement): void {
       super.render(canvas2D);
 
@@ -33,7 +98,16 @@ function renderCanvasRectangle<B extends typeof Canvas2DBaseRenderable>(
         height,
       } = this;
 
-      canvas2D.context.rect(x, y, width, height);
+      if (this.borderRadius === null)
+        canvas2D.context.rect(x, y, width, height);
+      else
+        canvas2D.context.roundRect(
+          x,
+          y,
+          width,
+          height,
+          this.borderRadius.toArray()
+        );
 
       this.afterRender(canvas2D);
     }
