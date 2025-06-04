@@ -460,7 +460,7 @@ function renderDemo(element: ElementData): [HTMLDivElement, HTMLElement] {
     width: 500,
   });
 
-  const htmlPre = root.createChild("pre");
+  const htmlPre = root.appendChild(document.createElement("pre"));
 
   const htmlCode = document.createElement("code");
 
