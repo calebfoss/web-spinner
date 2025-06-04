@@ -1,10 +1,12 @@
 import { Angle, AngleUnitShort } from "../classes/angle";
+import { BorderRadius } from "../classes/borderRadius";
 import { Color } from "../classes/color";
 import { DrawStyle } from "../classes/gradient";
 import { Vector2D } from "../classes/vector2d";
 
 type AttributeTypeMap = {
   number: number;
+  BorderRadius: BorderRadius;
   Color: Color;
   FillStrokeStyle: DrawStyle;
   Vector2D: Vector2D;
@@ -26,6 +28,15 @@ const includesNumbers = (str: string) => str.match(/\d/) !== null;
 export const attributeParser: AttributeTypeParser = {
   number(stringValue) {
     return parseFloat(stringValue);
+  },
+  BorderRadius(stringValue) {
+    const args = stringValue.split(",");
+
+    const [arg1, arg2, arg3, arg4] = args.map(attributeParser.number);
+
+    const borderRadius = new BorderRadius(arg1, arg2, arg3, arg4);
+
+    return borderRadius;
   },
   Color(stringValue) {
     const args = stringValue.split(",");

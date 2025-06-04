@@ -26,6 +26,7 @@ import {
 import { C2DBase } from "./elements/visual/c2dBase";
 import { Shadow } from "./classes/shadow";
 import { createRoot } from "./elements/document/domBase";
+import { BorderRadius } from "./classes/borderRadius";
 
 export type CSSLengthUnit = (typeof Units.size)[keyof typeof Units.size];
 
@@ -90,6 +91,7 @@ export type WebSpinnerElement = {
 
 export {
   createMultiple,
+  BorderRadius,
   Color,
   Vector2D,
   Angle,

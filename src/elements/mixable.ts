@@ -43,7 +43,8 @@ export class CustomHTMLElement extends HTMLElement {
 
     if (currentAttributeValue === stringValue) return;
 
-    this.setAttribute(attributeName, stringValue);
+    if (newValue === null) this.removeAttribute(attributeName);
+    else this.setAttribute(attributeName, stringValue);
   }
 }
 
