@@ -25,6 +25,11 @@ const video = root.video({
   controls: true,
 });
 
+const audio = root.audio({
+  src: "https://dn721601.ca.archive.org/0/items/78_a-visit-to-the-insect-zoo_the-louis-voss-grand-orchestra-h-bick_gbia3027479a/A%20VISIT%20TO%20THE%20INSECT%20ZOO%20-%20THE%20LOUIS%20VOSS%20GRAND%20ORCHESTRA.mp3",
+  controls: true,
+});
+
 const svg = root.svg({ width: 100, height: 100 });
 
 const gradient = new RadialGradient(0.5, 0.5, 0, 0.5, 0.5, 0.5);

@@ -36,6 +36,7 @@ import {
   DocumentSpanController,
   DocumentSpanWrapper,
 } from "../elements/document/span";
+import { HTMLAudioController, HTMLAudioWrapper } from "../elements/audio/audio";
 
 type MultipleCallback = (index: number) => Node | undefined;
 
@@ -177,6 +178,10 @@ export function documentChildren<
   W extends HTMLElementWrapperConstructor<T>
 >(WrapperConstructor: W) {
   return class extends WrapperConstructor {
+    audio(options?: Options<HTMLAudioController>): HTMLAudioController {
+      return this.createWrappedChild(HTMLAudioWrapper, options);
+    }
+
     container(
       options?: Options<DocumentContainerController>
     ): DocumentContainerController {
@@ -189,7 +194,7 @@ export function documentChildren<
       return this.createWrappedChild(DocumentParagraphWrapper, options);
     }
 
-    span(options?: Options<DocumentSpanController>) {
+    span(options?: Options<DocumentSpanController>): DocumentSpanController {
       return this.createWrappedChild(DocumentSpanWrapper, options);
     }
 
