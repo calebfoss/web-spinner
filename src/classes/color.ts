@@ -77,7 +77,7 @@ export class Color {
   ) {
     return new Color(
       `hsl(${hue} ${saturation} ${lightness}${
-        alpha === undefined ? "" : ` ${alpha}`
+        alpha === undefined ? "" : ` / ${alpha}`
       })`
     );
   }
