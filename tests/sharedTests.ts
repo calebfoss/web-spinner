@@ -43,7 +43,7 @@ export function testReflection<
   currentAttributeValue: string | null = String(element[propertyKey]),
   changedAttributeValue: string | null = String(changedPropertyValue)
 ) {
-  describe(`reflection - ${String(propertyKey)}`, () => {
+  describe(`reflection`, () => {
     const currentValue = element[propertyKey];
 
     beforeEach(() => {

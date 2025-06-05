@@ -10,4 +10,6 @@ export default {
     "^.+\\.tsx?$": ["ts-jest", { useESM: true }],
   },
   extensionsToTreatAsEsm: [".ts"],
+  collectCoverage: true,
+  coverageReporters: ["text"],
 };

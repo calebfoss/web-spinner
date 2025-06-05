@@ -1,7 +1,9 @@
 import path from "path";
+import { sourceMapsEnabled } from "process";
 
 export default {
   entry: "./src/index.ts",
+  devtool: "inline-source-map",
   module: {
     rules: [
       {

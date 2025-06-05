@@ -54,13 +54,19 @@ describe("c2d-canvas", () => {
 
   test("alpha", () => {});
 
-  test("background", () => {
-    expect(canvas.background instanceof Color).toBe(true);
+  describe("background", () => {
+    test("is an instance of the Color class by default", () => {
+      expect(canvas.background instanceof Color).toBe(true);
+    });
 
-    expect(background.equals(canvas.background as Color)).toBe(true);
+    test("value was set on creation", () => {
+      expect(background.equals(canvas.background as Color)).toBe(true);
+    });
+
+    testReflection(canvas, "background", "background", Color.rgb(255, 0, 0));
   });
 
-  test("center", () => {
+  test("center corresponds to dimensions", () => {
     expect(canvas.center.x).toBe(width / 2);
 
     expect(canvas.center.y).toBe(height / 2);
