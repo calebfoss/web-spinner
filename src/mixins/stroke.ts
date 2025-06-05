@@ -62,7 +62,10 @@ function baseStroke<B extends typeof CustomHTMLElement>(Base: B) {
         return;
 
       if (typeof value === "string")
-        this.registerChange("stroke", (this.#stroke = Color.fromString(value)));
+        this.registerChange(
+          "stroke",
+          (this.#stroke = value === "none" ? value : Color.fromString(value))
+        );
       else this.registerChange("stroke", (this.#stroke = value));
     }
 
@@ -126,7 +129,8 @@ export function c2dStroke<B extends typeof Canvas2DBaseRenderable>(Base: B) {
     }
 
     afterRender(canvas2D: Canvas2DCanvasElement): void {
-      if (this.stroke !== "none") canvas2D.context.stroke();
+      if (this.stroke !== "none" && this.stroke !== null)
+        canvas2D.context.stroke();
 
       super.afterRender(canvas2D);
     }
