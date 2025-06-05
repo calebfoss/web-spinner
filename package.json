@@ -26,7 +26,7 @@
     "dev": "webpack --watch",
     "demo": "vite demo",
     "docs": "cem analyze --globs src --outdir docs && vite build docs",
-    "start": "vite docs",
+    "start": "npm build && vite docs",
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
   },
   "author": "Caleb Foss",
