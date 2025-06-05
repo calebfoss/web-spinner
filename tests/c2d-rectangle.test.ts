@@ -1,7 +1,7 @@
 import { expect, jest, test } from "@jest/globals";
 import { setupJestCanvasMock } from "jest-canvas-mock";
 import { BorderRadius, Color, createRoot } from "web-spinner";
-import { testDimensions } from "./dimensions";
+import { testDimensions, testReflection } from "./sharedTests";
 
 Object.defineProperty(window, "matchMedia", {
   writable: true,
@@ -54,6 +54,8 @@ describe("c2d-rectangle", () => {
 
     afterEach(() => {
       renderedRadii = null;
+
+      rectangle.borderRadius = null;
     });
 
     test("single value", () => {
@@ -66,15 +68,15 @@ describe("c2d-rectangle", () => {
       expect(renderedRadii).toEqual(new Array(4).fill(singleValue));
     });
 
-    const topLeft = 1;
-
-    const topRight = 2;
-
-    const bottomRight = 3;
-
-    const bottomLeft = 4;
-
     test("4 values", () => {
+      const topLeft = 1;
+
+      const topRight = 2;
+
+      const bottomRight = 3;
+
+      const bottomLeft = 4;
+
       rectangle.borderRadius = new BorderRadius(
         topLeft,
         topRight,
@@ -94,9 +96,19 @@ describe("c2d-rectangle", () => {
 
     test("state change", async () => {
       await new Promise<void>((resolve) => {
-        const { borderRadius } = rectangle;
+        const topLeft = 1;
+        const topRight = 2;
+        const bottomRight = 3;
+        const bottomLeft = 4;
 
-        if (borderRadius === null) throw new Error("Border radius is null");
+        rectangle.borderRadius = new BorderRadius(
+          topLeft,
+          topRight,
+          bottomRight,
+          bottomLeft
+        );
+
+        const { borderRadius } = rectangle;
 
         const topLeftChange = 5;
 
@@ -115,39 +127,33 @@ describe("c2d-rectangle", () => {
       });
     });
 
-    describe("reflection", () => {
-      test("single value", () => {
-        const singleValue = 7;
+    rectangle.borderRadius = 5;
 
-        rectangle.borderRadius = singleValue;
+    const changedRadius = new BorderRadius(1);
 
-        rectangle.borderRadius = singleValue;
+    testReflection(
+      rectangle,
+      "borderRadius",
+      "border-radius",
+      changedRadius,
+      "5, 5, 5, 5",
+      "7, 7, 7, 7"
+    );
 
-        const attributeValue = rectangle.getAttribute("border-radius");
+    test("reflection - state change", () => {
+      const topLeft = 1;
+      const topRight = 2;
+      const bottomRight = 3;
+      const bottomLeft = 4;
 
-        expect(attributeValue).toBe(new Array(4).fill(singleValue).join(", "));
-      });
+      rectangle.borderRadius = new BorderRadius(
+        topLeft,
+        topRight,
+        bottomRight,
+        bottomLeft
+      );
 
-      test("4 values", () => {
-        const fourValueRadius = new BorderRadius(
-          topLeft,
-          topRight,
-          bottomRight,
-          bottomLeft
-        );
-
-        rectangle.borderRadius = fourValueRadius;
-
-        const attributeValue = rectangle.getAttribute("border-radius");
-
-        expect(attributeValue).toBe(fourValueRadius.toString());
-      });
-    });
-
-    test("state change", () => {
       const { borderRadius } = rectangle;
-
-      if (borderRadius === null) throw new Error("Border radius is null");
 
       const topLeftChange = 5;
 
