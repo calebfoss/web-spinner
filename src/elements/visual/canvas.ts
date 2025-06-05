@@ -11,6 +11,7 @@ import { DrawStyle } from "../../classes/gradient";
 export class Canvas2DCanvasElement extends c2dStandaloneChildren(C2DBase) {
   static observedAttributes: string[] = [
     ...C2DBase.observedAttributes,
+    "alpha",
     "width",
     "height",
     "background",
@@ -31,6 +32,7 @@ export class Canvas2DCanvasElement extends c2dStandaloneChildren(C2DBase) {
   #mouseTracker: MouseTracker;
   #renderEvents = new Set<keyof HTMLElementEventMap>();
   #renderQueued = false;
+  #setAlpha: number | null = null;
   #waitFor = new Set<Element>();
 
   constructor() {
@@ -74,6 +76,26 @@ export class Canvas2DCanvasElement extends c2dStandaloneChildren(C2DBase) {
   }
 
   /**
+   * Transparency applied to all shapes and images on this canvas. 0.0 is fully
+   * transparent, and 1.0 is fully opaque. This does not apply to the background.
+   */
+  get alpha(): number {
+    /* 
+    The rendering context's globalAlpha property does not retain values set  
+    before the canvas is connected, so the private property is here to allow the 
+    property to be set when creating the canvas.
+    */
+    return this.#setAlpha ?? this.context.globalAlpha;
+  }
+
+  set alpha(value) {
+    this.registerChange(
+      "alpha",
+      (this.context.globalAlpha = this.#setAlpha = value)
+    );
+  }
+
+  /**
    * True if the canvas is rendering animation.
    */
   get animating(): boolean {
@@ -87,6 +109,10 @@ export class Canvas2DCanvasElement extends c2dStandaloneChildren(C2DBase) {
   ): void {
     if (newValue !== null) {
       switch (name) {
+        case "alpha":
+          this.alpha = attributeParser.number(newValue);
+          break;
+
         case "width":
           this.width = attributeParser.number(newValue);
           break;
@@ -146,6 +172,13 @@ export class Canvas2DCanvasElement extends c2dStandaloneChildren(C2DBase) {
     document.addEventListener("DOMContentLoaded", this.queueRender.bind(this));
 
     this.addEventListener("change", this.queueRender.bind(this));
+
+    /* 
+    The rendering context's globalAlpha property does not retain values set  
+    before the canvas is connected, so this is here to allow the property to be
+    set when creating the canvas.
+    */
+    this.alpha = this.alpha;
   }
 
   get keyDown() {
@@ -282,6 +315,8 @@ export class Canvas2DCanvasElement extends c2dStandaloneChildren(C2DBase) {
 
     if (this.#background !== "none") {
       context.save();
+
+      context.globalAlpha = 1;
 
       context.fillStyle = this.#background.toString();
 
