@@ -22,10 +22,10 @@
   "type": "module",
   "types": "dist/types/index.d.ts",
   "scripts": {
-    "build": "webpack && npm i && vite build docs",
+    "build": "webpack && npm i && npm run docs",
     "dev": "webpack --watch",
     "demo": "vite demo",
-    "docs": "npx cem analyze --globs src --outdir docs",
+    "docs": "cem analyze --globs src --outdir docs && vite build docs",
     "start": "vite docs",
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
   },
