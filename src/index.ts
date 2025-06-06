@@ -27,6 +27,7 @@ import { C2DBase } from "./elements/visual/c2dBase";
 import { Shadow } from "./classes/shadow";
 import { createRoot } from "./elements/document/domBase";
 import { BorderRadius } from "./classes/borderRadius";
+import { Random } from "./classes/random";
 
 export type CSSLengthUnit = (typeof Units.size)[keyof typeof Units.size];
 
@@ -99,6 +100,7 @@ export {
   ConicalGradient,
   LinearGradient,
   RadialGradient,
+  Random,
   Shadow,
   createState,
   createRoot,
