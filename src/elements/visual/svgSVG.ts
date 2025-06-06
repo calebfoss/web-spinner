@@ -46,6 +46,25 @@ export class SVGSVGController extends viewBox(
     return id;
   }
 
+  download(filename = "webspinner.svg") {
+    this.mainElement.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+    this.mainElement.setAttribute("version", " 1.1");
+
+    const svgString = this.mainElement.outerHTML;
+
+    const downloadAnchor = document.createElement("a");
+
+    downloadAnchor.download = filename;
+
+    const blob = new Blob([svgString], { type: "image/svg" });
+
+    const url = URL.createObjectURL(blob);
+
+    downloadAnchor.href = url;
+
+    downloadAnchor.click();
+  }
+
   get svgContainer(): SVGSVGElement | null {
     return this.mainElement;
   }
