@@ -3,7 +3,7 @@ import { setupJestCanvasMock } from "jest-canvas-mock";
 import { waitFor } from "@testing-library/dom";
 import "@testing-library/jest-dom";
 import { userEvent } from "@testing-library/user-event";
-import { Color, createRoot } from "web-spinner";
+import { Color, createRoot, Vector2D } from "web-spinner";
 import { testDimensions, testReflection } from "./sharedTests";
 
 Object.defineProperty(window, "matchMedia", {
@@ -100,6 +100,35 @@ describe("c2d-canvas", () => {
     expect(canvas.center.x).toBe(width / 2);
 
     expect(canvas.center.y).toBe(height / 2);
+  });
+
+  test("clicked", async () => {
+    const user = userEvent.setup();
+
+    await user.click(canvas.domCanvas);
+
+    expect(canvas.clicked).toBe(true);
+  });
+
+  test("clickPosition", async () => {
+    const user = userEvent.setup();
+
+    const x = 45;
+
+    const y = 75;
+
+    await user.pointer([
+      { target: canvas.domCanvas },
+      {
+        target: canvas.domCanvas,
+        coords: { x, y },
+        keys: "[MouseLeft]",
+      },
+    ]);
+
+    expect(canvas.clickPosition.x).toBe(x);
+
+    expect(canvas.clickPosition.y).toBe(y);
   });
 
   test("domCanvas", () => {
