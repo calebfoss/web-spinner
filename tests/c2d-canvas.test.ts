@@ -1,5 +1,8 @@
-import { expect, jest, test } from "@jest/globals";
+import { jest } from "@jest/globals";
 import { setupJestCanvasMock } from "jest-canvas-mock";
+import { waitFor } from "@testing-library/dom";
+import "@testing-library/jest-dom";
+import { userEvent } from "@testing-library/user-event";
 import { Color, createRoot } from "web-spinner";
 import { testDimensions, testReflection } from "./sharedTests";
 
@@ -34,6 +37,35 @@ describe("c2d-canvas", () => {
 
   testDimensions(canvas, width, height);
 
+  describe("addEventListener", () => {
+    let receivedEvent: Event | null = null;
+    const key = "a";
+
+    afterEach(() => {
+      receivedEvent = null;
+    });
+
+    const listener = (evt: Event) => {
+      receivedEvent = evt;
+    };
+
+    test("keydown", async () => {
+      canvas.addEventListener("keydown", listener);
+
+      await userEvent.keyboard(key);
+
+      expect((receivedEvent as KeyboardEvent).key).toBe(key);
+    });
+
+    test("keyup", async () => {
+      canvas.addEventListener("keyup", listener);
+
+      await userEvent.keyboard(key);
+
+      expect((receivedEvent as KeyboardEvent).key).toBe(key);
+    });
+  });
+
   describe("alpha", () => {
     test("matches context", () => {
       expect(canvas.alpha).toBe(canvas.context.globalAlpha);
@@ -51,8 +83,6 @@ describe("c2d-canvas", () => {
 
     testReflection(canvas, "alpha", "alpha", 0.75);
   });
-
-  test("alpha", () => {});
 
   describe("background", () => {
     test("is an instance of the Color class by default", () => {
