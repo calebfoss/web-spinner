@@ -146,11 +146,7 @@ export class Canvas2DCanvasElement extends c2dStandaloneChildren(C2DBase) {
   set background(value) {
     if (this.#background.toString() === value.toString()) return;
 
-    this.#background = value;
-
-    this.setAttribute("background", value.toString());
-
-    this.queueRender();
+    this.registerChange("background", (this.#background = value));
   }
 
   /**
@@ -273,9 +269,7 @@ export class Canvas2DCanvasElement extends c2dStandaloneChildren(C2DBase) {
 
     this.domCanvas.width = value * devicePixelRatio;
 
-    this.setAttribute("width", String(value));
-
-    this.queueRender();
+    this.registerChange("width", value);
   }
 
   /**
@@ -295,12 +289,12 @@ export class Canvas2DCanvasElement extends c2dStandaloneChildren(C2DBase) {
 
     this.domCanvas.height = value * devicePixelRatio;
 
-    this.setAttribute("height", String(value));
-
-    this.queueRender();
+    this.registerChange("height", value);
   }
 
   #render() {
+    if (this.#waitFor.size) return;
+
     this.#frame++;
 
     const context = this.#context;
@@ -363,8 +357,6 @@ export class Canvas2DCanvasElement extends c2dStandaloneChildren(C2DBase) {
     this.domCanvas.style.scale = `${1 / newPixelRatio}`;
 
     this.#devicePixelRatio = newPixelRatio;
-
-    this.queueRender();
   }
 
   waitFor(element: Element, eventName: keyof HTMLElementEventMap = "load") {
