@@ -2,7 +2,7 @@ import { beforeAll, jest } from "@jest/globals";
 import { setupJestCanvasMock } from "jest-canvas-mock";
 import { waitFor } from "@testing-library/dom";
 import "@testing-library/jest-dom";
-import { userEvent } from "@testing-library/user-event";
+import { UserEvent, userEvent } from "@testing-library/user-event";
 import { Color, createRoot, Vector2D } from "web-spinner";
 import {
   mockMatchMedia,
@@ -24,6 +24,8 @@ describe("c2d-canvas", () => {
 
   let canvas = root.canvas2D({ width, height, background });
 
+  let user: UserEvent;
+
   beforeEach(() => {
     jest.resetAllMocks();
 
@@ -34,6 +36,8 @@ describe("c2d-canvas", () => {
     root = createRoot();
 
     canvas = root.canvas2D({ width, height, background });
+
+    user = userEvent.setup();
   });
 
   afterEach(() => {
@@ -118,16 +122,12 @@ describe("c2d-canvas", () => {
   });
 
   test("clicked", async () => {
-    const user = userEvent.setup();
-
     await user.click(canvas.domCanvas);
 
     expect(canvas.clicked).toBe(true);
   });
 
   test("clickPosition", async () => {
-    const user = userEvent.setup();
-
     const x = 45;
 
     const y = 75;
@@ -156,17 +156,23 @@ describe("c2d-canvas", () => {
     });
 
     test("Calculates time between frames", async () => {
-      const ms = 125;
-
       canvas.queueRender();
 
-      await sleep(ms);
+      await new Promise(requestAnimationFrame);
+
+      const startTime = performance.now();
+
+      await sleep(125);
 
       canvas.queueRender();
 
       await new Promise(requestAnimationFrame);
 
-      expect(Math.abs(canvas.deltaTime - ms)).toBeLessThan(17);
+      const endTime = performance.now();
+
+      const deltaTime = endTime - startTime;
+
+      expect(Math.abs(canvas.deltaTime - deltaTime)).toBeLessThan(5);
     });
   });
 
@@ -195,14 +201,36 @@ describe("c2d-canvas", () => {
   });
 
   test("keyDown", async () => {
-    const user = userEvent.setup();
-
     expect(canvas.keyDown).toBe(false);
 
-    await user.keyboard("{a>}");
+    const key = "a";
+
+    await user.keyboard(`{${key}>}`);
 
     expect(canvas.keyDown).toBe(true);
 
-    await user.keyboard("{/a}");
+    await user.keyboard(`{/${key}}`);
+  });
+
+  test("keyHeld", async () => {
+    const key = "a";
+
+    expect(canvas.keyHeld(key)).toBe(false);
+
+    await user.keyboard(`{${key}>}`);
+
+    expect(canvas.keyHeld(key)).toBe(true);
+
+    canvas.everyFrame = jest.fn();
+
+    await waitFor(async () => {
+      expect(canvas.frame).toBeGreaterThan(20);
+
+      expect(canvas.keyHeld(key)).toBe(true);
+
+      await user.keyboard(`{/${key}}`);
+
+      expect(canvas.keyHeld(key)).toBe(false);
+    });
   });
 });
