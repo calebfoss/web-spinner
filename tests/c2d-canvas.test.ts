@@ -259,4 +259,16 @@ describe("c2d-canvas", () => {
       expect(canvas.frame).toBe(1);
     });
   });
+
+  test("renderOn", async () => {
+    expect(canvas.frame).toBe(0);
+
+    canvas.renderOn("click");
+
+    user.click(canvas);
+
+    await waitFor(() => {
+      expect(canvas.frame).toBe(1);
+    });
+  });
 });
