@@ -250,6 +250,48 @@ describe("c2d-canvas", () => {
     }
   });
 
+  test("mouse", async () => {
+    const { mouse } = canvas;
+
+    expect(mouse.x).toBe(0);
+
+    expect(mouse.y).toBe(0);
+
+    expect(mouse.over).toBe(false);
+
+    expect(mouse.buttonStates.every((state) => !state)).toBe(true);
+
+    const x = 50;
+
+    const y = 75;
+
+    await user.pointer([
+      { coords: { x: 0, y: 0 } },
+      {
+        target: canvas.domCanvas,
+        coords: { x, y },
+      },
+    ]);
+
+    expect(mouse.x).toBe(x);
+
+    expect(mouse.y).toBe(y);
+
+    expect(mouse.over).toBe(true);
+
+    await user.pointer({ keys: "[MouseLeft>]" });
+
+    expect(mouse.buttonStates[0]).toBe(true);
+
+    expect(mouse.buttonStates[2]).toBe(false);
+
+    await user.pointer({ keys: "[/MouseLeft][MouseRight>]" });
+
+    expect(mouse.buttonStates[0]).toBe(false);
+
+    expect(mouse.buttonStates[2]).toBe(true);
+  });
+
   test("queueRender", async () => {
     expect(canvas.frame).toBe(0);
 
