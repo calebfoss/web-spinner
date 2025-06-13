@@ -1,9 +1,9 @@
-import { beforeAll, jest } from "@jest/globals";
+import { jest } from "@jest/globals";
 import { setupJestCanvasMock } from "jest-canvas-mock";
 import { waitFor } from "@testing-library/dom";
 import "@testing-library/jest-dom";
 import { UserEvent, userEvent } from "@testing-library/user-event";
-import { Color, createRoot, Vector2D } from "web-spinner";
+import { Color, createRoot } from "web-spinner";
 import {
   mockMatchMedia,
   sleep,
@@ -248,5 +248,15 @@ describe("c2d-canvas", () => {
 
       expect(canvas.lastKey).toBe(key);
     }
+  });
+
+  test("queueRender", async () => {
+    expect(canvas.frame).toBe(0);
+
+    canvas.queueRender();
+
+    await waitFor(() => {
+      expect(canvas.frame).toBe(1);
+    });
   });
 });
