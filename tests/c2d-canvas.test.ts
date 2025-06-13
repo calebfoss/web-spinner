@@ -4,15 +4,14 @@ import { waitFor } from "@testing-library/dom";
 import "@testing-library/jest-dom";
 import { userEvent } from "@testing-library/user-event";
 import { Color, createRoot, Vector2D } from "web-spinner";
-import { mockMatchMedia, testDimensions, testReflection } from "./shared";
+import {
+  mockMatchMedia,
+  sleep,
+  testDimensions,
+  testReflection,
+} from "./shared";
 
 mockMatchMedia();
-
-beforeEach(() => {
-  jest.resetAllMocks();
-
-  setupJestCanvasMock();
-});
 
 describe("c2d-canvas", () => {
   const width = 150;
@@ -21,9 +20,27 @@ describe("c2d-canvas", () => {
 
   const background = Color.rgb(50, 100, 150);
 
-  const root = createRoot();
+  let root = createRoot();
 
-  const canvas = root.canvas2D({ width, height, background });
+  let canvas = root.canvas2D({ width, height, background });
+
+  beforeEach(() => {
+    jest.resetAllMocks();
+
+    mockMatchMedia();
+
+    setupJestCanvasMock();
+
+    root = createRoot();
+
+    canvas = root.canvas2D({ width, height, background });
+  });
+
+  afterEach(() => {
+    canvas.remove();
+
+    root.remove();
+  });
 
   testDimensions(canvas, width, height);
 
@@ -121,6 +138,26 @@ describe("c2d-canvas", () => {
     expect(canvas.clickPosition.y).toBe(y);
   });
 
+  describe("deltaTime", () => {
+    test("Starts at 0", () => {
+      expect(canvas.deltaTime).toBe(0);
+    });
+
+    test("Calculates time between frames", async () => {
+      const ms = 125;
+
+      canvas.queueRender();
+
+      await sleep(ms);
+
+      canvas.queueRender();
+
+      await new Promise(requestAnimationFrame);
+
+      expect(Math.abs(canvas.deltaTime - ms)).toBeLessThan(17);
+    });
+  });
+
   test("domCanvas", () => {
     expect(canvas.domCanvas instanceof HTMLCanvasElement).toBe(true);
   });
@@ -130,17 +167,13 @@ describe("c2d-canvas", () => {
   });
 
   test("keyDown", async () => {
-    mockMatchMedia();
-
-    const freshCanvas = root.canvas2D({ width, height, background });
-
     const user = userEvent.setup();
 
-    expect(freshCanvas.keyDown).toBe(false);
+    expect(canvas.keyDown).toBe(false);
 
     await user.keyboard("{a>}");
 
-    expect(freshCanvas.keyDown).toBe(true);
+    expect(canvas.keyDown).toBe(true);
 
     await user.keyboard("{/a}");
   });

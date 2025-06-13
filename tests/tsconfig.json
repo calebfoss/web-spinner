@@ -1,0 +1,6 @@
+{
+  "compilerOptions": {
+    "types": ["@testing-library/jest-dom"]
+  },
+  "include": ["./*"]
+}
