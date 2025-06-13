@@ -1,4 +1,4 @@
-import { jest } from "@jest/globals";
+import { beforeAll, jest } from "@jest/globals";
 import { setupJestCanvasMock } from "jest-canvas-mock";
 import { waitFor } from "@testing-library/dom";
 import "@testing-library/jest-dom";
@@ -137,5 +137,31 @@ describe("c2d-canvas", () => {
 
   test("context", () => {
     expect(canvas.context instanceof CanvasRenderingContext2D).toBe(true);
+  });
+
+  test("keyDown", async () => {
+    Object.defineProperty(window, "matchMedia", {
+      writable: true,
+      value: jest.fn().mockImplementation((query) => ({
+        matches: false,
+        media: query,
+        onchange: null,
+        addEventListener: jest.fn(),
+        removeEventListener: jest.fn(),
+        dispatchEvent: jest.fn(),
+      })),
+    });
+
+    const freshCanvas = root.canvas2D({ width, height, background });
+
+    const user = userEvent.setup();
+
+    expect(freshCanvas.keyDown).toBe(false);
+
+    await user.keyboard("{a>}");
+
+    expect(freshCanvas.keyDown).toBe(true);
+
+    await user.keyboard("{/a}");
   });
 });
