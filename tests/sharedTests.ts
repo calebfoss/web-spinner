@@ -1,3 +1,5 @@
+import { jest } from "@jest/globals";
+
 export function testDimensions(
   element: { width: number; height: number },
   width: number,
@@ -71,5 +73,19 @@ export function testReflection<
         expect(element[propertyKey]).toEqual(changedPropertyValue);
       else expect(element[propertyKey]).toBe(changedPropertyValue);
     });
+  });
+}
+
+export function mockMatchMedia() {
+  Object.defineProperty(window, "matchMedia", {
+    writable: true,
+    value: jest.fn((query) => ({
+      matches: false,
+      media: query,
+      onchange: null,
+      addEventListener: jest.fn(),
+      removeEventListener: jest.fn(),
+      dispatchEvent: jest.fn(),
+    })),
   });
 }

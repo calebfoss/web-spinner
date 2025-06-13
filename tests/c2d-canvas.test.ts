@@ -4,19 +4,9 @@ import { waitFor } from "@testing-library/dom";
 import "@testing-library/jest-dom";
 import { userEvent } from "@testing-library/user-event";
 import { Color, createRoot, Vector2D } from "web-spinner";
-import { testDimensions, testReflection } from "./sharedTests";
+import { mockMatchMedia, testDimensions, testReflection } from "./sharedTests";
 
-Object.defineProperty(window, "matchMedia", {
-  writable: true,
-  value: jest.fn().mockImplementation((query) => ({
-    matches: false,
-    media: query,
-    onchange: null,
-    addEventListener: jest.fn(),
-    removeEventListener: jest.fn(),
-    dispatchEvent: jest.fn(),
-  })),
-});
+mockMatchMedia();
 
 beforeEach(() => {
   jest.resetAllMocks();
@@ -140,17 +130,7 @@ describe("c2d-canvas", () => {
   });
 
   test("keyDown", async () => {
-    Object.defineProperty(window, "matchMedia", {
-      writable: true,
-      value: jest.fn().mockImplementation((query) => ({
-        matches: false,
-        media: query,
-        onchange: null,
-        addEventListener: jest.fn(),
-        removeEventListener: jest.fn(),
-        dispatchEvent: jest.fn(),
-      })),
-    });
+    mockMatchMedia();
 
     const freshCanvas = root.canvas2D({ width, height, background });
 
