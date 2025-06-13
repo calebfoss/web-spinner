@@ -212,7 +212,7 @@ describe("c2d-canvas", () => {
     await user.keyboard(`{/${key}}`);
   });
 
-  test("keyHeld", async () => {
+  test("keyHeld and keyPreviouslyHeld", async () => {
     const key = "a";
 
     expect(canvas.keyHeld(key)).toBe(false);
@@ -221,12 +221,16 @@ describe("c2d-canvas", () => {
 
     expect(canvas.keyHeld(key)).toBe(true);
 
+    expect(canvas.keyPreviouslyHeld(key)).toBe(false);
+
     canvas.everyFrame = jest.fn();
 
     await waitFor(async () => {
       expect(canvas.frame).toBeGreaterThan(20);
 
       expect(canvas.keyHeld(key)).toBe(true);
+
+      expect(canvas.keyPreviouslyHeld(key)).toBe(true);
 
       await user.keyboard(`{/${key}}`);
 

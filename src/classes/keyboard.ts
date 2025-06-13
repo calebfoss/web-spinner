@@ -15,13 +15,23 @@ export class KeyboardTracker {
 
     window.addEventListener("keyup", (event) => {
       this.#current.set(event.key, false);
+
+      this.#down = false;
+
+      for (const [_, state] of this.#current.entries()) {
+        if (state) {
+          this.#down = true;
+
+          break;
+        }
+      }
     });
   }
 
   advanceFrame() {
-    this.#down = false;
-
-    this.#previous = { ...this.#current };
+    for (const [key, state] of this.#current.entries()) {
+      this.#previous.set(key, state);
+    }
   }
 
   get down() {
