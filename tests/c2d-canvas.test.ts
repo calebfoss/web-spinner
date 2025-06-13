@@ -237,4 +237,16 @@ describe("c2d-canvas", () => {
       expect(canvas.keyHeld(key)).toBe(false);
     });
   });
+
+  test("lastKey", async () => {
+    expect(canvas.lastKey).toBe("");
+
+    for (let cc = 65; cc < 91; cc++) {
+      const key = String.fromCharCode(cc);
+
+      await user.keyboard(key);
+
+      expect(canvas.lastKey).toBe(key);
+    }
+  });
 });
