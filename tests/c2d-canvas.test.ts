@@ -91,6 +91,14 @@ describe("c2d-canvas", () => {
     testReflection(canvas, "alpha", "alpha", 0.75);
   });
 
+  test("animating", () => {
+    expect(canvas.animating).toBe(false);
+
+    canvas.everyFrame = () => {};
+
+    expect(canvas.animating).toBe(true);
+  });
+
   describe("background", () => {
     test("is an instance of the Color class by default", () => {
       expect(canvas.background instanceof Color).toBe(true);
