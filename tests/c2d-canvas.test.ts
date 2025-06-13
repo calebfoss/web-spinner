@@ -174,7 +174,7 @@ describe("c2d-canvas", () => {
     expect(canvas.domCanvas instanceof HTMLCanvasElement).toBe(true);
   });
 
-  test("everyFrame", async () => {
+  test("everyFrame and frame", async () => {
     let framesRendered = 0;
     let lastFrame = -1;
 
@@ -189,6 +189,8 @@ describe("c2d-canvas", () => {
       expect(lastFrame).toBeGreaterThan(20);
 
       expect(framesRendered).toBe(lastFrame);
+
+      expect(canvas.frame).toBe(lastFrame);
     });
   });
 
