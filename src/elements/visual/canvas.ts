@@ -337,6 +337,8 @@ export class Canvas2DCanvasElement extends c2dStandaloneChildren(C2DBase) {
 
     this.#clickTracker.advanceFrame();
 
+    this.#keyboardTracker.advanceFrame();
+
     this.#mouseTracker.advanceFrame();
 
     if (this.#animating) this.queueRender();
