@@ -4,7 +4,7 @@ import { waitFor } from "@testing-library/dom";
 import "@testing-library/jest-dom";
 import { userEvent } from "@testing-library/user-event";
 import { Color, createRoot, Vector2D } from "web-spinner";
-import { mockMatchMedia, testDimensions, testReflection } from "./sharedTests";
+import { mockMatchMedia, testDimensions, testReflection } from "./shared";
 
 mockMatchMedia();
 

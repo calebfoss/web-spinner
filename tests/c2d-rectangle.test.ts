@@ -1,7 +1,7 @@
 import { expect, jest, test } from "@jest/globals";
 import { setupJestCanvasMock } from "jest-canvas-mock";
 import { BorderRadius, Color, createRoot } from "web-spinner";
-import { testDimensions, testReflection } from "./sharedTests";
+import { testDimensions, testReflection } from "./shared";
 
 Object.defineProperty(window, "matchMedia", {
   writable: true,
