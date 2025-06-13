@@ -307,10 +307,34 @@ describe("c2d-canvas", () => {
 
     canvas.renderOn("click");
 
-    user.click(canvas);
+    await user.click(canvas.domCanvas);
 
     await waitFor(() => {
       expect(canvas.frame).toBe(1);
+    });
+  });
+
+  test("waitFor", async () => {
+    const waitElement = document.createElement("a");
+
+    canvas.waitFor(waitElement, "click");
+
+    const everyFrame = jest.fn();
+
+    canvas.everyFrame = everyFrame;
+
+    await new Promise(requestAnimationFrame);
+
+    expect(everyFrame).not.toHaveBeenCalled();
+
+    expect(canvas.frame).toBe(0);
+
+    await user.click(waitElement);
+
+    await waitFor(() => {
+      expect(everyFrame).toHaveBeenCalled();
+
+      expect(canvas.frame).toBeGreaterThan(0);
     });
   });
 });
