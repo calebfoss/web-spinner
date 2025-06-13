@@ -146,6 +146,10 @@ describe("c2d-canvas", () => {
     expect(canvas.clickPosition.y).toBe(y);
   });
 
+  test("context", () => {
+    expect(canvas.context instanceof CanvasRenderingContext2D).toBe(true);
+  });
+
   describe("deltaTime", () => {
     test("Starts at 0", () => {
       expect(canvas.deltaTime).toBe(0);
@@ -170,8 +174,22 @@ describe("c2d-canvas", () => {
     expect(canvas.domCanvas instanceof HTMLCanvasElement).toBe(true);
   });
 
-  test("context", () => {
-    expect(canvas.context instanceof CanvasRenderingContext2D).toBe(true);
+  test("everyFrame", async () => {
+    let framesRendered = 0;
+    let lastFrame = -1;
+
+    const everyFrame = jest.fn((currentFrame: number) => {
+      framesRendered++;
+      lastFrame = currentFrame;
+    });
+
+    canvas.everyFrame = everyFrame;
+
+    await waitFor(() => {
+      expect(lastFrame).toBeGreaterThan(20);
+
+      expect(framesRendered).toBe(lastFrame);
+    });
   });
 
   test("keyDown", async () => {
