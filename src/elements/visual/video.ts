@@ -1,12 +1,13 @@
+import { C2DStandaloneTransformed } from "../../mixins/transform";
 import { rendersVisualMedia } from "../../mixins/visualMedia";
 import {
   createHTMLElementWrapperConstructor,
   HTMLElementController,
 } from "../document/domBase";
-import { Canvas2DStandaloneRenderable, changedEvent } from "./renderable";
+import { changedEvent } from "./renderable";
 
 export class Canvas2DVideo extends rendersVisualMedia(
-  Canvas2DStandaloneRenderable,
+  C2DStandaloneTransformed,
   "video"
 ) {
   static get tag() {

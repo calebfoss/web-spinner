@@ -1,12 +1,11 @@
 import { c2dFill } from "../../mixins/fill";
 import { offset } from "../../mixins/offset";
 import { c2dStroke } from "../../mixins/stroke";
-import { c2dTransform } from "../../mixins/transform";
+import { C2DShapePartTransformed } from "../../mixins/transform";
 import { Canvas2DCanvasElement } from "./canvas";
-import { Canvas2DShapePartRenderable } from "./renderable";
 
 export class Canvas2DShape extends c2dFill(
-  c2dStroke(c2dTransform(offset(Canvas2DShapePartRenderable)))
+  c2dStroke(offset(C2DShapePartTransformed))
 ) {
   static get tag() {
     return "c2d-shape";

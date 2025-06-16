@@ -3,16 +3,15 @@ import { LinearGradient, RadialGradient } from "../../classes/gradient";
 import { c2dFill } from "../../mixins/fill";
 import { c2dRectangleBounds } from "../../mixins/rectangleBounds";
 import { c2dStroke } from "../../mixins/stroke";
-import { c2dTransform } from "../../mixins/transform";
-import { Canvas2DCanvasElement } from "./canvas";
 import {
-  Canvas2DBaseRenderable,
-  Canvas2DShapePartRenderable,
-  Canvas2DStandaloneRenderable,
-} from "./renderable";
+  C2DShapePartTransformed,
+  C2DStandaloneTransformed,
+  C2DTransformed,
+} from "../../mixins/transform";
+import { Canvas2DCanvasElement } from "./canvas";
 
-function renderEllipse<B extends typeof Canvas2DBaseRenderable>(Base: B) {
-  return class extends c2dTransform(c2dRectangleBounds(Base)) {
+function renderEllipse<B extends C2DTransformed>(Base: B) {
+  return class extends c2dRectangleBounds(Base) {
     #startAngle = Angle.zero;
     #endAngle = Angle.radians(Math.PI * 2);
 
@@ -78,7 +77,7 @@ function renderEllipse<B extends typeof Canvas2DBaseRenderable>(Base: B) {
 }
 
 export class Canvas2DEllipse extends renderEllipse(
-  c2dStroke(c2dFill(Canvas2DStandaloneRenderable))
+  c2dStroke(c2dFill(C2DStandaloneTransformed))
 ) {
   static get tag() {
     return "c2d-ellipse";
@@ -88,7 +87,7 @@ export class Canvas2DEllipse extends renderEllipse(
 customElements.define("c2d-ellipse", Canvas2DEllipse);
 
 export class Canvas2DShapeEllipse extends renderEllipse(
-  Canvas2DShapePartRenderable
+  C2DShapePartTransformed
 ) {
   static get tag() {
     return "c2d-shape-ellipse";
