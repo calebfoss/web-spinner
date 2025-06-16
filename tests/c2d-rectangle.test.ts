@@ -64,25 +64,39 @@ describe("c2d-rectangle", () => {
     root = null;
   });
 
-  test("dimensions are passed into render function without border radius", async () => {
-    const width = 75;
+  describe("dimensions", () => {
+    test("reflection", () => {
+      if (rectangle === null) throw new Error("rectangle is null");
 
-    const height = 65;
+      rectangle.width = 75;
 
-    if (rectangle === null) throw new Error("rectangle is null");
+      rectangle.height = 65;
 
-    rectangle.width = width;
+      testReflection(rectangle, "width", "width", 115);
 
-    rectangle.height = height;
+      testReflection(rectangle, "height", "height", 125);
+    });
 
-    await waitFor(() => {
-      if (rect === null) throw new Error("rect is null");
+    test("passed into render function", async () => {
+      const width = 75;
 
-      expect(rect).toHaveBeenCalled();
+      const height = 65;
 
-      expect(rect.mock.calls[0][2]).toBe(width);
+      if (rectangle === null) throw new Error("rectangle is null");
 
-      expect(rect.mock.calls[0][3]).toBe(height);
+      rectangle.width = width;
+
+      rectangle.height = height;
+
+      await waitFor(() => {
+        if (rect === null) throw new Error("rect is null");
+
+        expect(rect).toHaveBeenCalled();
+
+        expect(rect.mock.calls[0][2]).toBe(width);
+
+        expect(rect.mock.calls[0][3]).toBe(height);
+      });
     });
   });
 
@@ -211,42 +225,3 @@ describe("c2d-rectangle", () => {
     });
   });
 });
-
-//     rectangle.borderRadius = 5;
-
-//     const changedRadius = new BorderRadius(1);
-
-//     testReflection(
-//       rectangle,
-//       "borderRadius",
-//       "border-radius",
-//       changedRadius,
-//       "5, 5, 5, 5",
-//       "7, 7, 7, 7"
-//     );
-
-//     test("reflection - state change", () => {
-//       const topLeft = 1;
-//       const topRight = 2;
-//       const bottomRight = 3;
-//       const bottomLeft = 4;
-
-//       rectangle.borderRadius = new BorderRadius(
-//         topLeft,
-//         topRight,
-//         bottomRight,
-//         bottomLeft
-//       );
-
-//       const { borderRadius } = rectangle;
-
-//       const topLeftChange = 5;
-
-//       borderRadius.topLeft += topLeftChange;
-
-//       const attributeValue = rectangle.getAttribute("border-radius");
-
-//       expect(attributeValue).toBe(borderRadius.toString());
-//     });
-//   });
-// });

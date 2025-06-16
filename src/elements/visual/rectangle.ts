@@ -23,8 +23,11 @@ import { Canvas2DCanvasElement } from "./canvas";
 import { createSVGController } from "./svgBase";
 
 function renderCanvasRectangle<B extends C2DTransformed>(Base: B) {
-  return class extends c2dRectangleBounds(Base) {
-    static observedAttributes = [...Base.observedAttributes, "border-radius"];
+  return class Rectangle extends c2dRectangleBounds(Base) {
+    static observedAttributes = [
+      ...c2dRectangleBounds(Base).observedAttributes,
+      "border-radius",
+    ];
 
     #borderRadius: BorderRadius | null = null;
 
