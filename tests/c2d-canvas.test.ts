@@ -4,12 +4,10 @@ import { waitFor } from "@testing-library/dom";
 import "@testing-library/jest-dom";
 import { UserEvent, userEvent } from "@testing-library/user-event";
 import { Color, createRoot } from "web-spinner";
-import {
-  mockMatchMedia,
-  sleep,
-  testDimensions,
-  testReflection,
-} from "./shared";
+import { mockMatchMedia, sleep, testReflection } from "./shared";
+import { HTMLElementController } from "../dist/types/elements/document/domBase";
+import { DocumentContainerWrapper } from "../dist/types/elements/document/container";
+import { Canvas2DCanvasElement } from "../dist/types/elements/visual/canvas";
 
 mockMatchMedia();
 
@@ -20,9 +18,12 @@ describe("c2d-canvas", () => {
 
   const background = Color.rgb(50, 100, 150);
 
-  let root = createRoot();
+  let root: HTMLElementController<
+    keyof HTMLElementTagNameMap,
+    DocumentContainerWrapper
+  >;
 
-  let canvas = root.canvas2D({ width, height, background });
+  let canvas: Canvas2DCanvasElement;
 
   let user: UserEvent;
 
@@ -46,7 +47,31 @@ describe("c2d-canvas", () => {
     root.remove();
   });
 
-  testDimensions(canvas, width, height);
+  test("width and height initialized", () => {
+    expect(canvas.width).toBe(width);
+
+    expect(canvas.height).toBe(height);
+  });
+
+  test("width and height modified", () => {
+    const change = 50;
+
+    canvas.width += change;
+
+    canvas.height += change;
+
+    expect(canvas.width).toBe(width + change);
+
+    expect(canvas.height).toBe(height + change);
+
+    canvas.width -= change;
+
+    canvas.height -= change;
+
+    expect(canvas.width).toBe(width);
+
+    expect(canvas.height).toBe(height);
+  });
 
   describe("addEventListener", () => {
     let receivedEvent: Event | null = null;
@@ -92,7 +117,9 @@ describe("c2d-canvas", () => {
       expect(canvas.context.globalAlpha).toBe(changedValue);
     });
 
-    testReflection(canvas, "alpha", "alpha", 0.75);
+    test("reflection", () => {
+      testReflection(canvas, "alpha", "alpha", 0.75);
+    });
   });
 
   test("animating", () => {
@@ -112,7 +139,9 @@ describe("c2d-canvas", () => {
       expect(background.equals(canvas.background as Color)).toBe(true);
     });
 
-    testReflection(canvas, "background", "background", Color.rgb(255, 0, 0));
+    test("reflection", () => {
+      testReflection(canvas, "background", "background", Color.rgb(255, 0, 0));
+    });
   });
 
   test("center corresponds to dimensions", () => {

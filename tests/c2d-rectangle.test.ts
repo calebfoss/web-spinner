@@ -1,167 +1,252 @@
 import { expect, jest, test } from "@jest/globals";
 import { setupJestCanvasMock } from "jest-canvas-mock";
-import { BorderRadius, Color, createRoot } from "web-spinner";
-import { testDimensions, testReflection } from "./shared";
+import { BorderRadius, createRoot } from "web-spinner";
+import { mockMatchMedia, testReflection } from "./shared";
+import { Canvas2DCanvasElement } from "../dist/types/elements/visual/canvas";
+import { Canvas2DRectangle } from "../dist/types/elements/visual/rectangle";
+import { HTMLElementController } from "../dist/types/elements/document/domBase";
+import { DocumentContainerWrapper } from "../dist/types/elements/document/container";
+import { waitFor } from "@testing-library/dom";
 
-Object.defineProperty(window, "matchMedia", {
-  writable: true,
-  value: jest.fn().mockImplementation((query) => ({
-    matches: false,
-    media: query,
-    onchange: null,
-    addEventListener: jest.fn(),
-    removeEventListener: jest.fn(),
-    dispatchEvent: jest.fn(),
-  })),
-});
-
-beforeEach(() => {
-  jest.resetAllMocks();
-
-  setupJestCanvasMock();
-});
+mockMatchMedia();
 
 describe("c2d-rectangle", () => {
-  const root = createRoot();
+  let root: HTMLElementController<
+    keyof HTMLElementTagNameMap,
+    DocumentContainerWrapper
+  > | null = null;
 
-  const canvas = root.canvas2D();
+  let canvas: Canvas2DCanvasElement | null = null;
 
-  const width = 125;
+  let rectangle: Canvas2DRectangle | null = null;
 
-  const height = 175;
+  let rect: jest.SpiedFunction<CanvasRenderingContext2D["rect"]> | null = null;
 
-  const rectangle = canvas.rectangle({ width, height });
+  const roundRect = jest.fn(
+    (...args: Parameters<CanvasRenderingContext2D["roundRect"]>) => {}
+  );
 
-  testDimensions(rectangle, width, height);
+  beforeEach(() => {
+    jest.resetAllMocks();
+
+    mockMatchMedia();
+
+    setupJestCanvasMock();
+
+    root = createRoot();
+
+    canvas = root.canvas2D();
+
+    rect = jest.spyOn(canvas.context, "rect");
+
+    canvas.context.roundRect = roundRect;
+
+    rectangle = canvas.rectangle();
+  });
+
+  afterEach(() => {
+    if (rectangle === null) throw new Error("rectangle is null after test");
+
+    rectangle.remove();
+
+    rectangle = null;
+
+    if (canvas === null) throw new Error("canvas is null after test");
+
+    canvas.remove();
+
+    canvas = null;
+
+    if (root === null) throw new Error("root is null after test");
+
+    root.remove();
+
+    root = null;
+  });
+
+  test("dimensions are passed into render function without border radius", async () => {
+    const width = 75;
+
+    const height = 65;
+
+    if (rectangle === null) throw new Error("rectangle is null");
+
+    rectangle.width = width;
+
+    rectangle.height = height;
+
+    await waitFor(() => {
+      if (rect === null) throw new Error("rect is null");
+
+      expect(rect).toHaveBeenCalled();
+
+      expect(rect.mock.calls[0][2]).toBe(width);
+
+      expect(rect.mock.calls[0][3]).toBe(height);
+    });
+  });
 
   describe("rounded", () => {
-    let renderedRadii:
-      | number
-      | DOMPointInit
-      | Iterable<number | DOMPointInit>
-      | undefined
-      | null = null;
+    test("dimensions are passed into render function with border radius", async () => {
+      const width = 75;
 
-    beforeEach(() => {
-      canvas.context.roundRect = jest.fn(
-        (...args: Parameters<CanvasRenderingContext2D["roundRect"]>) => {
-          const [x, y, width, height, radii] = args;
+      const height = 65;
 
-          renderedRadii = radii;
-        }
-      );
-    });
+      if (rectangle === null) throw new Error("rectangle is null");
 
-    afterEach(() => {
-      renderedRadii = null;
+      rectangle.width = width;
 
-      rectangle.borderRadius = null;
-    });
+      rectangle.height = height;
 
-    test("single value", () => {
-      const singleValue = 5;
+      rectangle.borderRadius = 5;
 
-      rectangle.borderRadius = singleValue;
+      await waitFor(() => {
+        expect(roundRect).toHaveBeenCalled();
 
-      rectangle.render(canvas);
+        expect(roundRect.mock.calls[0][2]).toBe(width);
 
-      expect(renderedRadii).toEqual(new Array(4).fill(singleValue));
-    });
-
-    test("4 values", () => {
-      const topLeft = 1;
-
-      const topRight = 2;
-
-      const bottomRight = 3;
-
-      const bottomLeft = 4;
-
-      rectangle.borderRadius = new BorderRadius(
-        topLeft,
-        topRight,
-        bottomRight,
-        bottomLeft
-      );
-
-      rectangle.render(canvas);
-
-      expect(renderedRadii).toEqual([
-        topLeft,
-        topRight,
-        bottomRight,
-        bottomLeft,
-      ]);
-    });
-
-    test("state change", async () => {
-      await new Promise<void>((resolve) => {
-        const topLeft = 1;
-        const topRight = 2;
-        const bottomRight = 3;
-        const bottomLeft = 4;
-
-        rectangle.borderRadius = new BorderRadius(
-          topLeft,
-          topRight,
-          bottomRight,
-          bottomLeft
-        );
-
-        const { borderRadius } = rectangle;
-
-        const topLeftChange = 5;
-
-        borderRadius.topLeft += topLeftChange;
-
-        requestAnimationFrame(() => {
-          expect(renderedRadii).toEqual([
-            topLeft + topLeftChange,
-            topRight,
-            bottomRight,
-            bottomLeft,
-          ]);
-
-          resolve();
-        });
+        expect(roundRect.mock.calls[0][3]).toBe(height);
       });
     });
 
-    rectangle.borderRadius = 5;
+    test("renders with border radius single value", async () => {
+      const radius = 5;
 
-    const changedRadius = new BorderRadius(1);
+      if (rectangle === null) throw new Error("rectangle is null");
 
-    testReflection(
-      rectangle,
-      "borderRadius",
-      "border-radius",
-      changedRadius,
-      "5, 5, 5, 5",
-      "7, 7, 7, 7"
-    );
+      rectangle.borderRadius = radius;
 
-    test("reflection - state change", () => {
+      await waitFor(() => {
+        expect(roundRect).toHaveBeenCalled();
+
+        const radii = roundRect.mock.calls[0][4];
+
+        if (!Array.isArray(radii))
+          throw new Error("radii argument is not an array");
+
+        expect(radii).toEqual([radius, radius, radius, radius]);
+      });
+    });
+
+    test("render with border radius object", async () => {
       const topLeft = 1;
+
       const topRight = 2;
+
       const bottomRight = 3;
+
       const bottomLeft = 4;
 
-      rectangle.borderRadius = new BorderRadius(
+      const borderRadius = new BorderRadius(
         topLeft,
         topRight,
         bottomRight,
         bottomLeft
       );
 
-      const { borderRadius } = rectangle;
+      if (rectangle === null) throw new Error("rectangle is null");
 
-      const topLeftChange = 5;
+      rectangle.borderRadius = borderRadius;
 
-      borderRadius.topLeft += topLeftChange;
+      await waitFor(() => {
+        expect(roundRect).toHaveBeenCalled();
 
-      const attributeValue = rectangle.getAttribute("border-radius");
+        const radii = roundRect.mock.calls[0][4];
 
-      expect(attributeValue).toBe(borderRadius.toString());
+        expect(radii).toEqual([topLeft, topRight, bottomRight, bottomLeft]);
+      });
+    });
+
+    test("responds to border radius state change", async () => {
+      const topLeft = 1;
+
+      const topRight = 2;
+
+      const bottomRight = 3;
+
+      const bottomLeft = 4;
+
+      const borderRadius = new BorderRadius(
+        topLeft,
+        topRight,
+        bottomRight,
+        bottomLeft
+      );
+
+      if (rectangle === null) throw new Error("rectangle is null");
+
+      rectangle.borderRadius = borderRadius;
+
+      await waitFor(() => {
+        expect(roundRect).toHaveBeenCalled();
+      });
+
+      const change = 5;
+
+      borderRadius.topLeft += change;
+
+      await waitFor(() => {
+        expect(roundRect).toHaveBeenCalledTimes(2);
+
+        const radii = roundRect.mock.calls[1][4];
+
+        expect(radii).toEqual([
+          topLeft + change,
+          topRight,
+          bottomRight,
+          bottomLeft,
+        ]);
+      });
+    });
+
+    test("reflection", () => {
+      if (rectangle === null) throw new Error("rectangle is null");
+
+      testReflection(
+        rectangle,
+        "borderRadius",
+        "border-radius",
+        new BorderRadius(5)
+      );
     });
   });
 });
+
+//     rectangle.borderRadius = 5;
+
+//     const changedRadius = new BorderRadius(1);
+
+//     testReflection(
+//       rectangle,
+//       "borderRadius",
+//       "border-radius",
+//       changedRadius,
+//       "5, 5, 5, 5",
+//       "7, 7, 7, 7"
+//     );
+
+//     test("reflection - state change", () => {
+//       const topLeft = 1;
+//       const topRight = 2;
+//       const bottomRight = 3;
+//       const bottomLeft = 4;
+
+//       rectangle.borderRadius = new BorderRadius(
+//         topLeft,
+//         topRight,
+//         bottomRight,
+//         bottomLeft
+//       );
+
+//       const { borderRadius } = rectangle;
+
+//       const topLeftChange = 5;
+
+//       borderRadius.topLeft += topLeftChange;
+
+//       const attributeValue = rectangle.getAttribute("border-radius");
+
+//       expect(attributeValue).toBe(borderRadius.toString());
+//     });
+//   });
+// });

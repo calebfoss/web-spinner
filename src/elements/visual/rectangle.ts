@@ -35,7 +35,9 @@ function renderCanvasRectangle<B extends C2DTransformed>(Base: B) {
     ): void {
       if (name === "border-radius") {
         if (newValue === null) this.borderRadius = null;
+        else if (newValue === this.borderRadius?.toString()) return;
         else this.borderRadius = attributeParser.BorderRadius(newValue);
+        return;
       }
 
       super.attributeChangedCallback(name, oldValue, newValue);
