@@ -47,30 +47,38 @@ describe("c2d-canvas", () => {
     root.remove();
   });
 
-  test("width and height initialized", () => {
-    expect(canvas.width).toBe(width);
+  describe("dimensions", () => {
+    test("initialization", () => {
+      expect(canvas.width).toBe(width);
 
-    expect(canvas.height).toBe(height);
-  });
+      expect(canvas.height).toBe(height);
+    });
 
-  test("width and height modified", () => {
-    const change = 50;
+    test("modification", () => {
+      const change = 50;
 
-    canvas.width += change;
+      canvas.width += change;
 
-    canvas.height += change;
+      canvas.height += change;
 
-    expect(canvas.width).toBe(width + change);
+      expect(canvas.width).toBe(width + change);
 
-    expect(canvas.height).toBe(height + change);
+      expect(canvas.height).toBe(height + change);
 
-    canvas.width -= change;
+      canvas.width -= change;
 
-    canvas.height -= change;
+      canvas.height -= change;
 
-    expect(canvas.width).toBe(width);
+      expect(canvas.width).toBe(width);
 
-    expect(canvas.height).toBe(height);
+      expect(canvas.height).toBe(height);
+    });
+
+    test("reflection", () => {
+      testReflection(canvas, "width", "width", width + 100);
+
+      testReflection(canvas, "height", "height", width + 100);
+    });
   });
 
   describe("addEventListener", () => {
