@@ -1,16 +1,15 @@
 import { Angle } from "../classes/angle";
-import { MouseTracker } from "../classes/mouse";
 import { Vector2D, Vector2DBase } from "../classes/vector2d";
 import { Canvas2DCanvasElement } from "../elements/visual/canvas";
-import { Canvas2DBaseRenderable } from "../elements/visual/renderable";
+import {
+  Canvas2DBaseRenderable,
+  Canvas2DShapePartRenderable,
+  Canvas2DStandaloneRenderable,
+} from "../elements/visual/renderable";
 import { CustomHTMLElement } from "../elements/mixable";
 import { SVGElementController } from "../elements/visual/svgBase";
 import { attributeParser } from "../utlities/attributeParser";
 import { isReadOnly } from "../utlities/readOnly";
-
-const matchAngle = new RegExp(
-  `(\d*)\s?(${Object.values(Angle.unit).join("|")})`
-);
 
 export function baseTransform<B extends typeof CustomHTMLElement>(Base: B) {
   return class BaseTransform extends Base {
@@ -221,8 +220,10 @@ export function baseTransform<B extends typeof CustomHTMLElement>(Base: B) {
   };
 }
 
-export function c2dTransform<B extends typeof Canvas2DBaseRenderable>(Base: B) {
-  return class C2DTransform extends baseTransform(Base) {
+function c2dTransform<
+  B extends ReturnType<typeof baseTransform<typeof Canvas2DBaseRenderable>>
+>(Base: B) {
+  return class C2DTransform extends Base {
     render(canvas2D: Canvas2DCanvasElement): void {
       super.render(canvas2D);
 
@@ -240,6 +241,16 @@ export function c2dTransform<B extends typeof Canvas2DBaseRenderable>(Base: B) {
     }
   };
 }
+
+export type C2DTransformed = ReturnType<typeof c2dTransform>;
+
+export class C2DStandaloneTransformed extends c2dTransform(
+  baseTransform(Canvas2DStandaloneRenderable)
+) {}
+
+export class C2DShapePartTransformed extends c2dTransform(
+  baseTransform(Canvas2DShapePartRenderable)
+) {}
 
 export function svgTransform<B extends SVGElementController>(Base: B) {
   return class SVGControllerTransform extends baseTransform(Base) {

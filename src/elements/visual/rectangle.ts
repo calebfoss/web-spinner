@@ -12,20 +12,18 @@ import {
   svgRectangleBounds,
 } from "../../mixins/rectangleBounds";
 import { c2dStroke, svgStroke } from "../../mixins/stroke";
-import { c2dTransform, svgTransform } from "../../mixins/transform";
+import {
+  C2DShapePartTransformed,
+  C2DStandaloneTransformed,
+  C2DTransformed,
+  svgTransform,
+} from "../../mixins/transform";
 import { attributeParser } from "../../utlities/attributeParser";
 import { Canvas2DCanvasElement } from "./canvas";
-import {
-  Canvas2DBaseRenderable,
-  Canvas2DShapePartRenderable,
-  Canvas2DStandaloneRenderable,
-} from "./renderable";
 import { createSVGController } from "./svgBase";
 
-function renderCanvasRectangle<B extends typeof Canvas2DBaseRenderable>(
-  Base: B
-) {
-  return class extends c2dTransform(c2dRectangleBounds(Base)) {
+function renderCanvasRectangle<B extends C2DTransformed>(Base: B) {
+  return class extends c2dRectangleBounds(Base) {
     static observedAttributes = [...Base.observedAttributes, "border-radius"];
 
     #borderRadius: BorderRadius | null = null;
@@ -126,7 +124,7 @@ function renderCanvasRectangle<B extends typeof Canvas2DBaseRenderable>(
 }
 
 export class Canvas2DRectangle extends renderCanvasRectangle(
-  c2dStroke(c2dFill(Canvas2DStandaloneRenderable))
+  c2dStroke(c2dFill(C2DStandaloneTransformed))
 ) {
   static get tag() {
     return "c2d-rectangle";
@@ -136,7 +134,7 @@ export class Canvas2DRectangle extends renderCanvasRectangle(
 customElements.define("c2d-rectangle", Canvas2DRectangle);
 
 export class Canvas2DShapeRectangle extends renderCanvasRectangle(
-  Canvas2DShapePartRenderable
+  C2DShapePartTransformed
 ) {
   static get tag() {
     return "c2d-shape-rectangle";

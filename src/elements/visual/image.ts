@@ -1,8 +1,8 @@
+import { C2DStandaloneTransformed } from "../../mixins/transform";
 import { rendersVisualMedia } from "../../mixins/visualMedia";
-import { Canvas2DStandaloneRenderable } from "./renderable";
 
 export class Canvas2DImage extends rendersVisualMedia(
-  Canvas2DStandaloneRenderable,
+  C2DStandaloneTransformed,
   "img"
 ) {
   static get tag() {

@@ -2,13 +2,12 @@ import { Vector2D } from "../../classes/vector2d";
 import { c2dFill } from "../../mixins/fill";
 import { c2dStroke } from "../../mixins/stroke";
 import { hasFrom, hasTo } from "../../mixins/fromTo";
-import {
-  Canvas2DBaseRenderable,
-  Canvas2DShapePartRenderable,
-  Canvas2DStandaloneRenderable,
-} from "./renderable";
+import { Canvas2DBaseRenderable } from "./renderable";
 import { Canvas2DCanvasElement } from "./canvas";
-import { c2dTransform } from "../../mixins/transform";
+import {
+  C2DShapePartTransformed,
+  C2DStandaloneTransformed,
+} from "../../mixins/transform";
 import { attributeParser } from "../../utlities/attributeParser";
 
 function hasControlPoints<B extends typeof Canvas2DBaseRenderable>(Base: B) {
@@ -79,7 +78,7 @@ function hasControlPoints<B extends typeof Canvas2DBaseRenderable>(Base: B) {
 }
 
 export class Canvas2DShapeBezier extends hasControlPoints(
-  Canvas2DShapePartRenderable
+  C2DShapePartTransformed
 ) {
   static get tag() {
     return "c2d-shape-bezier" as const;
@@ -106,9 +105,7 @@ export class Canvas2DShapeBezier extends hasControlPoints(
 customElements.define("c2d-shape-bezier", Canvas2DShapeBezier);
 
 export class Canvas2DBezier extends c2dFill(
-  c2dStroke(
-    hasFrom(hasControlPoints(c2dTransform(Canvas2DStandaloneRenderable)))
-  )
+  c2dStroke(hasFrom(hasControlPoints(C2DStandaloneTransformed)))
 ) {
   static get tag() {
     return "c2d-bezier";

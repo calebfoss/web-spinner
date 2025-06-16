@@ -1,10 +1,9 @@
 import { Vector2D } from "../classes/vector2d";
 import { Canvas2DBaseRenderable } from "../elements/visual/renderable";
 import { attributeParser } from "../utlities/attributeParser";
-import { c2dTransform } from "./transform";
 
 export function hasTo<B extends typeof Canvas2DBaseRenderable>(Base: B) {
-  return class extends c2dTransform(Base) {
+  return class extends Base {
     static observedAttributes = [...super.observedAttributes, "to"];
 
     #to = Vector2D.xy(100, 100);
