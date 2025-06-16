@@ -10,7 +10,26 @@ type Origin = "center" | "topLeft";
 
 function baseRectangleBounds<B extends typeof CustomHTMLElement>(Base: B) {
   return class extends dimensions(offset(Base)) {
+    static observedAttributes = [
+      ...dimensions(offset(Base)).observedAttributes,
+      "origin",
+    ];
+
     #origin: Origin = "topLeft";
+
+    attributeChangedCallback(
+      name: string,
+      oldValue: string | null,
+      newValue: string | null
+    ): void {
+      if (name === "origin") {
+        if (newValue === null) return;
+
+        this.origin = newValue as Origin;
+      }
+
+      return super.attributeChangedCallback(name, oldValue, newValue);
+    }
 
     get topLeft() {
       switch (this.#origin) {
@@ -48,7 +67,9 @@ function baseRectangleBounds<B extends typeof CustomHTMLElement>(Base: B) {
     }
 
     set origin(value) {
-      this.#origin = value;
+      if (this.#origin === value) return;
+
+      this.registerChange("origin", (this.#origin = value));
     }
   };
 }

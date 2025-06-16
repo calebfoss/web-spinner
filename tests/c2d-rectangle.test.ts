@@ -1,6 +1,6 @@
 import { expect, jest, test } from "@jest/globals";
 import { setupJestCanvasMock } from "jest-canvas-mock";
-import { BorderRadius, createRoot } from "web-spinner";
+import { BorderRadius, createRoot, Vector2D } from "web-spinner";
 import { mockMatchMedia, testReflection } from "./shared";
 import { Canvas2DCanvasElement } from "../dist/types/elements/visual/canvas";
 import { Canvas2DRectangle } from "../dist/types/elements/visual/rectangle";
@@ -98,6 +98,56 @@ describe("c2d-rectangle", () => {
         expect(rect.mock.calls[0][3]).toBe(height);
       });
     });
+  });
+
+  test("rectangle bounds", () => {
+    if (rectangle === null) throw new Error("rectangle is null");
+
+    rectangle.offset = Vector2D.xy(50, 65);
+
+    rectangle.width = 75;
+
+    rectangle.height = 85;
+
+    expect(rectangle.topLeft).toEqual(rectangle.offset);
+
+    expect(rectangle.topRight).toEqual(
+      rectangle.offset.plus(rectangle.width, 0)
+    );
+
+    expect(rectangle.bottomRight).toEqual(
+      rectangle.offset.plus(rectangle.width, rectangle.height)
+    );
+
+    expect(rectangle.bottomLeft).toEqual(
+      rectangle.offset.plus(0, rectangle.height)
+    );
+
+    expect(rectangle.center).toEqual(
+      rectangle.offset.plus(rectangle.width / 2, rectangle.height / 2)
+    );
+
+    rectangle.origin = "center";
+
+    expect(rectangle.topLeft).toEqual(
+      rectangle.offset.minus(rectangle.width / 2, rectangle.height / 2)
+    );
+
+    expect(rectangle.topRight).toEqual(
+      rectangle.offset.plus(rectangle.width / 2, -rectangle.height / 2)
+    );
+
+    expect(rectangle.bottomRight).toEqual(
+      rectangle.offset.plus(rectangle.width / 2, rectangle.height / 2)
+    );
+
+    expect(rectangle.bottomLeft).toEqual(
+      rectangle.offset.plus(-rectangle.width / 2, rectangle.height / 2)
+    );
+
+    expect(rectangle.center).toEqual(rectangle.offset);
+
+    testReflection(rectangle, "origin", "origin", "topLeft");
   });
 
   describe("rounded", () => {
