@@ -7,6 +7,7 @@ import { Canvas2DRectangle } from "../dist/types/elements/visual/rectangle";
 import { HTMLElementController } from "../dist/types/elements/document/domBase";
 import { DocumentContainerWrapper } from "../dist/types/elements/document/container";
 import { waitFor } from "@testing-library/dom";
+import { testStroke } from "./stroke";
 
 mockMatchMedia();
 
@@ -275,3 +276,13 @@ describe("c2d-rectangle", () => {
     });
   });
 });
+
+testStroke(() => {
+  const root = createRoot();
+
+  const canvas = root.canvas2D();
+
+  const rectangle = canvas.rectangle();
+
+  return { canvas, element: rectangle };
+}, "rect");
