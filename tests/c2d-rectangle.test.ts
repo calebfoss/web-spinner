@@ -9,6 +9,7 @@ import { DocumentContainerWrapper } from "../dist/types/elements/document/contai
 import { waitFor } from "@testing-library/dom";
 import { testStroke } from "./stroke";
 import { testRectangleBounds } from "./rectangleBounds";
+import { testFill } from "./fill";
 
 mockMatchMedia();
 
@@ -291,3 +292,5 @@ const setup = () => {
 testRectangleBounds(setup);
 
 testStroke(setup, "rect");
+
+testFill(setup, "rect");
