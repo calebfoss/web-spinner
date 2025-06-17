@@ -6,6 +6,7 @@ import { waitFor } from "@testing-library/dom";
 import { testStroke } from "./testStroke";
 import { testRectangleBounds } from "./testRectangleBounds";
 import { testFill } from "./testFill";
+import { testTransform } from "./testTransform";
 
 describe("c2d-rectangle", () => {
   mockMatchMedia();
@@ -164,6 +165,8 @@ describe("c2d-rectangle", () => {
       );
     });
   });
+
+  testTransform(setup, "rect");
 
   testRectangleBounds(setup, "rect");
 
