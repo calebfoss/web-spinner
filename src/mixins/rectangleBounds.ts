@@ -8,9 +8,31 @@ import { extendSVGOffset, offset } from "./offset";
 
 type Origin = "center" | "topLeft";
 
-function baseRectangleBounds<B extends typeof CustomHTMLElement>(Base: B) {
+function baseRectangleBounds<B extends typeof CustomHTMLElement>(
+  Base: B,
+  defaultOrigin: Origin
+) {
   return class extends dimensions(offset(Base)) {
-    #origin: Origin = "topLeft";
+    static observedAttributes = [
+      ...dimensions(offset(Base)).observedAttributes,
+      "origin",
+    ];
+
+    #origin: Origin = defaultOrigin;
+
+    attributeChangedCallback(
+      name: string,
+      oldValue: string | null,
+      newValue: string | null
+    ): void {
+      if (name === "origin") {
+        if (newValue === null) return;
+
+        this.origin = newValue as Origin;
+      }
+
+      return super.attributeChangedCallback(name, oldValue, newValue);
+    }
 
     get topLeft() {
       switch (this.#origin) {
@@ -48,15 +70,18 @@ function baseRectangleBounds<B extends typeof CustomHTMLElement>(Base: B) {
     }
 
     set origin(value) {
-      this.#origin = value;
+      if (this.#origin === value) return;
+
+      this.registerChange("origin", (this.#origin = value));
     }
   };
 }
 
 export function c2dRectangleBounds<B extends typeof Canvas2DBaseRenderable>(
-  Base: B
+  Base: B,
+  defaultOrigin: Origin
 ) {
-  return class extends baseRectangleBounds(Base) {
+  return class extends baseRectangleBounds(Base, defaultOrigin) {
     renderConicalGradient(
       context: CanvasRenderingContext2D,
       gradient: ConicalGradient
@@ -77,9 +102,12 @@ export function c2dRectangleBounds<B extends typeof Canvas2DBaseRenderable>(
   };
 }
 
-export function svgRectangleBounds<B extends SVGElementController>(Base: B) {
+export function svgRectangleBounds<B extends SVGElementController>(
+  Base: B,
+  defaultOrigin: Origin
+) {
   return class extends extendSVGOffset(
-    extendSVGDimensions(baseRectangleBounds(Base))
+    extendSVGDimensions(baseRectangleBounds(Base, defaultOrigin))
   ) {
     _updateOffset() {
       const { x, y } = this.topLeft;

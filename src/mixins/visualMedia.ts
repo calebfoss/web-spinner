@@ -7,7 +7,7 @@ export function rendersVisualMedia<
   B extends C2DTransformed,
   T extends "img" | "video"
 >(Base: B, mediaTag: T) {
-  return class extends c2dRectangleBounds(Base) {
+  return class extends c2dRectangleBounds(Base, "topLeft") {
     static observedAttributes = [...super.observedAttributes, "source"];
 
     #mediaElement: HTMLElementTagNameMap[T];

@@ -229,4 +229,4 @@ export class ConicalGradient extends Gradient {
   }
 }
 
-export type DrawStyle = Color | string | CanvasGradient | None;
+export type DrawStyle = Color | string | Gradient | None;

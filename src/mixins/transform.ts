@@ -49,7 +49,9 @@ export function baseTransform<B extends typeof CustomHTMLElement>(Base: B) {
     }
 
     set angle(value) {
-      this.#angle = this.#angle.replace(value, this.#angleChangeListener);
+      const replace = this.#angle.replace.bind(this.#angle);
+
+      replace((this.#angle = value), this.#angleChangeListener);
     }
 
     #angularVelocityChangedTime = -1;
@@ -88,7 +90,9 @@ export function baseTransform<B extends typeof CustomHTMLElement>(Base: B) {
     };
 
     set anchor(value) {
-      this.#anchor = this.#anchor.replace(value, this.#anchorChangeListener);
+      const replace = this.#anchor.replace.bind(this.#anchor);
+
+      replace((this.#anchor = value), this.#anchorChangeListener);
     }
 
     _applyMovement(deltaTime: number) {

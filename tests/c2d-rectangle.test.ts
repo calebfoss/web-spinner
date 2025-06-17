@@ -1,167 +1,176 @@
 import { expect, jest, test } from "@jest/globals";
 import { setupJestCanvasMock } from "jest-canvas-mock";
-import { BorderRadius, Color, createRoot } from "web-spinner";
-import { testDimensions, testReflection } from "./shared";
-
-Object.defineProperty(window, "matchMedia", {
-  writable: true,
-  value: jest.fn().mockImplementation((query) => ({
-    matches: false,
-    media: query,
-    onchange: null,
-    addEventListener: jest.fn(),
-    removeEventListener: jest.fn(),
-    dispatchEvent: jest.fn(),
-  })),
-});
-
-beforeEach(() => {
-  jest.resetAllMocks();
-
-  setupJestCanvasMock();
-});
+import { BorderRadius, createRoot, Vector2D } from "web-spinner";
+import { mockMatchMedia, testReflection } from "./shared";
+import { waitFor } from "@testing-library/dom";
+import { testStroke } from "./testStroke";
+import { testRectangleBounds } from "./testRectangleBounds";
+import { testFill } from "./testFill";
+import { testTransform } from "./testTransform";
 
 describe("c2d-rectangle", () => {
-  const root = createRoot();
+  mockMatchMedia();
 
-  const canvas = root.canvas2D();
+  setupJestCanvasMock();
 
-  const width = 125;
+  const setup = () => {
+    const root = createRoot();
 
-  const height = 175;
+    const canvas = root.canvas2D();
 
-  const rectangle = canvas.rectangle({ width, height });
+    canvas.context.roundRect = (
+      ...args: Parameters<CanvasRenderingContext2D["roundRect"]>
+    ) => {};
 
-  testDimensions(rectangle, width, height);
+    const rectangle = canvas.rectangle();
+
+    return { canvas, element: rectangle };
+  };
 
   describe("rounded", () => {
-    let renderedRadii:
-      | number
-      | DOMPointInit
-      | Iterable<number | DOMPointInit>
-      | undefined
-      | null = null;
+    test("dimensions are passed into render function with border radius", async () => {
+      const { element, canvas } = setup();
 
-    beforeEach(() => {
-      canvas.context.roundRect = jest.fn(
-        (...args: Parameters<CanvasRenderingContext2D["roundRect"]>) => {
-          const [x, y, width, height, radii] = args;
+      const roundRect = jest.spyOn(canvas.context, "roundRect");
 
-          renderedRadii = radii;
-        }
-      );
-    });
+      const width = 75;
 
-    afterEach(() => {
-      renderedRadii = null;
+      const height = 65;
 
-      rectangle.borderRadius = null;
-    });
+      element.width = width;
 
-    test("single value", () => {
-      const singleValue = 5;
+      element.height = height;
 
-      rectangle.borderRadius = singleValue;
+      element.borderRadius = 5;
 
-      rectangle.render(canvas);
+      await waitFor(() => {
+        expect(roundRect).toHaveBeenCalled();
 
-      expect(renderedRadii).toEqual(new Array(4).fill(singleValue));
-    });
+        expect(roundRect.mock.calls[0][2]).toBe(width);
 
-    test("4 values", () => {
-      const topLeft = 1;
-
-      const topRight = 2;
-
-      const bottomRight = 3;
-
-      const bottomLeft = 4;
-
-      rectangle.borderRadius = new BorderRadius(
-        topLeft,
-        topRight,
-        bottomRight,
-        bottomLeft
-      );
-
-      rectangle.render(canvas);
-
-      expect(renderedRadii).toEqual([
-        topLeft,
-        topRight,
-        bottomRight,
-        bottomLeft,
-      ]);
-    });
-
-    test("state change", async () => {
-      await new Promise<void>((resolve) => {
-        const topLeft = 1;
-        const topRight = 2;
-        const bottomRight = 3;
-        const bottomLeft = 4;
-
-        rectangle.borderRadius = new BorderRadius(
-          topLeft,
-          topRight,
-          bottomRight,
-          bottomLeft
-        );
-
-        const { borderRadius } = rectangle;
-
-        const topLeftChange = 5;
-
-        borderRadius.topLeft += topLeftChange;
-
-        requestAnimationFrame(() => {
-          expect(renderedRadii).toEqual([
-            topLeft + topLeftChange,
-            topRight,
-            bottomRight,
-            bottomLeft,
-          ]);
-
-          resolve();
-        });
+        expect(roundRect.mock.calls[0][3]).toBe(height);
       });
     });
 
-    rectangle.borderRadius = 5;
+    test("renders with border radius single value", async () => {
+      const { element, canvas } = setup();
 
-    const changedRadius = new BorderRadius(1);
+      const roundRect = jest.spyOn(canvas.context, "roundRect");
 
-    testReflection(
-      rectangle,
-      "borderRadius",
-      "border-radius",
-      changedRadius,
-      "5, 5, 5, 5",
-      "7, 7, 7, 7"
-    );
+      const radius = 5;
 
-    test("reflection - state change", () => {
+      if (element === null) throw new Error("rectangle is null");
+
+      element.borderRadius = radius;
+
+      await waitFor(() => {
+        expect(roundRect).toHaveBeenCalled();
+
+        const radii = roundRect.mock.calls[0][4];
+
+        if (!Array.isArray(radii))
+          throw new Error("radii argument is not an array");
+
+        expect(radii).toEqual([radius, radius, radius, radius]);
+      });
+    });
+
+    test("render with border radius object", async () => {
+      const { element, canvas } = setup();
+
+      const roundRect = jest.spyOn(canvas.context, "roundRect");
+
       const topLeft = 1;
+
       const topRight = 2;
+
       const bottomRight = 3;
+
       const bottomLeft = 4;
 
-      rectangle.borderRadius = new BorderRadius(
+      const borderRadius = new BorderRadius(
         topLeft,
         topRight,
         bottomRight,
         bottomLeft
       );
 
-      const { borderRadius } = rectangle;
+      if (element === null) throw new Error("rectangle is null");
 
-      const topLeftChange = 5;
+      element.borderRadius = borderRadius;
 
-      borderRadius.topLeft += topLeftChange;
+      await waitFor(() => {
+        expect(roundRect).toHaveBeenCalled();
 
-      const attributeValue = rectangle.getAttribute("border-radius");
+        const radii = roundRect.mock.calls[0][4];
 
-      expect(attributeValue).toBe(borderRadius.toString());
+        expect(radii).toEqual([topLeft, topRight, bottomRight, bottomLeft]);
+      });
+    });
+
+    test("responds to border radius state change", async () => {
+      const { element, canvas } = setup();
+
+      const roundRect = jest.spyOn(canvas.context, "roundRect");
+
+      const topLeft = 1;
+
+      const topRight = 2;
+
+      const bottomRight = 3;
+
+      const bottomLeft = 4;
+
+      const borderRadius = new BorderRadius(
+        topLeft,
+        topRight,
+        bottomRight,
+        bottomLeft
+      );
+
+      if (element === null) throw new Error("rectangle is null");
+
+      element.borderRadius = borderRadius;
+
+      await waitFor(() => {
+        expect(roundRect).toHaveBeenCalled();
+      });
+
+      const change = 5;
+
+      borderRadius.topLeft += change;
+
+      await waitFor(() => {
+        expect(roundRect).toHaveBeenCalledTimes(2);
+
+        const radii = roundRect.mock.calls[1][4];
+
+        expect(radii).toEqual([
+          topLeft + change,
+          topRight,
+          bottomRight,
+          bottomLeft,
+        ]);
+      });
+    });
+
+    test("reflection", () => {
+      const { element } = setup();
+
+      testReflection(
+        element,
+        "borderRadius",
+        "border-radius",
+        new BorderRadius(5)
+      );
     });
   });
+
+  testTransform(setup, "rect");
+
+  testRectangleBounds(setup, "rect");
+
+  testStroke(setup, "rect");
+
+  testFill(setup, "rect");
 });

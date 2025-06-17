@@ -41,7 +41,10 @@ function baseFill<B extends typeof CustomHTMLElement>(Base: B) {
         return;
 
       if (typeof value === "string")
-        this.registerChange("fill", (this.#fill = Color.fromString(value)));
+        this.registerChange(
+          "fill",
+          (this.#fill = value === "none" ? value : Color.fromString(value))
+        );
       else this.registerChange("fill", (this.#fill = value));
     }
 
@@ -50,11 +53,8 @@ function baseFill<B extends typeof CustomHTMLElement>(Base: B) {
       oldValue: string | null,
       newValue: string | null
     ) {
-      if (name === "fill") {
-        const fillValue =
-          newValue === null
-            ? "none"
-            : attributeParser.FillStrokeStyle(newValue);
+      if (name === "fill" && newValue !== null) {
+        const fillValue = attributeParser.FillStrokeStyle(newValue);
 
         if (fillValue !== "gradient") this.fill = fillValue;
       }
@@ -84,7 +84,7 @@ export function c2dFill<B extends typeof Canvas2DBaseRenderable>(Base: B) {
     }
 
     afterRender(canvas2D: Canvas2DCanvasElement): void {
-      if (this.fill !== "none") canvas2D.context.fill();
+      if (this.fill !== "none" && this.fill !== null) canvas2D.context.fill();
 
       super.afterRender(canvas2D);
     }
