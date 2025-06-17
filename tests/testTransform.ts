@@ -31,6 +31,12 @@ export function testTransform(
 
         expect(translate.mock.calls[0]).toEqual([anchor.x, anchor.y]);
       });
+    });
+
+    test("anchor reflection", () => {
+      const { element } = setup();
+
+      element.anchor = Vector2D.xy(45, 65);
 
       testReflection(element, "anchor", "anchor", Vector2D.xy(-65, -45));
     });
@@ -49,6 +55,12 @@ export function testTransform(
 
         expect(rotate.mock.calls[0][0]).toBe(angle.radians);
       });
+    });
+
+    test("angle reflection", () => {
+      const { element } = setup();
+
+      element.angle = Angle.degrees(30);
 
       testReflection(element, "angle", "angle", Angle.degrees(-60));
     });
@@ -81,6 +93,19 @@ export function testTransform(
       });
     });
 
+    test("angular velocity reflection", () => {
+      const { element } = setup();
+
+      element.angularVelocity = Angle.degrees(30);
+
+      testReflection(
+        element,
+        "angularVelocity",
+        "angular-velocity",
+        Angle.degrees(60)
+      );
+    });
+
     test("scale", async () => {
       const { element, canvas } = setup();
 
@@ -96,6 +121,12 @@ export function testTransform(
 
         expect(scale.mock.calls[1]).toEqual([scaleValue.x, scaleValue.y]);
       });
+    });
+
+    test("scale reflection", () => {
+      const { element } = setup();
+
+      element.scale = Vector2D.xy(1.5, 2.5);
 
       testReflection(element, "scale", "scale", Vector2D.xy(-2.5, -1.5));
     });
@@ -132,6 +163,14 @@ export function testTransform(
           0
         );
       });
+    });
+
+    test("velocity reflection", () => {
+      const { element } = setup();
+
+      element.velocity = Vector2D.xy(1, 2);
+
+      testReflection(element, "velocity", "velocity", Vector2D.xy(3, 4));
     });
   });
 }
