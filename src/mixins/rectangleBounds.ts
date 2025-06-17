@@ -8,14 +8,17 @@ import { extendSVGOffset, offset } from "./offset";
 
 type Origin = "center" | "topLeft";
 
-function baseRectangleBounds<B extends typeof CustomHTMLElement>(Base: B) {
+function baseRectangleBounds<B extends typeof CustomHTMLElement>(
+  Base: B,
+  defaultOrigin: Origin
+) {
   return class extends dimensions(offset(Base)) {
     static observedAttributes = [
       ...dimensions(offset(Base)).observedAttributes,
       "origin",
     ];
 
-    #origin: Origin = "topLeft";
+    #origin: Origin = defaultOrigin;
 
     attributeChangedCallback(
       name: string,
@@ -75,9 +78,10 @@ function baseRectangleBounds<B extends typeof CustomHTMLElement>(Base: B) {
 }
 
 export function c2dRectangleBounds<B extends typeof Canvas2DBaseRenderable>(
-  Base: B
+  Base: B,
+  defaultOrigin: Origin
 ) {
-  return class extends baseRectangleBounds(Base) {
+  return class extends baseRectangleBounds(Base, defaultOrigin) {
     renderConicalGradient(
       context: CanvasRenderingContext2D,
       gradient: ConicalGradient
@@ -98,9 +102,12 @@ export function c2dRectangleBounds<B extends typeof Canvas2DBaseRenderable>(
   };
 }
 
-export function svgRectangleBounds<B extends SVGElementController>(Base: B) {
+export function svgRectangleBounds<B extends SVGElementController>(
+  Base: B,
+  defaultOrigin: Origin
+) {
   return class extends extendSVGOffset(
-    extendSVGDimensions(baseRectangleBounds(Base))
+    extendSVGDimensions(baseRectangleBounds(Base, defaultOrigin))
   ) {
     _updateOffset() {
       const { x, y } = this.topLeft;

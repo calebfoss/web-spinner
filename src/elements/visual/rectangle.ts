@@ -23,9 +23,9 @@ import { Canvas2DCanvasElement } from "./canvas";
 import { createSVGController } from "./svgBase";
 
 function renderCanvasRectangle<B extends C2DTransformed>(Base: B) {
-  return class Rectangle extends c2dRectangleBounds(Base) {
+  return class Rectangle extends c2dRectangleBounds(Base, "topLeft") {
     static observedAttributes = [
-      ...c2dRectangleBounds(Base).observedAttributes,
+      ...c2dRectangleBounds(Base, "topLeft").observedAttributes,
       "border-radius",
     ];
 
@@ -153,7 +153,8 @@ export class SVGRectangleController extends svgStroke(
     svgDimensions(
       svgTransform(
         svgRectangleBounds(
-          svgChildren(createSVGController("rect", "svg-rectangle"))
+          svgChildren(createSVGController("rect", "svg-rectangle")),
+          "topLeft"
         )
       )
     )

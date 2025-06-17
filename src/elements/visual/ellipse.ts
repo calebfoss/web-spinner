@@ -11,14 +11,14 @@ import {
 import { Canvas2DCanvasElement } from "./canvas";
 
 function renderEllipse<B extends C2DTransformed>(Base: B) {
-  return class extends c2dRectangleBounds(Base) {
+  return class extends c2dRectangleBounds(Base, "center") {
     #startAngle = Angle.zero;
     #endAngle = Angle.radians(Math.PI * 2);
 
     constructor(...args: any[]) {
       super(...args);
 
-      this.origin = "center";
+      super.origin = "center";
     }
 
     render(canvas2D: Canvas2DCanvasElement): void {
