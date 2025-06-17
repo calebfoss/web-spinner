@@ -2,6 +2,7 @@ import { jest } from "@jest/globals";
 import { Angle, Vector2D } from "web-spinner";
 import { ElementTestSetup, VoidCanvasMethodNames } from "./types";
 import { waitFor } from "@testing-library/dom";
+import { testReflection } from "./shared";
 
 export function testTransform(
   setup: ElementTestSetup<{ anchor: Vector2D; angle: Angle; scale: Vector2D }>,
@@ -22,6 +23,8 @@ export function testTransform(
 
         expect(translate.mock.calls[0]).toEqual([anchor.x, anchor.y]);
       });
+
+      testReflection(element, "anchor", "anchor", Vector2D.xy(-65, -45));
     });
 
     test("angle", async () => {
@@ -38,6 +41,8 @@ export function testTransform(
 
         expect(rotate.mock.calls[0][0]).toBe(angle.radians);
       });
+
+      testReflection(element, "angle", "angle", Angle.degrees(-60));
     });
 
     test("scale", async () => {
@@ -55,6 +60,8 @@ export function testTransform(
 
         expect(scale.mock.calls[1]).toEqual([scaleValue.x, scaleValue.y]);
       });
+
+      testReflection(element, "scale", "scale", Vector2D.xy(-2.5, -1.5));
     });
   });
 }
