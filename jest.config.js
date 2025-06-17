@@ -12,4 +12,5 @@ export default {
   extensionsToTreatAsEsm: [".ts"],
   collectCoverage: true,
   coverageReporters: ["text"],
+  collectCoverageFrom: ["dist/*"],
 };
