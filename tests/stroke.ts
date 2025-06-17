@@ -66,12 +66,16 @@ export function testStroke(
 
     canvas.context[renderFunctionName] = render;
 
+    const stroke = jest.spyOn(canvas.context, "stroke");
+
     const color = Color.rgb(75, 150, 225);
 
     element.stroke = color;
 
     await waitFor(() => {
       expect(render).toHaveBeenCalled();
+
+      expect(stroke).toHaveBeenCalled();
 
       expect(renderedStroke).toBe(color.toString());
     });
@@ -85,6 +89,8 @@ export function testStroke(
     await waitFor(() => {
       expect(render).toHaveBeenCalledTimes(2);
 
+      expect(stroke).toHaveBeenCalledTimes(2);
+
       expect(renderedStroke instanceof CanvasGradient).toBe(true);
     });
 
@@ -94,6 +100,8 @@ export function testStroke(
 
     await waitFor(() => {
       expect(render).toHaveBeenCalledTimes(3);
+
+      expect(stroke).toHaveBeenCalledTimes(3);
 
       expect(renderedStroke instanceof CanvasGradient).toBe(true);
     });
@@ -110,7 +118,17 @@ export function testStroke(
     await waitFor(() => {
       expect(render).toHaveBeenCalledTimes(4);
 
+      expect(stroke).toHaveBeenCalledTimes(4);
+
       expect(renderedStroke instanceof CanvasGradient).toBe(true);
+    });
+
+    element.stroke = "none";
+
+    await waitFor(() => {
+      expect(render).toHaveBeenCalledTimes(5);
+
+      expect(stroke).toHaveBeenCalledTimes(4);
     });
   });
 }
