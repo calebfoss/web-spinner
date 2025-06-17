@@ -621,6 +621,8 @@ function renderNav(elements: ElementData[]) {
 function renderDocumentation() {
   const { elements } = getDocData();
 
+  const canvasElements = elements.filter((el) => el.tag.slice(0, 3) === "c2d");
+
   const docDiv = document.createElement("div");
 
   docDiv.classList.add("doc");
@@ -631,7 +633,7 @@ function renderDocumentation() {
 
   docDiv.appendChild(heading);
 
-  const nav = renderNav(elements);
+  const nav = renderNav(canvasElements);
 
   docDiv.appendChild(nav);
 
@@ -641,7 +643,7 @@ function renderDocumentation() {
 
   docDiv.appendChild(elementDiv);
 
-  const elementDocs = elements.map(renderElementDoc);
+  const elementDocs = canvasElements.map(renderElementDoc);
 
   for (const doc of elementDocs) {
     elementDiv.appendChild(doc);
