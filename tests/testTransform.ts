@@ -2,14 +2,17 @@ import { jest } from "@jest/globals";
 import { Angle, Vector2D } from "web-spinner";
 import { ElementTestSetup, VoidCanvasMethodNames } from "./types";
 import { waitFor } from "@testing-library/dom";
-import { testReflection } from "./shared";
+import { sleep, testReflection } from "./shared";
+import { Canvas2DCanvasElement } from "../dist/types/elements/visual/canvas";
 
 export function testTransform(
   setup: ElementTestSetup<{
+    _applyMovement: (deltaTime: number) => void;
     anchor: Vector2D;
     angle: Angle;
     angularVelocity: Angle;
     scale: Vector2D;
+    velocity: Vector2D;
   }>,
   renderFunctionName: VoidCanvasMethodNames
 ) {
@@ -53,40 +56,28 @@ export function testTransform(
     test("angular velocity", async () => {
       const { element, canvas } = setup();
 
-      const frames: { angle: number; ms: number }[] = [];
+      const fps = 60;
 
-      const rotate = jest
-        .spyOn(canvas.context, "rotate")
-        .mockImplementation((angle) => {
-          const ms = performance.now();
+      setupMockTiming(canvas, fps);
 
-          frames.push({
-            angle,
-            ms,
-          });
-        });
+      const applyMovement = jest.spyOn(element, "_applyMovement");
 
       const angularVelocity = Angle.degrees(180);
 
       element.angularVelocity = angularVelocity;
 
+      const rotationPerFrame = Angle.degrees(angularVelocity.degrees / fps);
+
       await waitFor(() => {
-        expect(frames.length).toBeGreaterThan(30);
+        const movedFrames = applyMovement.mock.calls.length - 1;
 
-        for (let i = 1; i < frames.length; i++) {
-          const frame = frames[i];
+        expect(movedFrames).toBeGreaterThanOrEqual(30);
 
-          const previous = frames[i - 1];
+        element.angularVelocity = Angle.zero;
 
-          const msPassed = frame.ms - previous.ms;
-
-          const angleChange = frame.angle - previous.angle;
-
-          expect(angleChange).toBeCloseTo(
-            (msPassed * angularVelocity.radians) / 1000,
-            1
-          );
-        }
+        expect(element.angle.degrees).toBeCloseTo(
+          rotationPerFrame.degrees * movedFrames
+        );
       });
     });
 
@@ -108,5 +99,52 @@ export function testTransform(
 
       testReflection(element, "scale", "scale", Vector2D.xy(-2.5, -1.5));
     });
+
+    test("velocity", async () => {
+      const { element, canvas } = setup();
+
+      const fps = 60;
+
+      setupMockTiming(canvas, fps);
+
+      const velocity = Vector2D.xy(125, -175);
+
+      const movementPerFrame = Vector2D.xy(velocity.x / fps, velocity.y / fps);
+
+      element.velocity = velocity;
+
+      const applyMovement = jest.spyOn(element, "_applyMovement");
+
+      await waitFor(() => {
+        const movedFrames = applyMovement.mock.calls.length - 1;
+
+        expect(movedFrames).toBeGreaterThanOrEqual(30);
+
+        element.velocity = Vector2D.zero;
+
+        expect(element.anchor.x).toBeCloseTo(
+          movementPerFrame.x * movedFrames,
+          0
+        );
+
+        expect(element.anchor.y).toBeCloseTo(
+          movementPerFrame.y * movedFrames,
+          0
+        );
+      });
+    });
+  });
+}
+
+function setupMockTiming(canvas: Canvas2DCanvasElement, fps: number) {
+  const msPerFrame = 1000 / fps;
+
+  performance.now = jest.fn(() => canvas.frame * msPerFrame);
+
+  Object.defineProperty(canvas, "deltaTime", {
+    get() {
+      return msPerFrame;
+    },
+    set() {},
   });
 }
