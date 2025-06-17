@@ -16,47 +16,59 @@ export function testRectangleBounds(
     origin: Canvas2DRectangle["origin"];
   }>
 ) {
-  const { element } = setup();
+  describe("rectangle bounds", () => {
+    const { element } = setup();
 
-  element.offset = Vector2D.xy(50, 65);
+    element.offset = Vector2D.xy(50, 65);
 
-  element.width = 75;
+    element.width = 75;
 
-  element.height = 85;
+    element.height = 85;
 
-  expect(element.topLeft).toEqual(element.offset);
+    test("with origin at top left", () => {
+      element.origin = "topLeft";
 
-  expect(element.topRight).toEqual(element.offset.plus(element.width, 0));
+      expect(element.topLeft).toEqual(element.offset);
 
-  expect(element.bottomRight).toEqual(
-    element.offset.plus(element.width, element.height)
-  );
+      expect(element.topRight).toEqual(element.offset.plus(element.width, 0));
 
-  expect(element.bottomLeft).toEqual(element.offset.plus(0, element.height));
+      expect(element.bottomRight).toEqual(
+        element.offset.plus(element.width, element.height)
+      );
 
-  expect(element.center).toEqual(
-    element.offset.plus(element.width / 2, element.height / 2)
-  );
+      expect(element.bottomLeft).toEqual(
+        element.offset.plus(0, element.height)
+      );
 
-  element.origin = "center";
+      expect(element.center).toEqual(
+        element.offset.plus(element.width / 2, element.height / 2)
+      );
+    });
 
-  expect(element.topLeft).toEqual(
-    element.offset.minus(element.width / 2, element.height / 2)
-  );
+    test("with origin at center", () => {
+      element.origin = "center";
 
-  expect(element.topRight).toEqual(
-    element.offset.plus(element.width / 2, -element.height / 2)
-  );
+      expect(element.topLeft).toEqual(
+        element.offset.minus(element.width / 2, element.height / 2)
+      );
 
-  expect(element.bottomRight).toEqual(
-    element.offset.plus(element.width / 2, element.height / 2)
-  );
+      expect(element.topRight).toEqual(
+        element.offset.plus(element.width / 2, -element.height / 2)
+      );
 
-  expect(element.bottomLeft).toEqual(
-    element.offset.plus(-element.width / 2, element.height / 2)
-  );
+      expect(element.bottomRight).toEqual(
+        element.offset.plus(element.width / 2, element.height / 2)
+      );
 
-  expect(element.center).toEqual(element.offset);
+      expect(element.bottomLeft).toEqual(
+        element.offset.plus(-element.width / 2, element.height / 2)
+      );
 
-  testReflection(element, "origin", "origin", "topLeft");
+      expect(element.center).toEqual(element.offset);
+    });
+
+    test("reflection", () => {
+      testReflection(element, "origin", "origin", "topLeft");
+    });
+  });
 }
