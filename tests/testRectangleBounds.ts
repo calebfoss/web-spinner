@@ -17,7 +17,8 @@ export function testRectangleBounds(
     center: Vector2D;
     origin: Canvas2DRectangle["origin"];
   }>,
-  renderFunctionName: VoidCanvasMethodNames
+  renderFunctionName: VoidCanvasMethodNames,
+  dimensionRenderScale = 1
 ) {
   describe("dimensions", () => {
     test("reflection", () => {
@@ -52,9 +53,9 @@ export function testRectangleBounds(
 
         expect(render).toHaveBeenCalled();
 
-        expect(render.mock.calls[0][2]).toBe(width);
+        expect(render.mock.calls[0][2]).toBe(width * dimensionRenderScale);
 
-        expect(render.mock.calls[0][3]).toBe(height);
+        expect(render.mock.calls[0][3]).toBe(height * dimensionRenderScale);
       });
     });
   });
