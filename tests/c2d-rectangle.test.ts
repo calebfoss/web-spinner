@@ -7,9 +7,9 @@ import { Canvas2DRectangle } from "../dist/types/elements/visual/rectangle";
 import { HTMLElementController } from "../dist/types/elements/document/domBase";
 import { DocumentContainerWrapper } from "../dist/types/elements/document/container";
 import { waitFor } from "@testing-library/dom";
-import { testStroke } from "./stroke";
-import { testRectangleBounds } from "./rectangleBounds";
-import { testFill } from "./fill";
+import { testStroke } from "./testStroke";
+import { testRectangleBounds } from "./testRectangleBounds";
+import { testFill } from "./testFill";
 
 mockMatchMedia();
 
