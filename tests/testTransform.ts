@@ -5,7 +5,12 @@ import { waitFor } from "@testing-library/dom";
 import { testReflection } from "./shared";
 
 export function testTransform(
-  setup: ElementTestSetup<{ anchor: Vector2D; angle: Angle; scale: Vector2D }>,
+  setup: ElementTestSetup<{
+    anchor: Vector2D;
+    angle: Angle;
+    angularVelocity: Angle;
+    scale: Vector2D;
+  }>,
   renderFunctionName: VoidCanvasMethodNames
 ) {
   describe("transform", () => {
@@ -43,6 +48,46 @@ export function testTransform(
       });
 
       testReflection(element, "angle", "angle", Angle.degrees(-60));
+    });
+
+    test("angular velocity", async () => {
+      const { element, canvas } = setup();
+
+      const frames: { angle: number; ms: number }[] = [];
+
+      const rotate = jest
+        .spyOn(canvas.context, "rotate")
+        .mockImplementation((angle) => {
+          const ms = performance.now();
+
+          frames.push({
+            angle,
+            ms,
+          });
+        });
+
+      const angularVelocity = Angle.degrees(180);
+
+      element.angularVelocity = angularVelocity;
+
+      await waitFor(() => {
+        expect(frames.length).toBeGreaterThan(30);
+
+        for (let i = 1; i < frames.length; i++) {
+          const frame = frames[i];
+
+          const previous = frames[i - 1];
+
+          const msPassed = frame.ms - previous.ms;
+
+          const angleChange = frame.angle - previous.angle;
+
+          expect(angleChange).toBeCloseTo(
+            (msPassed * angularVelocity.radians) / 1000,
+            1
+          );
+        }
+      });
     });
 
     test("scale", async () => {
