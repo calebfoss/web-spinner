@@ -1,6 +1,8 @@
+import { jest } from "@jest/globals";
+import { waitFor } from "@testing-library/dom";
 import { Canvas2DRectangle } from "../dist/types/elements/visual/rectangle";
 import { testReflection } from "./shared";
-import { ElementTestSetup } from "./types";
+import { ElementTestSetup, VoidCanvasMethodNames } from "./types";
 import { Vector2D } from "web-spinner";
 
 export function testRectangleBounds(
@@ -14,8 +16,49 @@ export function testRectangleBounds(
     height: number;
     center: Vector2D;
     origin: Canvas2DRectangle["origin"];
-  }>
+  }>,
+  renderFunctionName: VoidCanvasMethodNames
 ) {
+  describe("dimensions", () => {
+    test("reflection", () => {
+      const { element } = setup();
+
+      element.width = 75;
+
+      element.height = 65;
+
+      testReflection(element, "width", "width", 115);
+
+      testReflection(element, "height", "height", 125);
+    });
+
+    test("passed into render function", async () => {
+      const { element, canvas } = setup();
+
+      const render = jest.spyOn(canvas.context, renderFunctionName);
+
+      const width = 75;
+
+      const height = 65;
+
+      if (element === null) throw new Error("rectangle is null");
+
+      element.width = width;
+
+      element.height = height;
+
+      await waitFor(() => {
+        if (render === null) throw new Error("rect is null");
+
+        expect(render).toHaveBeenCalled();
+
+        expect(render.mock.calls[0][2]).toBe(width);
+
+        expect(render.mock.calls[0][3]).toBe(height);
+      });
+    });
+  });
+
   describe("rectangle bounds", () => {
     const { element } = setup();
 
