@@ -1,11 +1,12 @@
 import { expect, jest, test } from "@jest/globals";
-import { mockMatchMedia } from "./shared";
+import { mockMatchMedia, testReflection } from "./shared";
 import { setupJestCanvasMock } from "jest-canvas-mock";
-import { createRoot } from "web-spinner";
+import { Angle, createRoot } from "web-spinner";
 import { testTransform } from "./testTransform";
 import { testRectangleBounds } from "./testRectangleBounds";
 import { testStroke } from "./testStroke";
 import { testFill } from "./testFill";
+import { waitFor } from "@testing-library/dom";
 
 describe("c2d-ellipse", () => {
   mockMatchMedia();
@@ -21,6 +22,42 @@ describe("c2d-ellipse", () => {
 
     return { canvas, element: ellipse };
   };
+
+  describe("start and end angle", () => {
+    test("values are passed to render function", async () => {
+      const { element, canvas } = setup();
+
+      const render = jest.spyOn(canvas.context, "ellipse");
+
+      const startAngle = Angle.degrees(30);
+
+      element.startAngle = startAngle;
+
+      const endAngle = Angle.degrees(60);
+
+      element.endAngle = endAngle;
+
+      await waitFor(() => {
+        expect(render).toHaveBeenCalled();
+
+        expect(render.mock.calls[0][5]).toBe(startAngle.radians);
+
+        expect(render.mock.calls[0][6]).toBe(endAngle.radians);
+      });
+    });
+
+    test("reflection", () => {
+      const { element } = setup();
+
+      element.startAngle = Angle.degrees(30);
+
+      element.endAngle = Angle.degrees(60);
+
+      testReflection(element, "startAngle", "start-angle", Angle.degrees(60));
+
+      testReflection(element, "endAngle", "end-angle", Angle.degrees(30));
+    });
+  });
 
   testTransform(setup, "ellipse");
 
