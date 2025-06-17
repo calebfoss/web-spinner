@@ -8,6 +8,7 @@ import { HTMLElementController } from "../dist/types/elements/document/domBase";
 import { DocumentContainerWrapper } from "../dist/types/elements/document/container";
 import { waitFor } from "@testing-library/dom";
 import { testStroke } from "./stroke";
+import { testRectangleBounds } from "./rectangleBounds";
 
 mockMatchMedia();
 
@@ -277,7 +278,7 @@ describe("c2d-rectangle", () => {
   });
 });
 
-testStroke(() => {
+const setup = () => {
   const root = createRoot();
 
   const canvas = root.canvas2D();
@@ -285,4 +286,8 @@ testStroke(() => {
   const rectangle = canvas.rectangle();
 
   return { canvas, element: rectangle };
-}, "rect");
+};
+
+testRectangleBounds(setup);
+
+testStroke(setup, "rect");
