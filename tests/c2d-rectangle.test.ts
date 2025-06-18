@@ -8,27 +8,17 @@ import { testRectangleBounds } from "./testRectangleBounds";
 import { testFill } from "./testFill";
 import { testTransform } from "./testTransform";
 import { testOffset } from "./testOffset";
+import { ElementTestSetup } from "./types";
 
-describe("c2d-rectangle", () => {
-  mockMatchMedia();
-
-  setupJestCanvasMock();
-
-  const setup = () => {
-    const root = createRoot();
-
-    const canvas = root.canvas2D();
-
-    canvas.context.roundRect = (
-      ...args: Parameters<CanvasRenderingContext2D["roundRect"]>
-    ) => {};
-
-    const rectangle = canvas.rectangle();
-
-    return { canvas, element: rectangle };
-  };
-
-  describe("rounded", () => {
+function testBorderRadius(
+  setup: ElementTestSetup<{
+    width: number;
+    height: number;
+    get borderRadius(): BorderRadius | null;
+    set borderRadius(value: number | null | BorderRadius);
+  }>
+) {
+  describe("border radius", () => {
     test("dimensions are passed into render function with border radius", async () => {
       const { element, canvas } = setup();
 
@@ -166,8 +156,30 @@ describe("c2d-rectangle", () => {
       );
     });
   });
+}
+
+describe("c2d-rectangle", () => {
+  mockMatchMedia();
+
+  setupJestCanvasMock();
+
+  const setup = () => {
+    const root = createRoot();
+
+    const canvas = root.canvas2D();
+
+    canvas.context.roundRect = (
+      ...args: Parameters<CanvasRenderingContext2D["roundRect"]>
+    ) => {};
+
+    const rectangle = canvas.rectangle();
+
+    return { canvas, element: rectangle };
+  };
 
   testOffset(setup, "rect");
+
+  testBorderRadius(setup);
 
   testTransform(setup);
 
@@ -176,4 +188,28 @@ describe("c2d-rectangle", () => {
   testStroke(setup, "rect");
 
   testFill(setup, "rect");
+});
+
+describe("c2d-shape-rectangle", () => {
+  const setup = () => {
+    const root = createRoot();
+
+    const canvas = root.canvas2D();
+
+    canvas.context.roundRect = (
+      ...args: Parameters<CanvasRenderingContext2D["roundRect"]>
+    ) => {};
+
+    const shape = canvas.shape();
+
+    const rectangle = shape.rectangle();
+
+    return { canvas, element: rectangle };
+  };
+
+  testTransform(setup, 1);
+
+  testBorderRadius(setup);
+
+  testRectangleBounds(setup, "rect");
 });
