@@ -74,23 +74,25 @@ function baseStroke<B extends typeof CustomHTMLElement>(Base: B) {
       oldValue: string | null,
       newValue: string | null
     ) {
-      if (newValue !== null) {
-        switch (name) {
-          case "stroke": {
-            {
+      switch (name) {
+        case "stroke": {
+          {
+            if (newValue === null) this.stroke = null;
+            else {
               const strokeValue = attributeParser.FillStrokeStyle(newValue);
               if (strokeValue !== "gradient") this.stroke = strokeValue;
             }
-            break;
           }
-
-          case "line-width":
-            this.lineWidth =
-              newValue === null ? null : attributeParser.number(newValue);
-            break;
+          break;
         }
 
-        super.attributeChangedCallback(name, oldValue, newValue);
+        case "line-width":
+          this.lineWidth =
+            newValue === null ? null : attributeParser.number(newValue);
+          break;
+
+        default:
+          super.attributeChangedCallback(name, oldValue, newValue);
       }
     }
   };
@@ -129,8 +131,7 @@ export function c2dStroke<B extends typeof Canvas2DBaseRenderable>(Base: B) {
     }
 
     afterRender(canvas2D: Canvas2DCanvasElement): void {
-      if (this.stroke !== "none" && this.stroke !== null)
-        canvas2D.context.stroke();
+      if (this.stroke !== "none") canvas2D.context.stroke();
 
       super.afterRender(canvas2D);
     }

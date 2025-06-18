@@ -53,10 +53,13 @@ function baseFill<B extends typeof CustomHTMLElement>(Base: B) {
       oldValue: string | null,
       newValue: string | null
     ) {
-      if (name === "fill" && newValue !== null) {
-        const fillValue = attributeParser.FillStrokeStyle(newValue);
+      if (name === "fill") {
+        if (newValue === null) this.fill = null;
+        else {
+          const fillValue = attributeParser.FillStrokeStyle(newValue);
 
-        if (fillValue !== "gradient") this.fill = fillValue;
+          if (fillValue !== "gradient") this.fill = fillValue;
+        }
       }
 
       super.attributeChangedCallback(name, oldValue, newValue);
@@ -84,7 +87,7 @@ export function c2dFill<B extends typeof Canvas2DBaseRenderable>(Base: B) {
     }
 
     afterRender(canvas2D: Canvas2DCanvasElement): void {
-      if (this.fill !== "none" && this.fill !== null) canvas2D.context.fill();
+      if (this.fill !== "none") canvas2D.context.fill();
 
       super.afterRender(canvas2D);
     }
