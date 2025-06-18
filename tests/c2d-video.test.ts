@@ -5,6 +5,7 @@ import { createRoot } from "web-spinner";
 import { testOffset } from "./testOffset";
 import { testRectangleBounds } from "./testRectangleBounds";
 import { testTransform } from "./testTransform";
+import { waitFor } from "@testing-library/dom";
 
 describe("c2d-video", () => {
   mockMatchMedia();
@@ -28,13 +29,7 @@ describe("c2d-video", () => {
 
     video.mediaElement.dispatchEvent(new Event("canplay"));
 
-    return { canvas, element: video };
-  };
-
-  test("setting dimensions modifies mediaElement", () => {
-    const { element } = setup();
-
-    Object.defineProperties(element.mediaElement, {
+    Object.defineProperties(video.mediaElement, {
       videoWidth: {
         get() {
           return videoWidth;
@@ -46,6 +41,32 @@ describe("c2d-video", () => {
         },
       },
     });
+
+    Object.defineProperties(video.mediaElement, {
+      requestVideoFrameCallback: {
+        value: jest.fn((callback: VideoFrameRequestCallback) => {
+          requestAnimationFrame((time) =>
+            callback(time, {
+              expectedDisplayTime: 0,
+              width: videoWidth,
+              height: videoHeight,
+              mediaTime: 0,
+              presentationTime: 0,
+              presentedFrames: 0,
+            })
+          );
+        }),
+      },
+      cancelVideoFrameCallback: {
+        value: jest.fn((callback: VideoFrameRequestCallback) => {}),
+      },
+    });
+
+    return { canvas, element: video };
+  };
+
+  test("setting dimensions modifies mediaElement", () => {
+    const { element } = setup();
 
     const newWidth = 45;
 
@@ -83,4 +104,34 @@ describe("c2d-video", () => {
   testTransform(setup);
 
   testRectangleBounds(setup, "drawImage", 1, 3, 4);
+
+  describe("playback", () => {
+    test("play", async () => {
+      const { element, canvas } = setup();
+
+      const play = jest.spyOn(element.mediaElement, "play");
+
+      const drawVideo = jest.spyOn(canvas.context, "drawImage");
+
+      element.play();
+
+      await waitFor(() => {
+        expect(play).toHaveBeenCalled();
+
+        expect(drawVideo).toHaveBeenCalled();
+      });
+    });
+
+    test("pause", async () => {
+      const { element, canvas } = setup();
+
+      const pause = jest.spyOn(element.mediaElement, "pause");
+
+      element.pause();
+
+      await waitFor(() => {
+        expect(pause).toHaveBeenCalled();
+      });
+    });
+  });
 });
