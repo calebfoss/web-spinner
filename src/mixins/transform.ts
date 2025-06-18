@@ -31,6 +31,8 @@ export function baseTransform<B extends typeof CustomHTMLElement>(Base: B) {
     constructor(...args: any[]) {
       super(...args);
 
+      this.#anchor.addChangeListener(this.#anchorChangeListener);
+
       this.#angle.addChangeListener(this.#angleChangeListener);
     }
 
@@ -158,8 +160,6 @@ export function baseTransform<B extends typeof CustomHTMLElement>(Base: B) {
 
       this.#anchor.x += x;
       this.#anchor.y += y;
-
-      this.registerChange("anchor", this.#anchor);
     }
 
     /**

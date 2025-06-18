@@ -9,6 +9,12 @@ export function offset<B extends typeof CustomHTMLElement>(Base: B) {
 
     #offset = new Vector2D(0, 0);
 
+    constructor(...args: any[]) {
+      super(...args);
+
+      this.#offset.addChangeListener(this.#offsetChangeListener);
+    }
+
     attributeChangedCallback(
       name: string,
       oldValue: string | null,
@@ -27,17 +33,10 @@ export function offset<B extends typeof CustomHTMLElement>(Base: B) {
 
       this.#offset.x += x;
       this.#offset.y += y;
-
-      this.registerChange("offset", this.#offset);
     }
 
-    #offsetChangeListener: ChangeListener<Vector2DBase> = (
-      value: Vector2DBase
-    ) => {
-      this.registerChange(
-        "offset",
-        value instanceof Vector2D ? value : new Vector2D(value.x, value.y)
-      );
+    #offsetChangeListener: ChangeListener<Vector2DBase> = () => {
+      this.registerChange("offset", this.#offset);
     };
 
     /**
@@ -51,7 +50,9 @@ export function offset<B extends typeof CustomHTMLElement>(Base: B) {
     }
 
     set offset(value) {
-      this.#offset = this.#offset.replace(value, this.#offsetChangeListener);
+      const replace = this.#offset.replace.bind(this.#offset);
+
+      replace((this.#offset = value), this.#offsetChangeListener);
     }
   };
 }

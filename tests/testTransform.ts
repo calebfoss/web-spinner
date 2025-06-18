@@ -2,7 +2,7 @@ import { jest } from "@jest/globals";
 import { Angle, Vector2D } from "web-spinner";
 import { ElementTestSetup, VoidCanvasMethodNames } from "./types";
 import { waitFor } from "@testing-library/dom";
-import { sleep, testReflection } from "./shared";
+import { testReflection } from "./shared";
 import { Canvas2DCanvasElement } from "../dist/types/elements/visual/canvas";
 
 export function testTransform(
@@ -13,8 +13,7 @@ export function testTransform(
     angularVelocity: Angle;
     scale: Vector2D;
     velocity: Vector2D;
-  }>,
-  renderFunctionName: VoidCanvasMethodNames
+  }>
 ) {
   describe("transform", () => {
     test("anchor", async () => {
@@ -81,13 +80,13 @@ export function testTransform(
       const rotationPerFrame = Angle.degrees(angularVelocity.degrees / fps);
 
       await waitFor(() => {
-        const movedFrames = applyMovement.mock.calls.length - 1;
+        const movedFrames = applyMovement.mock.calls.length;
+
+        const currentDegrees = element.angle.degrees;
 
         expect(movedFrames).toBeGreaterThanOrEqual(30);
 
-        element.angularVelocity = Angle.zero;
-
-        expect(element.angle.degrees).toBeCloseTo(
+        expect(currentDegrees).toBeCloseTo(
           rotationPerFrame.degrees * movedFrames
         );
       });
@@ -147,21 +146,15 @@ export function testTransform(
       const applyMovement = jest.spyOn(element, "_applyMovement");
 
       await waitFor(() => {
-        const movedFrames = applyMovement.mock.calls.length - 1;
+        const movedFrames = applyMovement.mock.calls.length;
+
+        const { x, y } = element.anchor;
 
         expect(movedFrames).toBeGreaterThanOrEqual(30);
 
-        element.velocity = Vector2D.zero;
+        expect(x).toBeCloseTo(movementPerFrame.x * movedFrames, 0);
 
-        expect(element.anchor.x).toBeCloseTo(
-          movementPerFrame.x * movedFrames,
-          0
-        );
-
-        expect(element.anchor.y).toBeCloseTo(
-          movementPerFrame.y * movedFrames,
-          0
-        );
+        expect(y).toBeCloseTo(movementPerFrame.y * movedFrames, 0);
       });
     });
 

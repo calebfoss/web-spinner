@@ -7,6 +7,7 @@ import { testRectangleBounds } from "./testRectangleBounds";
 import { testStroke } from "./testStroke";
 import { testFill } from "./testFill";
 import { waitFor } from "@testing-library/dom";
+import { testOffset } from "./testOffset";
 
 describe("c2d-ellipse", () => {
   mockMatchMedia();
@@ -59,7 +60,9 @@ describe("c2d-ellipse", () => {
     });
   });
 
-  testTransform(setup, "ellipse");
+  testOffset(setup, "ellipse");
+
+  testTransform(setup);
 
   testRectangleBounds(setup, "ellipse", 0.5);
 
