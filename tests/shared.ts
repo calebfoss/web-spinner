@@ -1,4 +1,5 @@
 import { jest } from "@jest/globals";
+import { Canvas2DCanvasElement } from "../dist/types/elements/visual/canvas";
 
 export function testReflection<
   E extends Element,
@@ -54,5 +55,18 @@ export function mockMatchMedia() {
 export function sleep(ms: number) {
   return new Promise((resolve) => {
     setTimeout(resolve, ms);
+  });
+}
+
+export function setupMockTiming(canvas: Canvas2DCanvasElement, fps: number) {
+  const msPerFrame = 1000 / fps;
+
+  performance.now = jest.fn(() => canvas.frame * msPerFrame);
+
+  Object.defineProperty(canvas, "deltaTime", {
+    get() {
+      return msPerFrame;
+    },
+    set() {},
   });
 }

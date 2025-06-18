@@ -6,72 +6,11 @@ import { waitFor } from "@testing-library/dom";
 import { testTransform } from "./testTransform";
 import { testStroke } from "./testStroke";
 import { testFill } from "./testFill";
+import { ElementTestSetup } from "./types";
 
-describe("c2d-bezier", () => {
-  mockMatchMedia();
-
-  setupJestCanvasMock();
-
-  const setup = () => {
-    const root = createRoot();
-
-    const canvas = root.canvas2D();
-
-    const bezier = canvas.bezier();
-
-    return { canvas, element: bezier };
-  };
-
-  describe("from and to", () => {
-    test("from coordinates passed into moveTo", async () => {
-      const { element, canvas } = setup();
-
-      const from = Vector2D.xy(1, 2);
-
-      const moveTo = jest.spyOn(canvas.context, "moveTo");
-
-      element.from = from;
-
-      await waitFor(() => {
-        expect(moveTo).toHaveBeenCalled();
-
-        expect(moveTo.mock.calls[0]).toEqual([from.x, from.y]);
-      });
-    });
-
-    test("from reflection", () => {
-      const { element } = setup();
-
-      element.from = Vector2D.xy(1, 2);
-
-      testReflection(element, "from", "from", Vector2D.xy(4, 3));
-    });
-
-    test("to coordinates passed into bezierCurveTo", async () => {
-      const { element, canvas } = setup();
-
-      const to = Vector2D.xy(1, 2);
-
-      const bezierCurveTo = jest.spyOn(canvas.context, "bezierCurveTo");
-
-      element.to = to;
-
-      await waitFor(() => {
-        expect(bezierCurveTo).toHaveBeenCalled();
-
-        expect(bezierCurveTo.mock.calls[0].slice(4)).toEqual([to.x, to.y]);
-      });
-    });
-
-    test("to reflection", () => {
-      const { element } = setup();
-
-      element.to = Vector2D.xy(1, 2);
-
-      testReflection(element, "to", "to", Vector2D.xy(4, 3));
-    });
-  });
-
+function testControlPoints(
+  setup: ElementTestSetup<{ controlA: Vector2D; controlB: Vector2D }>
+) {
   describe("control points", () => {
     test("controlA coordinates passed into bezierCurveTo", async () => {
       const { element, canvas } = setup();
@@ -127,10 +66,104 @@ describe("c2d-bezier", () => {
       testReflection(element, "controlB", "control-b", Vector2D.xy(6, 5));
     });
   });
+}
+
+function testTo(setup: ElementTestSetup<{ to: Vector2D }>) {
+  describe("to", () => {
+    test("coordinates passed into bezierCurveTo", async () => {
+      const { element, canvas } = setup();
+
+      const to = Vector2D.xy(1, 2);
+
+      const bezierCurveTo = jest.spyOn(canvas.context, "bezierCurveTo");
+
+      element.to = to;
+
+      await waitFor(() => {
+        expect(bezierCurveTo).toHaveBeenCalled();
+
+        expect(bezierCurveTo.mock.calls[0].slice(4)).toEqual([to.x, to.y]);
+      });
+    });
+
+    test("reflection", () => {
+      const { element } = setup();
+
+      element.to = Vector2D.xy(1, 2);
+
+      testReflection(element, "to", "to", Vector2D.xy(4, 3));
+    });
+  });
+}
+
+describe("c2d-bezier", () => {
+  mockMatchMedia();
+
+  setupJestCanvasMock();
+
+  const setup = () => {
+    const root = createRoot();
+
+    const canvas = root.canvas2D();
+
+    const bezier = canvas.bezier();
+
+    return { canvas, element: bezier };
+  };
+
+  describe("from", () => {
+    test("coordinates passed into moveTo", async () => {
+      const { element, canvas } = setup();
+
+      const from = Vector2D.xy(1, 2);
+
+      const moveTo = jest.spyOn(canvas.context, "moveTo");
+
+      element.from = from;
+
+      await waitFor(() => {
+        expect(moveTo).toHaveBeenCalled();
+
+        expect(moveTo.mock.calls[0]).toEqual([from.x, from.y]);
+      });
+    });
+
+    test("reflection", () => {
+      const { element } = setup();
+
+      element.from = Vector2D.xy(1, 2);
+
+      testReflection(element, "from", "from", Vector2D.xy(4, 3));
+    });
+  });
+
+  testTo(setup);
+
+  testControlPoints(setup);
 
   testTransform(setup);
 
   testStroke(setup, "bezierCurveTo");
 
   testFill(setup, "bezierCurveTo");
+});
+
+describe("c2d-shape-bezier", () => {
+  const setup = () => {
+    const root = createRoot();
+
+    const canvas = root.canvas2D();
+
+    const shape = canvas.shape();
+
+    const bezier = shape.bezier();
+
+    return { canvas, element: bezier };
+  };
+
+  testTo(setup);
+
+  testControlPoints(setup);
+
+  testTransform(setup, 1);
 });

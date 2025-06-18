@@ -4,7 +4,12 @@ import { waitFor } from "@testing-library/dom";
 import "@testing-library/jest-dom";
 import { UserEvent, userEvent } from "@testing-library/user-event";
 import { Color, createRoot } from "web-spinner";
-import { mockMatchMedia, sleep, testReflection } from "./shared";
+import {
+  mockMatchMedia,
+  setupMockTiming,
+  sleep,
+  testReflection,
+} from "./shared";
 import { HTMLElementController } from "../dist/types/elements/document/domBase";
 import { DocumentContainerWrapper } from "../dist/types/elements/document/container";
 import { Canvas2DCanvasElement } from "../dist/types/elements/visual/canvas";
@@ -193,23 +198,19 @@ describe("c2d-canvas", () => {
     });
 
     test("Calculates time between frames", async () => {
-      canvas.queueRender();
+      const fps = 60;
 
-      await new Promise(requestAnimationFrame);
+      setupMockTiming(canvas, fps);
 
-      const startTime = performance.now();
+      const everyFrame = jest.fn((frame) => {
+        expect(canvas.deltaTime).toBe(1000 / fps);
+      });
 
-      await sleep(125);
+      canvas.everyFrame = everyFrame;
 
-      canvas.queueRender();
-
-      await new Promise(requestAnimationFrame);
-
-      const endTime = performance.now();
-
-      const deltaTime = endTime - startTime;
-
-      expect(Math.abs(canvas.deltaTime - deltaTime)).toBeLessThan(5);
+      await waitFor(() => {
+        expect(everyFrame.mock.calls.length).toBeGreaterThanOrEqual(30);
+      });
     });
   });
 

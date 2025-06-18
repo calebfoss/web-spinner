@@ -6,6 +6,7 @@ import { Vector2D } from "../classes/vector2d";
 
 type AttributeTypeMap = {
   number: number;
+  boolean: boolean;
   BorderRadius: BorderRadius;
   Color: Color;
   FillStrokeStyle: DrawStyle;
@@ -28,6 +29,16 @@ const includesNumbers = (str: string) => str.match(/\d/) !== null;
 export const attributeParser: AttributeTypeParser = {
   number(stringValue) {
     return parseFloat(stringValue);
+  },
+  boolean(stringValue) {
+    switch (stringValue.trim().toLowerCase()) {
+      case "true":
+        return true;
+      case "false":
+        return false;
+      default:
+        throw new Error(`Failed to parse ${stringValue} as boolean.`);
+    }
   },
   BorderRadius(stringValue) {
     const args = stringValue.split(",");
