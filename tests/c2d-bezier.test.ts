@@ -128,7 +128,7 @@ describe("c2d-bezier", () => {
     });
   });
 
-  testTransform(setup, "bezierCurveTo");
+  testTransform(setup);
 
   testStroke(setup, "bezierCurveTo");
 

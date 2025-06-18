@@ -87,7 +87,7 @@ describe("c2d-line", () => {
     expect(element.center.y).toBe(from.y + (to.y - from.y) / 2);
   });
 
-  testTransform(setup, "lineTo");
+  testTransform(setup);
 
   testStroke(setup, "lineTo");
 });

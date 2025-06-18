@@ -3,6 +3,7 @@ import { setupJestCanvasMock } from "jest-canvas-mock";
 import { createRoot } from "web-spinner";
 import { testTransform } from "./testTransform";
 import { testRectangleBounds } from "./testRectangleBounds";
+import { testOffset } from "./testOffset";
 
 describe("c2d-image", () => {
   mockMatchMedia();
@@ -76,7 +77,9 @@ describe("c2d-image", () => {
     testReflection(element, "source", "source", "http://b.com/b.jpg");
   });
 
-  testTransform(setup, "drawImage");
+  testOffset(setup, "drawImage", { x: 1, y: 2 });
+
+  testTransform(setup);
 
   testRectangleBounds(setup, "drawImage", 1, 3, 4);
 });

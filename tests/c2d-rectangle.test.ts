@@ -7,6 +7,7 @@ import { testStroke } from "./testStroke";
 import { testRectangleBounds } from "./testRectangleBounds";
 import { testFill } from "./testFill";
 import { testTransform } from "./testTransform";
+import { testOffset } from "./testOffset";
 
 describe("c2d-rectangle", () => {
   mockMatchMedia();
@@ -166,7 +167,9 @@ describe("c2d-rectangle", () => {
     });
   });
 
-  testTransform(setup, "rect");
+  testOffset(setup, "rect");
+
+  testTransform(setup);
 
   testRectangleBounds(setup, "rect");
 
