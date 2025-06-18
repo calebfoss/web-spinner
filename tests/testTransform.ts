@@ -2,7 +2,7 @@ import { jest } from "@jest/globals";
 import { Angle, Vector2D } from "web-spinner";
 import { ElementTestSetup, VoidCanvasMethodNames } from "./types";
 import { waitFor } from "@testing-library/dom";
-import { testReflection } from "./shared";
+import { setupMockTiming, testReflection } from "./shared";
 import { Canvas2DCanvasElement } from "../dist/types/elements/visual/canvas";
 
 export function testTransform(
@@ -172,18 +172,5 @@ export function testTransform(
 
       testReflection(element, "velocity", "velocity", Vector2D.xy(3, 4));
     });
-  });
-}
-
-function setupMockTiming(canvas: Canvas2DCanvasElement, fps: number) {
-  const msPerFrame = 1000 / fps;
-
-  performance.now = jest.fn(() => canvas.frame * msPerFrame);
-
-  Object.defineProperty(canvas, "deltaTime", {
-    get() {
-      return msPerFrame;
-    },
-    set() {},
   });
 }
