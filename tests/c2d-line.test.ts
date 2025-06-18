@@ -5,47 +5,10 @@ import { createRoot, Vector2D } from "web-spinner";
 import { testTransform } from "./testTransform";
 import { testStroke } from "./testStroke";
 import { waitFor } from "@testing-library/dom";
+import { ElementTestSetup } from "./types";
 
-describe("c2d-line", () => {
-  mockMatchMedia();
-
-  setupJestCanvasMock();
-
-  const setup = () => {
-    const root = createRoot();
-
-    const canvas = root.canvas2D();
-
-    const line = canvas.line();
-
-    return { canvas, element: line };
-  };
-
-  describe("from and to", () => {
-    test("from coordinates passed into moveTo", async () => {
-      const { element, canvas } = setup();
-
-      const from = Vector2D.xy(1, 2);
-
-      const moveTo = jest.spyOn(canvas.context, "moveTo");
-
-      element.from = from;
-
-      await waitFor(() => {
-        expect(moveTo).toHaveBeenCalled();
-
-        expect(moveTo.mock.calls[0]).toEqual([from.x, from.y]);
-      });
-    });
-
-    test("from reflection", () => {
-      const { element } = setup();
-
-      element.from = Vector2D.xy(1, 2);
-
-      testReflection(element, "from", "from", Vector2D.xy(4, 3));
-    });
-
+function testTo(setup: ElementTestSetup<{ to: Vector2D }>) {
+  describe("to", () => {
     test("to coordinates passed into lineTo", async () => {
       const { element, canvas } = setup();
 
@@ -70,6 +33,50 @@ describe("c2d-line", () => {
       testReflection(element, "to", "to", Vector2D.xy(4, 3));
     });
   });
+}
+
+describe("c2d-line", () => {
+  mockMatchMedia();
+
+  setupJestCanvasMock();
+
+  const setup = () => {
+    const root = createRoot();
+
+    const canvas = root.canvas2D();
+
+    const line = canvas.line();
+
+    return { canvas, element: line };
+  };
+
+  describe("from", () => {
+    test("coordinates passed into moveTo", async () => {
+      const { element, canvas } = setup();
+
+      const from = Vector2D.xy(1, 2);
+
+      const moveTo = jest.spyOn(canvas.context, "moveTo");
+
+      element.from = from;
+
+      await waitFor(() => {
+        expect(moveTo).toHaveBeenCalled();
+
+        expect(moveTo.mock.calls[0]).toEqual([from.x, from.y]);
+      });
+    });
+
+    test("reflection", () => {
+      const { element } = setup();
+
+      element.from = Vector2D.xy(1, 2);
+
+      testReflection(element, "from", "from", Vector2D.xy(4, 3));
+    });
+  });
+
+  testTo(setup);
 
   test("center coordinates match", () => {
     const { element } = setup();
@@ -90,4 +97,22 @@ describe("c2d-line", () => {
   testTransform(setup);
 
   testStroke(setup, "lineTo");
+});
+
+describe("c2d-shape-line", () => {
+  const setup = () => {
+    const root = createRoot();
+
+    const canvas = root.canvas2D();
+
+    const shape = canvas.shape();
+
+    const line = shape.line();
+
+    return { canvas, element: line };
+  };
+
+  testTo(setup);
+
+  testTransform(setup, 1);
 });
