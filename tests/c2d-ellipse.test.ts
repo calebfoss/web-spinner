@@ -8,22 +8,11 @@ import { testStroke } from "./testStroke";
 import { testFill } from "./testFill";
 import { waitFor } from "@testing-library/dom";
 import { testOffset } from "./testOffset";
+import { ElementTestSetup } from "./types";
 
-describe("c2d-ellipse", () => {
-  mockMatchMedia();
-
-  setupJestCanvasMock();
-
-  const setup = () => {
-    const root = createRoot();
-
-    const canvas = root.canvas2D();
-
-    const ellipse = canvas.ellipse();
-
-    return { canvas, element: ellipse };
-  };
-
+function testStartEndAngles(
+  setup: ElementTestSetup<{ startAngle: Angle; endAngle: Angle }>
+) {
   describe("start and end angle", () => {
     test("values are passed to render function", async () => {
       const { element, canvas } = setup();
@@ -59,6 +48,24 @@ describe("c2d-ellipse", () => {
       testReflection(element, "endAngle", "end-angle", Angle.degrees(30));
     });
   });
+}
+
+describe("c2d-ellipse", () => {
+  mockMatchMedia();
+
+  setupJestCanvasMock();
+
+  const setup = () => {
+    const root = createRoot();
+
+    const canvas = root.canvas2D();
+
+    const ellipse = canvas.ellipse();
+
+    return { canvas, element: ellipse };
+  };
+
+  testStartEndAngles(setup);
 
   testOffset(setup, "ellipse");
 
@@ -69,4 +76,24 @@ describe("c2d-ellipse", () => {
   testStroke(setup, "ellipse");
 
   testFill(setup, "ellipse");
+});
+
+describe("c2d-shape-ellipse", () => {
+  const setup = () => {
+    const root = createRoot();
+
+    const canvas = root.canvas2D();
+
+    const shape = canvas.shape();
+
+    const ellipse = shape.ellipse();
+
+    return { canvas, element: ellipse };
+  };
+
+  testStartEndAngles(setup);
+
+  testTransform(setup, 1);
+
+  testRectangleBounds(setup, "ellipse", 0.5);
 });

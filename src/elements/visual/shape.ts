@@ -46,12 +46,15 @@ export class Canvas2DShape extends c2dFill(
 
     context.moveTo(this.offset.x, this.offset.y);
 
-    this.renderChildren(canvas2D);
+    super.renderChildren(canvas2D);
 
     if (this.#close) context.closePath();
 
     this.afterRender(canvas2D);
   }
+
+  // This is empty to prevent double rendering children
+  renderChildren(canvas2D: Canvas2DCanvasElement): void {}
 }
 
 customElements.define("c2d-shape", Canvas2DShape);

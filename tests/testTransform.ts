@@ -13,7 +13,8 @@ export function testTransform(
     angularVelocity: Angle;
     scale: Vector2D;
     velocity: Vector2D;
-  }>
+  }>,
+  transformedParents = 0
 ) {
   describe("transform", () => {
     test("anchor", async () => {
@@ -26,9 +27,12 @@ export function testTransform(
       element.anchor = anchor;
 
       await waitFor(() => {
-        expect(translate).toHaveBeenCalled();
+        expect(translate).toHaveBeenCalledTimes(1 + transformedParents);
 
-        expect(translate.mock.calls[0]).toEqual([anchor.x, anchor.y]);
+        expect(translate.mock.calls[transformedParents]).toEqual([
+          anchor.x,
+          anchor.y,
+        ]);
       });
     });
 
@@ -50,9 +54,9 @@ export function testTransform(
       element.angle = angle;
 
       await waitFor(() => {
-        expect(rotate).toHaveBeenCalled();
+        expect(rotate).toHaveBeenCalledTimes(1 + transformedParents);
 
-        expect(rotate.mock.calls[0][0]).toBe(angle.radians);
+        expect(rotate.mock.calls[transformedParents][0]).toBe(angle.radians);
       });
     });
 
@@ -116,9 +120,12 @@ export function testTransform(
 
       await waitFor(() => {
         // The first time is for the canvas
-        expect(scale).toHaveBeenCalledTimes(2);
+        expect(scale).toHaveBeenCalledTimes(2 + transformedParents);
 
-        expect(scale.mock.calls[1]).toEqual([scaleValue.x, scaleValue.y]);
+        expect(scale.mock.calls[1 + transformedParents]).toEqual([
+          scaleValue.x,
+          scaleValue.y,
+        ]);
       });
     });
 
