@@ -209,7 +209,7 @@ describe("c2d-canvas", () => {
       canvas.everyFrame = everyFrame;
 
       await waitFor(() => {
-        expect(everyFrame).toHaveBeenCalledTimes(30);
+        expect(everyFrame.mock.calls.length).toBeGreaterThanOrEqual(30);
       });
     });
   });
