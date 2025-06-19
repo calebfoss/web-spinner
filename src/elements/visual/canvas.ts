@@ -292,6 +292,15 @@ export class Canvas2DCanvasElement extends c2dStandaloneChildren(C2DBase) {
     this.registerChange("height", value);
   }
 
+  registerChange<P extends keyof this>(
+    propertyName: P,
+    newValue: this[P]
+  ): void {
+    super.registerChange(propertyName, newValue);
+
+    this.queueRender();
+  }
+
   #render() {
     if (this.#waitFor.size) return;
 
