@@ -81,6 +81,8 @@ export class Canvas2DText extends Base {
 
     if (this.#align !== null) context.textAlign = this.#align;
 
+    if (this.#baseline !== null) context.textBaseline = this.#baseline;
+
     if (this.fill !== "none" && this.textContent !== null)
       context.fillText(this.textContent, this.offset.x, this.offset.y);
 
