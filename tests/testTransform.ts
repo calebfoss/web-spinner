@@ -3,7 +3,6 @@ import { Angle, Vector2D } from "web-spinner";
 import { ElementTestSetup, VoidCanvasMethodNames } from "./types";
 import { waitFor } from "@testing-library/dom";
 import { setupMockTiming, testReflection } from "./shared";
-import { Canvas2DCanvasElement } from "../dist/types/elements/visual/canvas";
 
 export function testTransform(
   setup: ElementTestSetup<{

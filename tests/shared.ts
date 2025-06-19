@@ -70,3 +70,20 @@ export function setupMockTiming(canvas: Canvas2DCanvasElement, fps: number) {
     set() {},
   });
 }
+
+export function mockMediaPlayback() {
+  let paused = true;
+
+  Object.defineProperties(HTMLMediaElement.prototype, {
+    play: {
+      value() {
+        paused = false;
+      },
+    },
+    pause: {
+      value() {
+        paused = true;
+      },
+    },
+  });
+}

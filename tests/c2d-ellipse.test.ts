@@ -9,6 +9,7 @@ import { testFill } from "./testFill";
 import { waitFor } from "@testing-library/dom";
 import { testOffset } from "./testOffset";
 import { ElementTestSetup } from "./types";
+import { testShadow } from "./testShadow";
 
 function testStartEndAngles(
   setup: ElementTestSetup<{ startAngle: Angle; endAngle: Angle }>
@@ -76,6 +77,8 @@ describe("c2d-ellipse", () => {
   testStroke(setup, "ellipse");
 
   testFill(setup, "ellipse");
+
+  testShadow(setup, "ellipse");
 });
 
 describe("c2d-shape-ellipse", () => {

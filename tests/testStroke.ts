@@ -27,7 +27,8 @@ export function testStroke(
       gradient: RadialGradient
     ) => CanvasGradient;
   }>,
-  renderFunctionName: VoidCanvasMethodNames
+  renderFunctionName: VoidCanvasMethodNames,
+  rendersWithNoStroke = true
 ) {
   describe("stroke", () => {
     test("lineWidth", async () => {
@@ -123,12 +124,14 @@ export function testStroke(
       expect(renderedStroke instanceof CanvasGradient).toBe(true);
     });
 
-    element.stroke = "none";
+    if (rendersWithNoStroke) {
+      element.stroke = "none";
 
-    await waitFor(() => {
-      expect(render).toHaveBeenCalledTimes(5);
+      await waitFor(() => {
+        expect(render).toHaveBeenCalledTimes(5);
 
-      expect(stroke).toHaveBeenCalledTimes(4);
-    });
+        expect(stroke).toHaveBeenCalledTimes(4);
+      });
+    }
   });
 }

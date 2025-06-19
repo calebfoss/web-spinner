@@ -26,7 +26,8 @@ export function testFill(
       gradient: RadialGradient
     ) => CanvasGradient;
   }>,
-  renderFunctionName: VoidCanvasMethodNames
+  renderFunctionName: VoidCanvasMethodNames,
+  rendersWithNoFill = true
 ) {
   describe("fill", () => {
     test("fill", async () => {
@@ -96,15 +97,17 @@ export function testFill(
         expect(renderedFill instanceof CanvasGradient).toBe(true);
       });
 
-      element.fill = "none";
+      if (rendersWithNoFill) {
+        element.fill = "none";
 
-      await waitFor(() => {
-        expect(render).toHaveBeenCalledTimes(5);
+        await waitFor(() => {
+          expect(render).toHaveBeenCalledTimes(5);
 
-        expect(fill).toHaveBeenCalledTimes(4);
-      });
+          expect(fill).toHaveBeenCalledTimes(4);
+        });
 
-      testReflection(element, "fill", "fill", Color.rgb(225, 150, 75));
+        testReflection(element, "fill", "fill", Color.rgb(225, 150, 75));
+      }
     });
   });
 }

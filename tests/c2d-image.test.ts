@@ -4,6 +4,7 @@ import { createRoot } from "web-spinner";
 import { testTransform } from "./testTransform";
 import { testRectangleBounds } from "./testRectangleBounds";
 import { testOffset } from "./testOffset";
+import { testShadow } from "./testShadow";
 
 describe("c2d-image", () => {
   mockMatchMedia();
@@ -82,4 +83,6 @@ describe("c2d-image", () => {
   testTransform(setup);
 
   testRectangleBounds(setup, "drawImage", 1, 3, 4);
+
+  testShadow(setup, "drawImage");
 });

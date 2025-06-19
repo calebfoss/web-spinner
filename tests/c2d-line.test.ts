@@ -6,6 +6,7 @@ import { testTransform } from "./testTransform";
 import { testStroke } from "./testStroke";
 import { waitFor } from "@testing-library/dom";
 import { ElementTestSetup } from "./types";
+import { testShadow } from "./testShadow";
 
 function testTo(setup: ElementTestSetup<{ to: Vector2D }>) {
   describe("to", () => {
@@ -97,6 +98,8 @@ describe("c2d-line", () => {
   testTransform(setup);
 
   testStroke(setup, "lineTo");
+
+  testShadow(setup, "lineTo");
 });
 
 describe("c2d-shape-line", () => {
