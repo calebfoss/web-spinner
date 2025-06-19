@@ -1,14 +1,17 @@
 import { expect, jest, test } from "@jest/globals";
-import { mockMatchMedia, testReflection } from "./shared";
+import { mockMatchMedia, mockMediaPlayback, testReflection } from "./shared";
 import { setupJestCanvasMock } from "jest-canvas-mock";
 import { createRoot } from "web-spinner";
 import { testOffset } from "./testOffset";
 import { testRectangleBounds } from "./testRectangleBounds";
 import { testTransform } from "./testTransform";
 import { waitFor } from "@testing-library/dom";
+import { testShadow } from "./testShadow";
 
 describe("c2d-video", () => {
   mockMatchMedia();
+
+  mockMediaPlayback();
 
   setupJestCanvasMock();
 
@@ -134,4 +137,6 @@ describe("c2d-video", () => {
       });
     });
   });
+
+  testShadow(setup, "drawImage");
 });

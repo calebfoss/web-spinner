@@ -7,6 +7,7 @@ import { setupJestCanvasMock } from "jest-canvas-mock";
 import { mockMatchMedia, testReflection } from "./shared";
 import { testTransform } from "./testTransform";
 import { waitFor } from "@testing-library/dom";
+import { testShadow } from "./testShadow";
 
 describe("c2d-shape", () => {
   setupJestCanvasMock();
@@ -64,4 +65,6 @@ describe("c2d-shape", () => {
   testFill(setup, "moveTo");
 
   testStroke(setup, "moveTo");
+
+  testShadow(setup, "moveTo");
 });

@@ -9,6 +9,7 @@ import { testFill } from "./testFill";
 import { testTransform } from "./testTransform";
 import { testOffset } from "./testOffset";
 import { ElementTestSetup } from "./types";
+import { testShadow } from "./testShadow";
 
 function testBorderRadius(
   setup: ElementTestSetup<{
@@ -188,6 +189,8 @@ describe("c2d-rectangle", () => {
   testStroke(setup, "rect");
 
   testFill(setup, "rect");
+
+  testShadow(setup, "rect");
 });
 
 describe("c2d-shape-rectangle", () => {

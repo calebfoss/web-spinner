@@ -7,6 +7,7 @@ import { testTransform } from "./testTransform";
 import { testStroke } from "./testStroke";
 import { testFill } from "./testFill";
 import { ElementTestSetup } from "./types";
+import { testShadow } from "./testShadow";
 
 function testControlPoints(
   setup: ElementTestSetup<{ controlA: Vector2D; controlB: Vector2D }>
@@ -146,6 +147,8 @@ describe("c2d-bezier", () => {
   testStroke(setup, "bezierCurveTo");
 
   testFill(setup, "bezierCurveTo");
+
+  testShadow(setup, "bezierCurveTo");
 });
 
 describe("c2d-shape-bezier", () => {

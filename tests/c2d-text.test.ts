@@ -5,6 +5,7 @@ import { testFill } from "./testFill";
 import { mockMatchMedia, testReflection } from "./shared";
 import { setupJestCanvasMock } from "jest-canvas-mock";
 import { waitFor } from "@testing-library/dom";
+import { testShadow } from "./testShadow";
 
 describe("c2d-text", () => {
   setupJestCanvasMock();
@@ -121,4 +122,6 @@ describe("c2d-text", () => {
   testStroke(setup, "strokeText", false);
 
   testFill(setup, "fillText", false);
+
+  testShadow(setup, "fillText");
 });
