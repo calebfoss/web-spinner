@@ -66,6 +66,10 @@ describe("c2d-ellipse", () => {
     return { canvas, element: ellipse };
   };
 
+  afterEach(() => {
+    while (document.body.firstChild !== null) document.body.firstChild.remove();
+  });
+
   testStartEndAngles(setup);
 
   testOffset(setup, "ellipse");

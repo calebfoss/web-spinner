@@ -83,7 +83,7 @@ export function testTransform(
       const rotationPerFrame = Angle.degrees(angularVelocity.degrees / fps);
 
       await waitFor(() => {
-        const movedFrames = applyMovement.mock.calls.length;
+        const movedFrames = applyMovement.mock.calls.length - 1;
 
         const currentDegrees = element.angle.degrees;
 
@@ -152,7 +152,7 @@ export function testTransform(
       const applyMovement = jest.spyOn(element, "_applyMovement");
 
       await waitFor(() => {
-        const movedFrames = applyMovement.mock.calls.length;
+        const movedFrames = applyMovement.mock.calls.length - 1;
 
         const { x, y } = element.anchor;
 

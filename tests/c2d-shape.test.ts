@@ -24,6 +24,10 @@ describe("c2d-shape", () => {
     return { canvas, element: shape };
   };
 
+  afterEach(() => {
+    while (document.body.firstChild !== null) document.body.firstChild.remove();
+  });
+
   describe("close", () => {
     test("close determines whether closePath is called", async () => {
       const { element, canvas } = setup();

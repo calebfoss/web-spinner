@@ -106,7 +106,8 @@ export function baseTransform<B extends typeof CustomHTMLElement>(Base: B) {
             Math.min(deltaTime, now - this.#angularVelocityChangedTime)) /
           1000;
 
-        this.angle[this.#angle.unit] += angleChange;
+        if (angleChange === 0) this.registerChange("angle", this.#angle);
+        else this.angle[this.#angle.unit] += angleChange;
       }
 
       if (this.#velocity.x !== 0 || this.#velocity.y !== 0) {
@@ -116,10 +117,12 @@ export function baseTransform<B extends typeof CustomHTMLElement>(Base: B) {
         if (isReadOnly(this.#anchor, "x") || isReadOnly(this.#anchor, "y"))
           this.#anchor = this.#anchor.copy();
 
-        this.moveAnchor(
-          this.#velocity.x * velocityDelta,
-          this.#velocity.y * velocityDelta
-        );
+        if (velocityDelta === 0) this.registerChange("anchor", this.#anchor);
+        else
+          this.moveAnchor(
+            this.#velocity.x * velocityDelta,
+            this.#velocity.y * velocityDelta
+          );
       }
     }
 

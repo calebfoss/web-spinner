@@ -1,12 +1,12 @@
 export class KeyboardTracker {
-  #current = new Map<string, boolean>();
-  #previous = new Map<string, boolean>();
+  #current = new Set<string>();
+  #previous = new Set<string>();
   #last = "";
   #down = false;
 
   constructor() {
     window.addEventListener("keydown", (event) => {
-      this.#current.set(event.key, true);
+      this.#current.add(event.key);
 
       this.#last = event.key;
 
@@ -14,7 +14,7 @@ export class KeyboardTracker {
     });
 
     window.addEventListener("keyup", (event) => {
-      this.#current.set(event.key, false);
+      this.#current.delete(event.key);
 
       this.#down = false;
 
@@ -29,8 +29,12 @@ export class KeyboardTracker {
   }
 
   advanceFrame() {
-    for (const [key, state] of this.#current.entries()) {
-      this.#previous.set(key, state);
+    for (const key of this.#previous) {
+      if (!this.#current.has(key)) this.#previous.delete(key);
+    }
+
+    for (const key of this.#current) {
+      this.#previous.add(key);
     }
   }
 
@@ -43,10 +47,10 @@ export class KeyboardTracker {
   }
 
   keyHeld(key: string) {
-    return this.#current.get(key) ?? false;
+    return this.#current.has(key);
   }
 
   keyPreviouslyHeld(key: string) {
-    return this.#previous.get(key) ?? false;
+    return this.#previous.has(key);
   }
 }

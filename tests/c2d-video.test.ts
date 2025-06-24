@@ -68,6 +68,10 @@ describe("c2d-video", () => {
     return { canvas, element: video };
   };
 
+  afterEach(() => {
+    while (document.body.firstChild !== null) document.body.firstChild.remove();
+  });
+
   test("setting dimensions modifies mediaElement", () => {
     const { element } = setup();
 

@@ -51,6 +51,10 @@ describe("c2d-line", () => {
     return { canvas, element: line };
   };
 
+  afterEach(() => {
+    while (document.body.firstChild !== null) document.body.firstChild.remove();
+  });
+
   describe("from", () => {
     test("coordinates passed into moveTo", async () => {
       const { element, canvas } = setup();

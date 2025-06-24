@@ -178,6 +178,10 @@ describe("c2d-rectangle", () => {
     return { canvas, element: rectangle };
   };
 
+  afterEach(() => {
+    while (document.body.firstChild !== null) document.body.firstChild.remove();
+  });
+
   testOffset(setup, "rect");
 
   testBorderRadius(setup);
