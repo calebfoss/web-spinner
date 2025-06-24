@@ -2062,13 +2062,13 @@
               "kind": "field",
               "name": "#current",
               "privacy": "private",
-              "default": "new Map<string, boolean>()"
+              "default": "new Set<string>()"
             },
             {
               "kind": "field",
               "name": "#previous",
               "privacy": "private",
-              "default": "new Map<string, boolean>()"
+              "default": "new Set<string>()"
             },
             {
               "kind": "field",
@@ -5462,7 +5462,7 @@
               "type": {
                 "text": "Origin"
               },
-              "default": "\"topLeft\"",
+              "default": "defaultOrigin",
               "inheritedFrom": {
                 "name": "baseRectangleBounds",
                 "module": "src/mixins/rectangleBounds.ts"
@@ -5646,9 +5646,22 @@
               "type": {
                 "text": "B"
               }
+            },
+            {
+              "name": "defaultOrigin",
+              "type": {
+                "text": "Origin"
+              }
             }
           ],
           "attributes": [
+            {
+              "name": "origin",
+              "inheritedFrom": {
+                "name": "baseRectangleBounds",
+                "module": "src/mixins/rectangleBounds.ts"
+              }
+            },
             {
               "name": "width",
               "type": {
@@ -5784,7 +5797,7 @@
               "type": {
                 "text": "Origin"
               },
-              "default": "\"topLeft\"",
+              "default": "defaultOrigin",
               "inheritedFrom": {
                 "name": "baseRectangleBounds",
                 "module": "src/mixins/rectangleBounds.ts"
@@ -5904,9 +5917,22 @@
               "type": {
                 "text": "B"
               }
+            },
+            {
+              "name": "defaultOrigin",
+              "type": {
+                "text": "Origin"
+              }
             }
           ],
           "attributes": [
+            {
+              "name": "origin",
+              "inheritedFrom": {
+                "name": "baseRectangleBounds",
+                "module": "src/mixins/rectangleBounds.ts"
+              }
+            },
             {
               "name": "width",
               "type": {
@@ -9100,7 +9126,7 @@
               "type": {
                 "text": "Origin"
               },
-              "default": "\"topLeft\"",
+              "default": "defaultOrigin",
               "inheritedFrom": {
                 "name": "baseRectangleBounds",
                 "module": "src/mixins/rectangleBounds.ts"
@@ -9254,6 +9280,13 @@
               "fieldName": "source"
             },
             {
+              "name": "origin",
+              "inheritedFrom": {
+                "name": "baseRectangleBounds",
+                "module": "src/mixins/rectangleBounds.ts"
+              }
+            },
+            {
               "name": "width",
               "type": {
                 "text": "number"
@@ -9333,7 +9366,7 @@
           "type": {
             "text": "AttributeTypeParser"
           },
-          "default": "{ number(stringValue) { return parseFloat(stringValue); }, BorderRadius(stringValue) { const args = stringValue.split(\",\"); const [arg1, arg2, arg3, arg4] = args.map(attributeParser.number); const borderRadius = new BorderRadius(arg1, arg2, arg3, arg4); return borderRadius; }, Color(stringValue) { const args = stringValue.split(\",\"); const numbers = args.map(attributeParser.number); switch (numbers.length) { case 1: return isNaN(numbers[0]) ? new Color(args[0]) : new Color(numbers[0]); case 2: return new Color(numbers[0], numbers[1]); case 3: return new Color(numbers[0], numbers[1], numbers[2]); case 5: console.warn( `Found ${numbers.length} arguments passed to Color attribute, but the maximum is 4` ); default: return new Color(numbers[0], numbers[1], numbers[2], numbers[3]); } }, FillStrokeStyle(stringValue) { if (stringValue === \"none\" || stringValue === \"gradient\") return stringValue; return attributeParser.Color(stringValue); }, Vector2D(stringValue) { const numbers = stringValue.split(\",\").map(attributeParser.number); if (numbers.some(Number.isNaN)) throw new Error(`NaN: ${stringValue}`); switch (numbers.length) { case 0: return new Vector2D(); case 1: return new Vector2D(numbers[0]); case 3: console.warn( `Found ${numbers.length} arguments passed to Vecto2D attribute, but the maximum is 2` ); default: return new Vector2D(numbers[0], numbers[1]); } }, Angle(stringValue) { const args = stringValue.match(angleMatch); if (args === null) throw new Error(`Angle arguments could not be parsed: ${stringValue}`); const value = attributeParser.number(args[1]); const unit = args[2] as AngleUnitShort; return new Angle(unit, value); }, }"
+          "default": "{ number(stringValue) { return parseFloat(stringValue); }, boolean(stringValue) { switch (stringValue.trim().toLowerCase()) { case \"true\": return true; case \"false\": return false; default: throw new Error(`Failed to parse ${stringValue} as boolean.`); } }, BorderRadius(stringValue) { const args = stringValue.split(\",\"); const [arg1, arg2, arg3, arg4] = args.map(attributeParser.number); const borderRadius = new BorderRadius(arg1, arg2, arg3, arg4); return borderRadius; }, Color(stringValue) { const args = stringValue.split(\",\"); const numbers = args.map(attributeParser.number); switch (numbers.length) { case 1: return isNaN(numbers[0]) ? new Color(args[0]) : new Color(numbers[0]); case 2: return new Color(numbers[0], numbers[1]); case 3: return new Color(numbers[0], numbers[1], numbers[2]); case 5: console.warn( `Found ${numbers.length} arguments passed to Color attribute, but the maximum is 4` ); default: return new Color(numbers[0], numbers[1], numbers[2], numbers[3]); } }, FillStrokeStyle(stringValue) { if (stringValue === \"none\" || stringValue === \"gradient\") return stringValue; return attributeParser.Color(stringValue); }, Vector2D(stringValue) { const numbers = stringValue.split(\",\").map(attributeParser.number); if (numbers.some(Number.isNaN)) throw new Error(`NaN: ${stringValue}`); switch (numbers.length) { case 0: return new Vector2D(); case 1: return new Vector2D(numbers[0]); case 3: console.warn( `Found ${numbers.length} arguments passed to Vecto2D attribute, but the maximum is 2` ); default: return new Vector2D(numbers[0], numbers[1]); } }, Angle(stringValue) { const args = stringValue.match(angleMatch); if (args === null) throw new Error(`Angle arguments could not be parsed: ${stringValue}`); const value = attributeParser.number(args[1]); const unit = args[2] as AngleUnitShort; return new Angle(unit, value); }, }"
         }
       ],
       "exports": [
@@ -13226,6 +13259,34 @@
             },
             {
               "kind": "method",
+              "name": "registerChange",
+              "parameters": [
+                {
+                  "name": "propertyName",
+                  "type": {
+                    "text": "P"
+                  }
+                },
+                {
+                  "name": "newValue",
+                  "type": {
+                    "text": "this[P]"
+                  }
+                }
+              ],
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "CustomHTMLElement",
+                "module": "src/elements/mixable.ts"
+              },
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
               "name": "#render",
               "privacy": "private"
             },
@@ -13558,29 +13619,6 @@
                 "name": "CustomHTMLElement",
                 "module": "src/elements/mixable.ts"
               }
-            },
-            {
-              "kind": "method",
-              "name": "registerChange",
-              "parameters": [
-                {
-                  "name": "propertyName",
-                  "type": {
-                    "text": "P"
-                  }
-                },
-                {
-                  "name": "newValue",
-                  "type": {
-                    "text": "this[P]"
-                  }
-                }
-              ],
-              "privacy": "private",
-              "inheritedFrom": {
-                "name": "CustomHTMLElement",
-                "module": "src/elements/mixable.ts"
-              }
             }
           ],
           "attributes": [
@@ -13819,7 +13857,7 @@
               "type": {
                 "text": "Origin"
               },
-              "default": "\"topLeft\"",
+              "default": "defaultOrigin",
               "inheritedFrom": {
                 "name": "baseRectangleBounds",
                 "module": "src/mixins/rectangleBounds.ts"
@@ -14885,6 +14923,13 @@
           "customElement": true,
           "attributes": [
             {
+              "name": "origin",
+              "inheritedFrom": {
+                "name": "baseRectangleBounds",
+                "module": "src/mixins/rectangleBounds.ts"
+              }
+            },
+            {
               "name": "width",
               "type": {
                 "text": "number"
@@ -15268,7 +15313,7 @@
               "type": {
                 "text": "Origin"
               },
-              "default": "\"topLeft\"",
+              "default": "defaultOrigin",
               "inheritedFrom": {
                 "name": "baseRectangleBounds",
                 "module": "src/mixins/rectangleBounds.ts"
@@ -16108,6 +16153,13 @@
           "customElement": true,
           "attributes": [
             {
+              "name": "origin",
+              "inheritedFrom": {
+                "name": "baseRectangleBounds",
+                "module": "src/mixins/rectangleBounds.ts"
+              }
+            },
+            {
               "name": "width",
               "type": {
                 "text": "number"
@@ -16528,7 +16580,7 @@
               "type": {
                 "text": "Origin"
               },
-              "default": "\"topLeft\"",
+              "default": "defaultOrigin",
               "inheritedFrom": {
                 "name": "baseRectangleBounds",
                 "module": "src/mixins/rectangleBounds.ts"
@@ -17517,6 +17569,13 @@
               "inheritedFrom": {
                 "name": "rendersVisualMedia",
                 "module": "src/mixins/visualMedia.ts"
+              }
+            },
+            {
+              "name": "origin",
+              "inheritedFrom": {
+                "name": "baseRectangleBounds",
+                "module": "src/mixins/rectangleBounds.ts"
               }
             },
             {
@@ -20094,7 +20153,7 @@
               "type": {
                 "text": "Origin"
               },
-              "default": "\"topLeft\"",
+              "default": "defaultOrigin",
               "inheritedFrom": {
                 "name": "baseRectangleBounds",
                 "module": "src/mixins/rectangleBounds.ts"
@@ -21175,6 +21234,13 @@
               }
             },
             {
+              "name": "origin",
+              "inheritedFrom": {
+                "name": "baseRectangleBounds",
+                "module": "src/mixins/rectangleBounds.ts"
+              }
+            },
+            {
               "name": "width",
               "type": {
                 "text": "number"
@@ -21545,7 +21611,7 @@
               "type": {
                 "text": "Origin"
               },
-              "default": "\"topLeft\"",
+              "default": "defaultOrigin",
               "inheritedFrom": {
                 "name": "baseRectangleBounds",
                 "module": "src/mixins/rectangleBounds.ts"
@@ -22400,6 +22466,13 @@
               }
             },
             {
+              "name": "origin",
+              "inheritedFrom": {
+                "name": "baseRectangleBounds",
+                "module": "src/mixins/rectangleBounds.ts"
+              }
+            },
+            {
               "name": "width",
               "type": {
                 "text": "number"
@@ -23039,7 +23112,7 @@
               "type": {
                 "text": "Origin"
               },
-              "default": "\"topLeft\"",
+              "default": "defaultOrigin",
               "inheritedFrom": {
                 "name": "baseRectangleBounds",
                 "module": "src/mixins/rectangleBounds.ts"
@@ -23521,6 +23594,13 @@
               "inheritedFrom": {
                 "name": "baseTransform",
                 "module": "src/mixins/transform.ts"
+              }
+            },
+            {
+              "name": "origin",
+              "inheritedFrom": {
+                "name": "baseRectangleBounds",
+                "module": "src/mixins/rectangleBounds.ts"
               }
             },
             {
@@ -25456,6 +25536,15 @@
           "members": [
             {
               "kind": "field",
+              "name": "#close",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "kind": "field",
               "name": "tag",
               "type": {
                 "text": "string"
@@ -25470,20 +25559,33 @@
             },
             {
               "kind": "field",
-              "name": "#close",
-              "privacy": "private",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false"
-            },
-            {
-              "kind": "field",
               "name": "close"
             },
             {
               "kind": "method",
               "name": "render",
+              "parameters": [
+                {
+                  "name": "canvas2D",
+                  "type": {
+                    "text": "Canvas2DCanvasElement"
+                  }
+                }
+              ],
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "Canvas2DBaseRenderable",
+                "module": "src/elements/visual/renderable.ts"
+              },
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "renderChildren",
               "parameters": [
                 {
                   "name": "canvas2D",
@@ -26232,23 +26334,6 @@
               }
             },
             {
-              "kind": "method",
-              "name": "renderChildren",
-              "parameters": [
-                {
-                  "name": "canvas2D",
-                  "type": {
-                    "text": "Canvas2DCanvasElement"
-                  }
-                }
-              ],
-              "privacy": "private",
-              "inheritedFrom": {
-                "name": "Canvas2DBaseRenderable",
-                "module": "src/elements/visual/renderable.ts"
-              }
-            },
-            {
               "kind": "field",
               "name": "#shadowChangeListener",
               "privacy": "private",
@@ -26374,27 +26459,10 @@
               }
             }
           ],
-          "mixins": [
-            {
-              "name": "c2dFill",
-              "module": "/src/mixins/fill"
-            },
-            {
-              "name": "c2dStroke",
-              "module": "/src/mixins/stroke"
-            },
-            {
-              "name": "offset",
-              "module": "/src/mixins/offset"
-            }
-          ],
-          "superclass": {
-            "name": "C2DShapePartTransformed",
-            "module": "/src/mixins/transform"
-          },
-          "tagName": "c2d-shape",
-          "customElement": true,
           "attributes": [
+            {
+              "name": "close"
+            },
             {
               "name": "fill",
               "type": {
@@ -26504,6 +26572,26 @@
               }
             }
           ],
+          "mixins": [
+            {
+              "name": "c2dFill",
+              "module": "/src/mixins/fill"
+            },
+            {
+              "name": "c2dStroke",
+              "module": "/src/mixins/stroke"
+            },
+            {
+              "name": "offset",
+              "module": "/src/mixins/offset"
+            }
+          ],
+          "superclass": {
+            "name": "C2DShapePartTransformed",
+            "module": "/src/mixins/transform"
+          },
+          "tagName": "c2d-shape",
+          "customElement": true,
           "events": [
             {
               "name": "click",
@@ -29009,7 +29097,7 @@
               "type": {
                 "text": "Origin"
               },
-              "default": "\"topLeft\"",
+              "default": "defaultOrigin",
               "inheritedFrom": {
                 "name": "baseRectangleBounds",
                 "module": "src/mixins/rectangleBounds.ts"
@@ -29998,6 +30086,13 @@
               "inheritedFrom": {
                 "name": "rendersVisualMedia",
                 "module": "src/mixins/visualMedia.ts"
+              }
+            },
+            {
+              "name": "origin",
+              "inheritedFrom": {
+                "name": "baseRectangleBounds",
+                "module": "src/mixins/rectangleBounds.ts"
               }
             },
             {

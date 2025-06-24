@@ -3,6 +3,7 @@ import data from "./custom-elements.json";
 import { createRoot, Color } from "web-spinner";
 import * as WebSpinner from "web-spinner";
 import highlight from "highlight.js";
+import imageSource from "./Embia_major_mf.jpg";
 
 interface ClassFieldExtended extends Schema.ClassField {
   attribute?: string;
@@ -529,7 +530,7 @@ function renderDemo(element: ElementData): [HTMLDivElement, HTMLElement] {
 
   if (element.tag === "c2d-image") {
     const image = mainElement as WebSpinner.WebSpinnerElement["Canvas2DImage"];
-    image.source = "./Embia_major_mf.jpg";
+    image.source = imageSource;
     image.width = canvas.width;
     image.origin = "center";
   } else if (element.tag === "c2d-video") {
