@@ -31,6 +31,10 @@ describe("c2d-image", () => {
     return { canvas, element: image };
   };
 
+  afterEach(() => {
+    while (document.body.firstChild !== null) document.body.firstChild.remove();
+  });
+
   test("setting dimensions modifies mediaElement", () => {
     const { element } = setup();
 

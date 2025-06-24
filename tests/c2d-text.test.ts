@@ -22,6 +22,10 @@ describe("c2d-text", () => {
     return { canvas, element: text };
   };
 
+  afterEach(() => {
+    while (document.body.firstChild !== null) document.body.firstChild.remove();
+  });
+
   describe("align", () => {
     test("sets context textAlign", async () => {
       const { element, canvas } = setup();

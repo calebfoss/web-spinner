@@ -292,10 +292,20 @@ export class Canvas2DCanvasElement extends c2dStandaloneChildren(C2DBase) {
     this.registerChange("height", value);
   }
 
-  #render() {
-    if (this.#waitFor.size) return;
+  registerChange<P extends keyof this>(
+    propertyName: P,
+    newValue: this[P]
+  ): void {
+    super.registerChange(propertyName, newValue);
 
-    this.#frame++;
+    this.queueRender();
+  }
+
+  #render() {
+    if (this.#waitFor.size) {
+      this.#renderQueued = false;
+      return;
+    }
 
     const context = this.#context;
 
@@ -334,6 +344,8 @@ export class Canvas2DCanvasElement extends c2dStandaloneChildren(C2DBase) {
     this.#keyboardTracker.advanceFrame();
 
     this.#mouseTracker.advanceFrame();
+
+    this.#frame++;
 
     if (this.#animating) this.queueRender();
   }

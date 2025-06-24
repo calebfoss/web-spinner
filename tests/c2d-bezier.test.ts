@@ -112,6 +112,10 @@ describe("c2d-bezier", () => {
     return { canvas, element: bezier };
   };
 
+  afterEach(() => {
+    while (document.body.firstChild !== null) document.body.firstChild.remove();
+  });
+
   describe("from", () => {
     test("coordinates passed into moveTo", async () => {
       const { element, canvas } = setup();

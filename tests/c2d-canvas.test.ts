@@ -2,64 +2,47 @@ import { jest } from "@jest/globals";
 import { setupJestCanvasMock } from "jest-canvas-mock";
 import { waitFor } from "@testing-library/dom";
 import "@testing-library/jest-dom";
-import { UserEvent, userEvent } from "@testing-library/user-event";
+import { userEvent } from "@testing-library/user-event";
 import { Color, createRoot } from "web-spinner";
-import {
-  mockMatchMedia,
-  setupMockTiming,
-  sleep,
-  testReflection,
-} from "./shared";
-import { HTMLElementController } from "../dist/types/elements/document/domBase";
-import { DocumentContainerWrapper } from "../dist/types/elements/document/container";
-import { Canvas2DCanvasElement } from "../dist/types/elements/visual/canvas";
-
-mockMatchMedia();
+import { mockMatchMedia, setupMockTiming, testReflection } from "./shared";
 
 describe("c2d-canvas", () => {
+  mockMatchMedia();
+
+  setupJestCanvasMock();
+
   const width = 150;
 
   const height = 250;
 
   const background = Color.rgb(50, 100, 150);
 
-  let root: HTMLElementController<
-    keyof HTMLElementTagNameMap,
-    DocumentContainerWrapper
-  >;
+  const setup = () => {
+    const root = createRoot();
 
-  let canvas: Canvas2DCanvasElement;
+    const canvas = root.canvas2D({ width, height, background });
 
-  let user: UserEvent;
+    const user = userEvent.setup();
 
-  beforeEach(() => {
-    jest.resetAllMocks();
-
-    mockMatchMedia();
-
-    setupJestCanvasMock();
-
-    root = createRoot();
-
-    canvas = root.canvas2D({ width, height, background });
-
-    user = userEvent.setup();
-  });
+    return { user, canvas, root };
+  };
 
   afterEach(() => {
-    canvas.remove();
-
-    root.remove();
+    while (document.body.firstChild !== null) document.body.firstChild.remove();
   });
 
   describe("dimensions", () => {
     test("initialization", () => {
+      const { canvas } = setup();
+
       expect(canvas.width).toBe(width);
 
       expect(canvas.height).toBe(height);
     });
 
     test("modification", () => {
+      const { canvas } = setup();
+
       const change = 50;
 
       canvas.width += change;
@@ -80,6 +63,8 @@ describe("c2d-canvas", () => {
     });
 
     test("reflection", () => {
+      const { canvas } = setup();
+
       testReflection(canvas, "width", "width", width + 100);
 
       testReflection(canvas, "height", "height", width + 100);
@@ -99,17 +84,21 @@ describe("c2d-canvas", () => {
     };
 
     test("keydown", async () => {
+      const { canvas, user } = setup();
+
       canvas.addEventListener("keydown", listener);
 
-      await userEvent.keyboard(key);
+      await user.keyboard(key);
 
       expect((receivedEvent as KeyboardEvent).key).toBe(key);
     });
 
     test("keyup", async () => {
+      const { canvas, user } = setup();
+
       canvas.addEventListener("keyup", listener);
 
-      await userEvent.keyboard(key);
+      await user.keyboard(key);
 
       expect((receivedEvent as KeyboardEvent).key).toBe(key);
     });
@@ -117,10 +106,14 @@ describe("c2d-canvas", () => {
 
   describe("alpha", () => {
     test("matches context", () => {
+      const { canvas } = setup();
+
       expect(canvas.alpha).toBe(canvas.context.globalAlpha);
     });
 
     test("responds to changes", () => {
+      const { canvas } = setup();
+
       const changedValue = 0.5;
 
       canvas.alpha = changedValue;
@@ -131,11 +124,15 @@ describe("c2d-canvas", () => {
     });
 
     test("reflection", () => {
+      const { canvas } = setup();
+
       testReflection(canvas, "alpha", "alpha", 0.75);
     });
   });
 
   test("animating", () => {
+    const { canvas } = setup();
+
     expect(canvas.animating).toBe(false);
 
     canvas.everyFrame = () => {};
@@ -145,31 +142,43 @@ describe("c2d-canvas", () => {
 
   describe("background", () => {
     test("is an instance of the Color class by default", () => {
+      const { canvas } = setup();
+
       expect(canvas.background instanceof Color).toBe(true);
     });
 
     test("value was set on creation", () => {
+      const { canvas } = setup();
+
       expect(background.equals(canvas.background as Color)).toBe(true);
     });
 
     test("reflection", () => {
+      const { canvas } = setup();
+
       testReflection(canvas, "background", "background", Color.rgb(255, 0, 0));
     });
   });
 
   test("center corresponds to dimensions", () => {
+    const { canvas } = setup();
+
     expect(canvas.center.x).toBe(width / 2);
 
     expect(canvas.center.y).toBe(height / 2);
   });
 
   test("clicked", async () => {
+    const { canvas, user } = setup();
+
     await user.click(canvas.domCanvas);
 
     expect(canvas.clicked).toBe(true);
   });
 
   test("clickPosition", async () => {
+    const { canvas, user } = setup();
+
     const x = 45;
 
     const y = 75;
@@ -189,15 +198,21 @@ describe("c2d-canvas", () => {
   });
 
   test("context", () => {
+    const { canvas } = setup();
+
     expect(canvas.context instanceof CanvasRenderingContext2D).toBe(true);
   });
 
   describe("deltaTime", () => {
     test("Starts at 0", () => {
+      const { canvas } = setup();
+
       expect(canvas.deltaTime).toBe(0);
     });
 
     test("Calculates time between frames", async () => {
+      const { canvas } = setup();
+
       const fps = 60;
 
       setupMockTiming(canvas, fps);
@@ -215,15 +230,17 @@ describe("c2d-canvas", () => {
   });
 
   test("domCanvas", () => {
+    const { canvas } = setup();
+
     expect(canvas.domCanvas instanceof HTMLCanvasElement).toBe(true);
   });
 
   test("everyFrame and frame", async () => {
-    let framesRendered = 0;
+    const { canvas } = setup();
+
     let lastFrame = -1;
 
     const everyFrame = jest.fn((currentFrame: number) => {
-      framesRendered++;
       lastFrame = currentFrame;
     });
 
@@ -232,13 +249,15 @@ describe("c2d-canvas", () => {
     await waitFor(() => {
       expect(lastFrame).toBeGreaterThan(20);
 
-      expect(framesRendered).toBe(lastFrame);
+      expect(everyFrame.mock.calls.length).toBe(lastFrame + 1);
 
-      expect(canvas.frame).toBe(lastFrame);
+      expect(canvas.frame).toBe(lastFrame + 1);
     });
   });
 
   test("keyDown", async () => {
+    const { canvas, user } = setup();
+
     expect(canvas.keyDown).toBe(false);
 
     const key = "a";
@@ -251,32 +270,68 @@ describe("c2d-canvas", () => {
   });
 
   test("keyHeld and keyPreviouslyHeld", async () => {
+    const { canvas, user } = setup();
+
     const key = "a";
 
     expect(canvas.keyHeld(key)).toBe(false);
 
+    await waitFor(() => {
+      expect(canvas.frame).toBe(1);
+    });
+
     await user.keyboard(`{${key}>}`);
 
-    expect(canvas.keyHeld(key)).toBe(true);
+    let keyHeld: boolean | null = null;
 
-    expect(canvas.keyPreviouslyHeld(key)).toBe(false);
+    let keyPreviouslyHeld: boolean | null = null;
 
-    canvas.everyFrame = jest.fn();
+    jest.spyOn(canvas.context, "beginPath").mockImplementation(() => {
+      keyHeld = canvas.keyHeld(key);
+
+      keyPreviouslyHeld = canvas.keyPreviouslyHeld(key);
+    });
+
+    canvas.queueRender();
+
+    await waitFor(() => {
+      expect(canvas.frame).toBe(2);
+
+      expect(keyHeld).toBe(true);
+
+      expect(keyPreviouslyHeld).toBe(false);
+    });
+
+    keyHeld = null;
+
+    keyPreviouslyHeld = null;
+
+    canvas.queueRender();
 
     await waitFor(async () => {
-      expect(canvas.frame).toBeGreaterThan(20);
+      expect(canvas.frame).toBe(3);
 
-      expect(canvas.keyHeld(key)).toBe(true);
+      expect(keyHeld).toBe(true);
 
-      expect(canvas.keyPreviouslyHeld(key)).toBe(true);
+      expect(keyPreviouslyHeld).toBe(true);
+    });
 
-      await user.keyboard(`{/${key}}`);
+    keyHeld = null;
 
-      expect(canvas.keyHeld(key)).toBe(false);
+    await user.keyboard(`{/${key}}`);
+
+    canvas.queueRender();
+
+    await waitFor(() => {
+      expect(canvas.frame).toBe(4);
+
+      expect(keyHeld).toBe(false);
     });
   });
 
   test("lastKey", async () => {
+    const { canvas, user } = setup();
+
     expect(canvas.lastKey).toBe("");
 
     for (let cc = 65; cc < 91; cc++) {
@@ -289,6 +344,8 @@ describe("c2d-canvas", () => {
   });
 
   test("mouse", async () => {
+    const { canvas, user } = setup();
+
     const { mouse } = canvas;
 
     expect(mouse.x).toBe(0);
@@ -331,6 +388,8 @@ describe("c2d-canvas", () => {
   });
 
   test("queueRender", async () => {
+    const { canvas } = setup();
+
     expect(canvas.frame).toBe(0);
 
     canvas.queueRender();
@@ -341,18 +400,24 @@ describe("c2d-canvas", () => {
   });
 
   test("renderOn", async () => {
-    expect(canvas.frame).toBe(0);
+    const { canvas, user } = setup();
+
+    await waitFor(() => {
+      expect(canvas.frame).toBe(1);
+    });
 
     canvas.renderOn("click");
 
     await user.click(canvas.domCanvas);
 
     await waitFor(() => {
-      expect(canvas.frame).toBe(1);
+      expect(canvas.frame).toBe(2);
     });
   });
 
   test("waitFor", async () => {
+    const { canvas, user } = setup();
+
     const waitElement = document.createElement("a");
 
     canvas.waitFor(waitElement, "click");
