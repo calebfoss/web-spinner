@@ -28,6 +28,7 @@ import { Shadow } from "./classes/shadow";
 import { createRoot } from "./elements/document/domBase";
 import { BorderRadius } from "./classes/borderRadius";
 import { Random } from "./classes/random";
+import { CustomHTMLElement } from "./elements/mixable";
 
 export type CSSLengthUnit = (typeof Units.size)[keyof typeof Units.size];
 
@@ -90,6 +91,25 @@ export type WebSpinnerElement = {
   Canvas2DVideo: Canvas2DVideo;
 };
 
+type ElementMap = {
+  parentElement: typeof CustomHTMLElement;
+  [name: string]: typeof CustomHTMLElement | ElementMap;
+};
+
+const elements: { [category: string]: ElementMap } = {
+  canvas2D: {
+    parentElement: Canvas2DCanvasElement,
+    Canvas2DBezier,
+    shape: {
+      parentElement: Canvas2DShape,
+      Canvas2DBezier,
+      Canvas2DShapeEllipse,
+      Canvas2DShapeLine,
+      Canvas2DShapeRectangle,
+    },
+  },
+};
+
 export {
   createMultiple,
   BorderRadius,
@@ -104,4 +124,5 @@ export {
   Shadow,
   createState,
   createRoot,
+  elements as Elements,
 };

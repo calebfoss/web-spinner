@@ -1,16 +1,23 @@
-import * as Schema from "custom-elements-manifest/schema";
+import {
+  ClassDeclaration,
+  ClassField,
+  Module,
+  ClassMethod,
+  Package,
+  Parameter,
+} from "custom-elements-manifest/schema";
 import data from "./custom-elements.json";
 import { createRoot, Color } from "web-spinner";
 import * as WebSpinner from "web-spinner";
 import highlight from "highlight.js";
 import imageSource from "./Embia_major_mf.jpg";
 
-interface ClassFieldExtended extends Schema.ClassField {
+interface ClassFieldExtended extends ClassField {
   attribute?: string;
   readonly?: boolean;
 }
 
-function getCustomElementDefinitions(module: Schema.Module) {
+function getCustomElementDefinitions(module: Module) {
   const { exports } = module;
 
   if (exports === undefined) return [];
@@ -18,7 +25,7 @@ function getCustomElementDefinitions(module: Schema.Module) {
   return exports.filter((exp) => exp.kind === "custom-element-definition");
 }
 
-function getClassDeclarations(module: Schema.Module) {
+function getClassDeclarations(module: Module) {
   const { declarations } = module;
 
   if (declarations === undefined) return [];
@@ -29,17 +36,12 @@ function getClassDeclarations(module: Schema.Module) {
 type ElementData = {
   tag: string;
   constructorName: string;
-  fields: Schema.ClassField[];
-  methods: Schema.ClassMethod[];
-};
-
-type DocData = {
-  elements: ElementData[];
-  classes: Schema.ClassDeclaration[];
+  fields: ClassField[];
+  methods: ClassMethod[];
 };
 
 function getDocData() {
-  const { modules } = data as Schema.Schema;
+  const { modules } = data as Package;
 
   const customElementDefinitions = modules
     .map(getCustomElementDefinitions)
@@ -58,12 +60,12 @@ function getDocData() {
           `Could not locate declaration for ${definition.name}: ${definition.declaration.name}`
         );
 
-      const { members } = declaration;
+      const { members } = declaration as ClassDeclaration;
 
       const [methods, fields] =
         members === undefined
           ? [[], []]
-          : members.reduce<[Schema.ClassMethod[], Schema.ClassField[]]>(
+          : members.reduce<[ClassMethod[], ClassField[]]>(
               ([partialMethods, partialFields], member) => {
                 if (member.kind === "field")
                   return [partialMethods, partialFields.concat(member)];
@@ -85,14 +87,18 @@ function getDocData() {
     })
     .toSorted((a, b) => a.tag.localeCompare(b.tag));
 
-  const classes = allClasses.filter(
+  const indexModule = modules.find((module) => module.path === "src/index.ts");
+
+  if (indexModule === undefined) throw new Error("Could not find index module");
+
+  const publicClasses = getClassDeclarations(indexModule).filter(
     (c) => !elements.some((el) => el.constructorName === c.name)
   );
 
-  return { elements, classes };
+  return { elements, publicClasses };
 }
 
-function renderParameterRow(param: Schema.Parameter) {
+function renderParameterRow(param: Parameter) {
   const row = document.createElement("tr");
 
   const nameCell = document.createElement("td");
@@ -122,7 +128,7 @@ function renderParameterRow(param: Schema.Parameter) {
   return row;
 }
 
-function renderParametersTable(params: Schema.Parameter[]) {
+function renderParametersTable(params: Parameter[]) {
   const table = document.createElement("table");
 
   const caption = document.createElement("caption");
@@ -162,7 +168,7 @@ function renderTableHeaders(...headerText: string[]) {
   return row;
 }
 
-function renderMethodDoc(method: Schema.ClassMethod) {
+function renderMethodDoc(method: ClassMethod) {
   const div = document.createElement("div");
 
   div.classList.add("method");
@@ -210,7 +216,7 @@ function renderMethodDoc(method: Schema.ClassMethod) {
   return div;
 }
 
-function renderMethodsDocs(methods: Schema.ClassMethod[]) {
+function renderMethodsDocs(methods: ClassMethod[]) {
   const div = document.createElement("div");
 
   div.classList.add("methods");
@@ -408,10 +414,7 @@ function renderPropertyRows(
   return [statRow, descriptionRow];
 }
 
-function renderPropertyTable(
-  fields: Schema.ClassField[],
-  demoElement: HTMLElement
-) {
+function renderPropertyTable(fields: ClassField[], demoElement: HTMLElement) {
   const table = document.createElement("table");
 
   const caption = document.createElement("caption");
