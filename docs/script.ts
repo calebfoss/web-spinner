@@ -1,98 +1,29 @@
-import * as Schema from "custom-elements-manifest/schema";
-import data from "./custom-elements.json";
+import {
+  ClassDeclaration,
+  ClassField,
+  FunctionDeclaration,
+  FunctionLike,
+  ClassMethod,
+  Parameter,
+} from "custom-elements-manifest/schema";
+import untypedData from "./doc-data.json";
 import { createRoot, Color } from "web-spinner";
 import * as WebSpinner from "web-spinner";
 import highlight from "highlight.js";
 import imageSource from "./Embia_major_mf.jpg";
+import {
+  CustomElementDeclarationX,
+  WebSpinnerDocData,
+} from "./reorganizeDocData";
 
-interface ClassFieldExtended extends Schema.ClassField {
+const data = untypedData as WebSpinnerDocData;
+
+interface ClassFieldExtended extends ClassField {
   attribute?: string;
   readonly?: boolean;
 }
 
-function getCustomElementDefinitions(module: Schema.Module) {
-  const { exports } = module;
-
-  if (exports === undefined) return [];
-
-  return exports.filter((exp) => exp.kind === "custom-element-definition");
-}
-
-function getClassDeclarations(module: Schema.Module) {
-  const { declarations } = module;
-
-  if (declarations === undefined) return [];
-
-  return declarations.filter((declaration) => declaration.kind === "class");
-}
-
-type ElementData = {
-  tag: string;
-  constructorName: string;
-  fields: Schema.ClassField[];
-  methods: Schema.ClassMethod[];
-};
-
-type DocData = {
-  elements: ElementData[];
-  classes: Schema.ClassDeclaration[];
-};
-
-function getDocData() {
-  const { modules } = data as Schema.Schema;
-
-  const customElementDefinitions = modules
-    .map(getCustomElementDefinitions)
-    .flat();
-
-  const allClasses = modules.map(getClassDeclarations).flat();
-
-  const elements = customElementDefinitions
-    .map<ElementData>((definition) => {
-      const declaration = allClasses.find(
-        (declaration) => declaration.name === definition.declaration.name
-      );
-
-      if (declaration === undefined)
-        throw new Error(
-          `Could not locate declaration for ${definition.name}: ${definition.declaration.name}`
-        );
-
-      const { members } = declaration;
-
-      const [methods, fields] =
-        members === undefined
-          ? [[], []]
-          : members.reduce<[Schema.ClassMethod[], Schema.ClassField[]]>(
-              ([partialMethods, partialFields], member) => {
-                if (member.kind === "field")
-                  return [partialMethods, partialFields.concat(member)];
-                if (member.kind === "method")
-                  return [partialMethods.concat(member), partialFields];
-                throw new Error(
-                  `Unsupported member kind: ${(member as any).kind}`
-                );
-              },
-              [[], []]
-            );
-
-      return {
-        tag: definition.name,
-        constructorName: declaration.name,
-        methods,
-        fields,
-      };
-    })
-    .toSorted((a, b) => a.tag.localeCompare(b.tag));
-
-  const classes = allClasses.filter(
-    (c) => !elements.some((el) => el.constructorName === c.name)
-  );
-
-  return { elements, classes };
-}
-
-function renderParameterRow(param: Schema.Parameter) {
+function renderParameterRow(param: Parameter) {
   const row = document.createElement("tr");
 
   const nameCell = document.createElement("td");
@@ -122,7 +53,7 @@ function renderParameterRow(param: Schema.Parameter) {
   return row;
 }
 
-function renderParametersTable(params: Schema.Parameter[]) {
+function renderParametersTable(params: Parameter[]) {
   const table = document.createElement("table");
 
   const caption = document.createElement("caption");
@@ -162,30 +93,34 @@ function renderTableHeaders(...headerText: string[]) {
   return row;
 }
 
-function renderMethodDoc(method: Schema.ClassMethod) {
+function renderFunctionDoc(fn: FunctionLike, memberOfClass: boolean) {
   const div = document.createElement("div");
 
-  div.classList.add("method");
+  if (!memberOfClass) {
+    div.id = fn.name;
+  }
 
-  const heading = document.createElement("h5");
+  div.classList.add(memberOfClass ? "method" : "item");
 
-  heading.textContent = method.name;
+  const heading = document.createElement(memberOfClass ? "h5" : "h3");
+
+  heading.textContent = fn.name;
 
   div.appendChild(heading);
 
-  if (method.description !== undefined) {
+  if (fn.description !== undefined) {
     const descriptionPar = document.createElement("p");
 
-    descriptionPar.textContent = method.description;
+    descriptionPar.textContent = fn.description;
 
     div.appendChild(descriptionPar);
   }
 
-  const parameters = renderParametersTable(method.parameters ?? []);
+  const parameters = renderParametersTable(fn.parameters ?? []);
 
   div.appendChild(parameters);
 
-  const returnHeading = document.createElement("h6");
+  const returnHeading = document.createElement(memberOfClass ? "h6" : "h5");
 
   returnHeading.textContent = "Return value";
 
@@ -195,14 +130,14 @@ function renderMethodDoc(method: Schema.ClassMethod) {
 
   div.appendChild(returnTypePar);
 
-  if (method.return === undefined) {
+  if (fn.return === undefined) {
     returnTypePar.textContent = "None";
   } else {
-    returnTypePar.textContent = method.return.type?.text ?? "";
+    returnTypePar.textContent = fn.return.type?.text ?? "";
 
     const returnDescriptionPar = document.createElement("p");
 
-    returnDescriptionPar.textContent = method.return.description ?? "";
+    returnDescriptionPar.textContent = fn.return.description ?? "";
 
     div.appendChild(returnDescriptionPar);
   }
@@ -210,14 +145,22 @@ function renderMethodDoc(method: Schema.ClassMethod) {
   return div;
 }
 
-function renderMethodsDocs(methods: Schema.ClassMethod[]) {
+function renderClassMethodDoc(method: ClassMethod) {
+  return renderFunctionDoc(method, true);
+}
+
+function renderStandaloneFunctionDoc(fn: FunctionDeclaration) {
+  return renderFunctionDoc(fn, false);
+}
+
+function renderMethodsDocs(methods: ClassMethod[], isStatic: boolean) {
   const div = document.createElement("div");
 
   div.classList.add("methods");
 
   const heading = document.createElement("h4");
 
-  heading.textContent = "Methods";
+  heading.append(`${isStatic ? "Static" : "Instance"} Methods`);
 
   div.appendChild(heading);
 
@@ -225,7 +168,7 @@ function renderMethodsDocs(methods: Schema.ClassMethod[]) {
     (m) => m.privacy === undefined || m.privacy === "public"
   );
 
-  const methodDocs = publicMethods.map(renderMethodDoc);
+  const methodDocs = publicMethods.map(renderClassMethodDoc);
 
   for (const doc of methodDocs) {
     div.appendChild(doc);
@@ -240,7 +183,7 @@ const angleMatch = new RegExp(
 
 function renderPropertyRows(
   member: ClassFieldExtended,
-  demoElement: HTMLElement
+  demoElement?: HTMLElement
 ) {
   const statRow = document.createElement("tr");
 
@@ -250,11 +193,13 @@ function renderPropertyRows(
 
   statRow.appendChild(jsNameCell);
 
-  const htmlNameCell = document.createElement("td");
+  if (demoElement !== undefined) {
+    const htmlNameCell = document.createElement("td");
 
-  htmlNameCell.textContent = member.attribute ?? "[none]";
+    htmlNameCell.textContent = member.attribute ?? "[none]";
 
-  statRow.appendChild(htmlNameCell);
+    statRow.appendChild(htmlNameCell);
+  }
 
   const typeCell = document.createElement("td");
 
@@ -266,128 +211,130 @@ function renderPropertyRows(
 
   statRow.appendChild(typeCell);
 
-  const demoCell = document.createElement("td");
+  if (demoElement !== undefined) {
+    const demoCell = document.createElement("td");
 
-  const attributeName = member.attribute;
+    const attributeName = member.attribute;
 
-  if (attributeName !== undefined) {
-    const demoInput = document.createElement("input");
+    if (attributeName !== undefined) {
+      const demoInput = document.createElement("input");
 
-    const typeText = member.type?.text;
+      const typeText = member.type?.text;
 
-    switch (typeText) {
-      case "Color":
-      case "DrawStyle":
-      case "DrawStyle | null":
-        demoInput.type = "color";
-        break;
-      case "number":
-      case "number | null":
-        demoInput.type = "number";
-        break;
-      case "Vector2D":
-      case "Vetor2D | null":
-        {
-          demoInput.type = "hidden";
+      switch (typeText) {
+        case "Color":
+        case "DrawStyle":
+        case "DrawStyle | null":
+          demoInput.type = "color";
+          break;
+        case "number":
+        case "number | null":
+          demoInput.type = "number";
+          break;
+        case "Vector2D":
+        case "Vetor2D | null":
+          {
+            demoInput.type = "hidden";
 
-          const vector = Reflect.get(
-            demoElement,
-            member.name
-          ) as WebSpinner.Vector2D;
+            const vector = Reflect.get(
+              demoElement,
+              member.name
+            ) as WebSpinner.Vector2D;
 
-          demoElement.setAttribute(attributeName, vector.toString());
+            demoElement.setAttribute(attributeName, vector.toString());
 
-          const xLabel = document.createElement("label");
+            const xLabel = document.createElement("label");
 
-          xLabel.textContent = "x";
+            xLabel.textContent = "x";
 
-          demoCell.appendChild(xLabel);
+            demoCell.appendChild(xLabel);
 
-          const xInput = document.createElement("input");
+            const xInput = document.createElement("input");
 
-          xInput.type = "number";
+            xInput.type = "number";
 
-          xInput.value = vector.x.toString();
+            xInput.value = vector.x.toString();
 
-          xLabel.appendChild(xInput);
+            xLabel.appendChild(xInput);
 
-          const yLabel = document.createElement("label");
+            const yLabel = document.createElement("label");
 
-          yLabel.textContent = "y";
+            yLabel.textContent = "y";
 
-          demoCell.appendChild(yLabel);
+            demoCell.appendChild(yLabel);
 
-          const yInput = document.createElement("input");
+            const yInput = document.createElement("input");
 
-          yInput.type = "number";
+            yInput.type = "number";
 
-          yInput.value = vector.y.toString();
+            yInput.value = vector.y.toString();
 
-          yLabel.appendChild(yInput);
+            yLabel.appendChild(yInput);
 
-          xInput.addEventListener("input", () => {
-            if (
-              xInput.value.length === 0 ||
-              yInput.value.length === 0 ||
-              Number.isNaN(Number(xInput.value)) ||
-              Number.isNaN(Number(yInput.value))
-            )
-              return;
+            xInput.addEventListener("input", () => {
+              if (
+                xInput.value.length === 0 ||
+                yInput.value.length === 0 ||
+                Number.isNaN(Number(xInput.value)) ||
+                Number.isNaN(Number(yInput.value))
+              )
+                return;
 
-            const newValue = `${xInput.value}, ${yInput.value}`;
+              const newValue = `${xInput.value}, ${yInput.value}`;
 
-            const currentValue = demoElement.getAttribute(attributeName);
+              const currentValue = demoElement.getAttribute(attributeName);
 
-            if (currentValue === newValue) return;
+              if (currentValue === newValue) return;
 
-            demoInput.value = newValue;
+              demoInput.value = newValue;
 
-            demoElement.setAttribute(attributeName, newValue);
-          });
+              demoElement.setAttribute(attributeName, newValue);
+            });
 
-          yInput.addEventListener("input", () => {
-            if (
-              xInput.value.length === 0 ||
-              yInput.value.length === 0 ||
-              Number.isNaN(Number(xInput.value)) ||
-              Number.isNaN(Number(yInput.value))
-            )
-              return;
+            yInput.addEventListener("input", () => {
+              if (
+                xInput.value.length === 0 ||
+                yInput.value.length === 0 ||
+                Number.isNaN(Number(xInput.value)) ||
+                Number.isNaN(Number(yInput.value))
+              )
+                return;
 
-            const newValue = `${xInput.value}, ${yInput.value}`;
+              const newValue = `${xInput.value}, ${yInput.value}`;
 
-            const currentValue = demoElement.getAttribute(attributeName);
+              const currentValue = demoElement.getAttribute(attributeName);
 
-            if (currentValue === newValue) return;
+              if (currentValue === newValue) return;
 
-            demoInput.value = newValue;
+              demoInput.value = newValue;
 
-            demoElement.setAttribute(attributeName, newValue);
-          });
-        }
-        break;
+              demoElement.setAttribute(attributeName, newValue);
+            });
+          }
+          break;
+      }
+
+      demoInput.addEventListener("input", (evt) => {
+        const currentValue = demoElement.getAttribute(attributeName);
+
+        if (currentValue === demoInput.value) return;
+
+        if (
+          member.type?.text === "Angle" &&
+          demoInput.value.match(angleMatch) === null
+        )
+          return;
+
+        demoElement.setAttribute(attributeName, demoInput.value);
+      });
+
+      demoInput.value = Reflect.get(demoElement, member.name);
+
+      demoCell.appendChild(demoInput);
     }
 
-    demoInput.addEventListener("input", (evt) => {
-      const currentValue = demoElement.getAttribute(attributeName);
-
-      if (currentValue === demoInput.value) return;
-
-      if (
-        member.type?.text === "Angle" &&
-        demoInput.value.match(angleMatch) === null
-      )
-        return;
-
-      demoElement.setAttribute(attributeName, demoInput.value);
-    });
-
-    demoInput.value = Reflect.get(demoElement, member.name);
-
-    demoCell.appendChild(demoInput);
+    statRow.appendChild(demoCell);
   }
-
-  statRow.appendChild(demoCell);
 
   const descriptionRow = document.createElement("tr");
 
@@ -409,14 +356,15 @@ function renderPropertyRows(
 }
 
 function renderPropertyTable(
-  fields: Schema.ClassField[],
-  demoElement: HTMLElement
+  fields: ClassField[],
+  isStatic: boolean,
+  demoElement?: HTMLElement
 ) {
   const table = document.createElement("table");
 
   const caption = document.createElement("caption");
 
-  caption.textContent = "Properties";
+  caption.append(`${isStatic ? "Static" : "Instance"} Properties`);
 
   table.appendChild(caption);
 
@@ -424,12 +372,10 @@ function renderPropertyTable(
 
   table.appendChild(body);
 
-  const fieldHeaderRow = renderTableHeaders(
-    "JS Name",
-    "HTML Name",
-    "Type",
-    "Demo"
-  );
+  const fieldHeaderRow =
+    demoElement === undefined
+      ? renderTableHeaders("Name", "Type")
+      : renderTableHeaders("JS Name", "HTML Name", "Type", "Demo");
 
   body.appendChild(fieldHeaderRow);
 
@@ -448,7 +394,9 @@ function renderPropertyTable(
   return table;
 }
 
-function renderDemo(element: ElementData): [HTMLDivElement, HTMLElement] {
+function renderDemo(
+  element: CustomElementDeclarationX
+): [HTMLDivElement, HTMLElement] {
   const div = document.createElement("div");
 
   div.classList.add("demo");
@@ -479,7 +427,7 @@ function renderDemo(element: ElementData): [HTMLDivElement, HTMLElement] {
     navigator.clipboard.writeText(htmlCode.textContent ?? "");
   });
 
-  if (element.tag === "c2d-canvas") {
+  if (element.tagName === "c2d-canvas") {
     const observer = new MutationObserver(() => {
       delete htmlCode.dataset.highlighted;
 
@@ -504,7 +452,7 @@ function renderDemo(element: ElementData): [HTMLDivElement, HTMLElement] {
     controlB: WebSpinner.Vector2D.xy(0, 100),
   };
 
-  const mainElement = document.createElement(element.tag);
+  const mainElement = document.createElement(element.tagName);
 
   // const jsCode = document.createElement("code");
 
@@ -528,12 +476,12 @@ function renderDemo(element: ElementData): [HTMLDivElement, HTMLElement] {
     }
   }
 
-  if (element.tag === "c2d-image") {
+  if (element.tagName === "c2d-image") {
     const image = mainElement as WebSpinner.WebSpinnerElement["Canvas2DImage"];
     image.source = imageSource;
     image.width = canvas.width;
     image.origin = "center";
-  } else if (element.tag === "c2d-video") {
+  } else if (element.tagName === "c2d-video") {
     const video = mainElement as WebSpinner.WebSpinnerElement["Canvas2DVideo"];
     video.source =
       "https://download.blender.org/peach/bigbuckbunny_movies/BigBuckBunny_320x180.mp4";
@@ -542,13 +490,13 @@ function renderDemo(element: ElementData): [HTMLDivElement, HTMLElement] {
     canvas.listen.click(() => video.play());
   }
 
-  if (element.tag === "c2d-text") {
+  if (element.tagName === "c2d-text") {
     mainElement.textContent = "Web Spinner";
 
     (mainElement as WebSpinner.WebSpinnerElement["Canvas2DText"]).lineWidth = 1;
 
     canvas.appendChild(mainElement);
-  } else if (element.tag.slice(0, 10) === "c2d-shape-") {
+  } else if (element.tagName.slice(0, 10) === "c2d-shape-") {
     const shape = document.createElement("c2d-shape");
 
     canvas.appendChild(shape);
@@ -563,35 +511,142 @@ function renderDemo(element: ElementData): [HTMLDivElement, HTMLElement] {
   return [div, mainElement];
 }
 
-function renderElementDoc(element: ElementData) {
-  const div = document.createElement("div");
+function renderClassDoc(
+  classData: ClassDeclaration | CustomElementDeclarationX
+) {
+  const container = document.createElement("div");
 
-  div.classList.add("element");
+  container.className = "item";
 
-  div.id = element.tag;
+  const name =
+    (classData as CustomElementDeclarationX).tagName ?? classData.name;
+
+  container.id = name;
 
   const heading = document.createElement("h3");
 
-  heading.textContent = element.tag;
+  heading.textContent = name;
 
-  div.appendChild(heading);
+  container.appendChild(heading);
 
-  const [demoDiv, demoElement] = renderDemo(element);
+  const [staticFields, staticMethods, instanceFields, instanceMethods] = (
+    classData.members ?? []
+  ).reduce(
+    (
+      [
+        partialStaticFields,
+        partialStaticMethods,
+        partialInstanceFields,
+        partialInstanceMethods,
+      ]: [ClassField[], ClassMethod[], ClassField[], ClassMethod[]],
+      member
+    ) => {
+      if (member.kind === "field") {
+        if (member.static)
+          return [
+            partialStaticFields.concat(member),
+            partialStaticMethods,
+            partialInstanceFields,
+            partialInstanceMethods,
+          ] as const;
+        return [
+          partialStaticFields,
+          partialStaticMethods,
+          partialInstanceFields.concat(member),
+          partialInstanceMethods,
+        ] as const;
+      }
+      if (member.kind === "method") {
+        if (member.static)
+          return [
+            partialStaticFields,
+            partialStaticMethods.concat(member),
+            partialInstanceFields,
+            partialInstanceMethods,
+          ] as const;
+        return [
+          partialStaticFields,
+          partialStaticMethods,
+          partialInstanceFields,
+          partialInstanceMethods.concat(member),
+        ] as const;
+      }
+      throw new Error("Unsupported member");
+    },
+    [[], [], [], []]
+  );
 
-  div.appendChild(demoDiv);
+  const [demoDiv, demoElement] = (classData as CustomElementDeclarationX)
+    .customElement
+    ? renderDemo(classData as CustomElementDeclarationX)
+    : [];
 
-  const fieldTable = renderPropertyTable(element.fields, demoElement);
+  if (demoDiv !== undefined) container.append(demoDiv);
 
-  div.appendChild(fieldTable);
+  if (staticFields.length) {
+    const staticFieldTable = renderPropertyTable(staticFields, true);
 
-  const methodTable = renderMethodsDocs(element.methods);
+    container.append(staticFieldTable);
+  }
 
-  div.appendChild(methodTable);
+  if (staticMethods.length) {
+    const staticMethodTable = renderMethodsDocs(staticMethods, true);
 
-  return div;
+    container.append(staticMethodTable);
+  }
+
+  if (instanceFields.length) {
+    const instanceFieldTable = renderPropertyTable(
+      instanceFields,
+      false,
+      demoElement
+    );
+
+    container.appendChild(instanceFieldTable);
+  }
+
+  if (instanceMethods.length) {
+    const instanceMethodTable = renderMethodsDocs(instanceMethods, false);
+
+    container.appendChild(instanceMethodTable);
+  }
+
+  return container;
 }
 
-function renderNav(elements: ElementData[]) {
+function renderNavItem(
+  dataObject: ClassDeclaration | FunctionDeclaration | CustomElementDeclarationX
+) {
+  const item = document.createElement("li");
+
+  const anchor = document.createElement("a");
+
+  const asCustomElement = dataObject as CustomElementDeclarationX;
+
+  const name = asCustomElement.customElement
+    ? asCustomElement.tagName
+    : dataObject.name;
+
+  anchor.href = "#" + name;
+
+  anchor.textContent = name;
+
+  item.append(anchor);
+
+  if (asCustomElement.customElement && asCustomElement.children.length) {
+    const childList = document.createElement("ul");
+
+    item.append(childList);
+
+    const childItems = asCustomElement.children.map(renderNavItem);
+
+    childList.append(...childItems);
+  }
+
+  return item;
+}
+
+function renderNav() {
   const nav = document.createElement("nav");
 
   const topAnchor = document.createElement("a");
@@ -604,53 +659,80 @@ function renderNav(elements: ElementData[]) {
 
   topAnchor.appendChild(topHeading);
 
-  nav.appendChild(topAnchor);
+  const topList = document.createElement("ul");
 
-  for (const element of elements) {
-    const anchor = document.createElement("a");
+  nav.append(topAnchor, topList);
 
-    anchor.href = "#" + element.tag;
+  for (const [category, dataObjects] of Object.entries(data)) {
+    const categoryItem = document.createElement("li");
 
-    anchor.textContent = element.tag;
+    topList.append(categoryItem);
 
-    nav.appendChild(anchor);
+    const categoryAnchor = document.createElement("a");
+
+    categoryAnchor.href = `#${category}`;
+
+    // categoryAnchor.ariaHasPopup = "true";
+
+    categoryAnchor.append(category);
+
+    const categoryList = document.createElement("ul");
+
+    categoryItem.append(categoryAnchor, categoryList);
+
+    const dataItems = dataObjects.map(renderNavItem);
+
+    categoryList.append(...dataItems);
   }
 
   return nav;
 }
 
-function renderDocumentation() {
-  const { elements } = getDocData();
-
-  const canvasElements = elements.filter((el) => el.tag.slice(0, 3) === "c2d");
-
-  const docDiv = document.createElement("div");
-
-  docDiv.classList.add("doc");
-
-  const heading = document.createElement("h2");
-
-  heading.textContent = "Documentation";
-
-  docDiv.appendChild(heading);
-
-  const nav = renderNav(canvasElements);
-
-  docDiv.appendChild(nav);
-
+function renderCanvasElementDoc(canvasElementData: CustomElementDeclarationX) {
   const elementDiv = document.createElement("div");
 
-  elementDiv.classList.add("elements");
+  elementDiv.classList.add("canvas-elements");
 
-  docDiv.appendChild(elementDiv);
+  const canvasDoc = renderClassDoc(canvasElementData);
 
-  const elementDocs = canvasElements.map(renderElementDoc);
+  const elementDocs = canvasElementData.children.map(renderClassDoc);
 
-  for (const doc of elementDocs) {
-    elementDiv.appendChild(doc);
+  elementDiv.append(canvasDoc, ...elementDocs);
+
+  return elementDiv;
+}
+
+function renderBaseElementDoc(element: CustomElementDeclarationX) {
+  switch (element.tagName) {
+    case "c2d-canvas":
+      return renderCanvasElementDoc(element);
+    default:
+      throw new Error(
+        `No render process for defined for element with tagName ${element.tagName}`
+      );
   }
+}
 
-  return docDiv;
+function renderDocumentation() {
+  const main = document.createElement("main");
+
+  const nav = renderNav();
+
+  const docContainer = document.createElement("div");
+
+  docContainer.className = "doc";
+
+  main.append(nav, docContainer);
+
+  const classDocs = data.classes.map(renderClassDoc);
+
+  const elementDocs = data.elements.map(renderBaseElementDoc);
+
+  const functionDocs = data.functions.map(renderStandaloneFunctionDoc);
+
+  docContainer.append(...classDocs, ...elementDocs, ...functionDocs);
+
+  return main;
 }
 
 const reference = renderDocumentation();

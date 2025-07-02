@@ -1,3 +1,4 @@
 node_modules/
 dist/
 docs/custom-elements.json
+docs/doc-data.json

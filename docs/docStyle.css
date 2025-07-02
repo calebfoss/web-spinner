@@ -34,6 +34,8 @@ body {
   background-color: var(--darkest);
   color: var(--light-gray);
   padding: 10px;
+  margin: 0;
+  height: 100vh;
 }
 
 h1,
@@ -57,23 +59,20 @@ h6 {
   font-size: 1.25rem;
 }
 
-.doc {
+main {
   display: grid;
-  grid-template-columns: auto 1fr;
-  position: relative;
-  top: 0;
+  grid-template-columns: auto auto;
+  height: 100%;
 
   h2 {
     grid-column-end: span 2;
   }
 
   nav {
-    position: sticky;
-    top: 3em;
     background-color: var(--darker);
     padding: 15px;
-    align-self: start;
     border-radius: 20px;
+    overflow: auto;
 
     a {
       display: block;
@@ -86,155 +85,163 @@ h6 {
       background-color: var(--dark);
       text-decoration: underline;
     }
+
+    li {
+      display: block;
+    }
   }
 
-  .element {
-    margin-left: 20px;
-    margin-bottom: 20px;
-    background-color: var(--dark);
-    border-radius: 20px;
-    box-shadow: black 5px 5px;
+  .doc {
+    overflow: auto;
 
-    h3 {
-      position: sticky;
-      top: 0;
-      z-index: 3;
-      background-color: var(--medium);
-      font-size: 2rem;
-      margin: 0;
-      border-radius: 20px 20px 0 0;
-    }
-
-    .demo {
-      position: sticky;
-      height: 300px;
-      top: 3.5rem;
+    .item {
+      margin-left: 20px;
+      margin-bottom: 20px;
       background-color: var(--dark);
-      margin: 0 0 2.5% 0;
-      padding: 2.5%;
-      overflow: hidden;
-      box-shadow: var(--dark-gray) 0 4px 4px;
-      z-index: 2;
+      border-radius: 20px;
+      box-shadow: black 5px 5px;
 
-      pre {
-        text-wrap: wrap;
+      h3 {
+        position: sticky;
+        top: 0;
+        z-index: 3;
+        background-color: var(--medium);
+        font-size: 2rem;
+        margin: 0;
+        border-radius: 20px 20px 0 0;
       }
 
-      code {
-        max-width: 600px;
+      .demo {
+        position: sticky;
+        height: 300px;
+        top: 3.5rem;
+        background-color: var(--dark);
+        margin: 0 0 2.5% 0;
+        padding: 2.5%;
+        overflow: hidden;
+        box-shadow: var(--dark-gray) 0 4px 4px;
+        z-index: 2;
 
-        * {
-          font-family: "Open Dyslexic Mono", monospace;
+        pre {
+          text-wrap: wrap;
+        }
+
+        code {
+          max-width: 600px;
+
+          * {
+            font-family: "Open Dyslexic Mono", monospace;
+          }
+        }
+
+        c2d-canvas {
+          float: inline-start;
+          margin-right: 15px;
+        }
+
+        button {
+          background-color: var(--medium);
+          color: var(--light-gray);
+          border-color: var(--light-gray);
+          border-radius: 5px;
         }
       }
 
-      c2d-canvas {
-        float: inline-start;
-        margin-right: 15px;
+      label {
+        display: inline-block;
       }
 
-      button {
-        background-color: var(--medium);
-        color: var(--light-gray);
-        border-color: var(--light-gray);
-        border-radius: 5px;
+      input {
+        width: 100%;
       }
-    }
 
-    label {
-      display: inline-block;
-    }
-
-    input {
-      width: 100%;
-    }
-
-    table {
-      display: table;
-      box-shadow: var(--dark-gray) 5px 5px;
-      border-collapse: collapse;
-      margin: auto;
-      border-radius: 0 0 20px 20px;
-      width: 90%;
-
-      caption {
-        background-color: var(--medium);
-        color: var(--light-gray);
-        border-radius: 20px 20px 0 0;
-        padding: 5px;
+      table {
+        display: table;
         box-shadow: var(--dark-gray) 5px 5px;
-      }
+        border-collapse: collapse;
+        margin: auto;
+        border-radius: 0 0 20px 20px;
+        width: 90%;
 
-      tbody {
-        width: 100%;
-      }
+        caption {
+          background-color: var(--medium);
+          color: var(--light-gray);
+          border-radius: 20px 20px 0 0;
+          padding: 5px;
+          box-shadow: var(--dark-gray) 5px 5px;
+        }
 
-      td:last-child {
-        width: 400px;
-      }
-
-      tr {
-        width: 100%;
-      }
-
-      tr:first-child {
-        position: sticky;
-        top: calc(300px + 3.5rem);
-        z-index: 1;
-      }
-
-      tr:last-child {
-        border-radius: 20px 20px 0 0;
-
-        td:first-child {
-          border-radius: 0 0 0 20px;
+        tbody {
+          width: 100%;
         }
 
         td:last-child {
-          border-radius: 0 0 20px 0;
+          width: 400px;
         }
-      }
 
-      tr:nth-child(even) {
+        tr {
+          width: 100%;
+        }
+
+        tr:first-child {
+          position: sticky;
+          top: 0;
+          z-index: 1;
+        }
+
+        tr:last-child {
+          border-radius: 20px 20px 0 0;
+
+          td:first-child {
+            border-radius: 0 0 0 20px;
+          }
+
+          td:last-child {
+            border-radius: 0 0 20px 0;
+          }
+        }
+
+        tr:nth-child(even) {
+          th {
+            background-color: var(--darker);
+          }
+
+          td {
+            background-color: var(--darker);
+          }
+        }
+
+        tr:nth-child(odd) {
+          th {
+            background-color: var(--darkest);
+          }
+
+          td {
+            background-color: var(--dark);
+          }
+        }
+
+        td,
         th {
-          background-color: var(--darker);
+          padding: 15px 5px 15px 5px;
         }
 
-        td {
-          background-color: var(--darker);
-        }
-      }
-
-      tr:nth-child(odd) {
-        th {
-          background-color: var(--darkest);
+        td:first-child,
+        th:first-child {
+          padding-left: 20px;
         }
 
-        td {
-          background-color: var(--dark);
+        td:last-child,
+        th:last-child {
+          padding-right: 20px;
         }
       }
 
-      td,
-      th {
-        padding: 15px 5px 15px 5px;
-      }
-
-      td:first-child,
-      th:first-child {
-        padding-left: 20px;
-      }
-
-      td:last-child,
-      th:last-child {
-        padding-right: 20px;
-      }
-    }
-
-    .method {
-      h6,
-      p {
-        padding-left: 30px;
+      .method {
+        h6,
+        p {
+          padding-left: 30px;
+        }
       }
     }
   }
