@@ -160,6 +160,6 @@ function organizeData() {
   );
 }
 
-writeFileSync("doc-data.json", JSON.stringify(organizeData()), {
+writeFileSync("./docs/doc-data.json", JSON.stringify(organizeData()), {
   encoding: "utf-8",
 });
