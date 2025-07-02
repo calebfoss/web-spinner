@@ -28,7 +28,7 @@
     "build": "webpack && npm i && npm run docs",
     "dev": "webpack --watch",
     "demo": "vite demo",
-    "docs": "cem analyze --globs src --outdir docs && vite build docs",
+    "docs": "cem analyze --globs src --outdir docs && pushd docs && tsx reorganizeDocData.ts && popd && vite build docs",
     "start": "npm run build && vite docs",
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
   },

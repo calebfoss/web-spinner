@@ -1,101 +1,26 @@
 import {
   ClassDeclaration,
   ClassField,
-  Module,
+  FunctionDeclaration,
+  FunctionLike,
   ClassMethod,
-  Package,
   Parameter,
 } from "custom-elements-manifest/schema";
-import data from "./custom-elements.json";
+import untypedData from "./doc-data.json";
 import { createRoot, Color } from "web-spinner";
 import * as WebSpinner from "web-spinner";
 import highlight from "highlight.js";
 import imageSource from "./Embia_major_mf.jpg";
+import {
+  CustomElementDeclarationX,
+  WebSpinnerDocData,
+} from "./reorganizeDocData";
+
+const data = untypedData as WebSpinnerDocData;
 
 interface ClassFieldExtended extends ClassField {
   attribute?: string;
   readonly?: boolean;
-}
-
-function getCustomElementDefinitions(module: Module) {
-  const { exports } = module;
-
-  if (exports === undefined) return [];
-
-  return exports.filter((exp) => exp.kind === "custom-element-definition");
-}
-
-function getClassDeclarations(module: Module) {
-  const { declarations } = module;
-
-  if (declarations === undefined) return [];
-
-  return declarations.filter((declaration) => declaration.kind === "class");
-}
-
-type ElementData = {
-  tag: string;
-  constructorName: string;
-  fields: ClassField[];
-  methods: ClassMethod[];
-};
-
-function getDocData() {
-  const { modules } = data as Package;
-
-  const customElementDefinitions = modules
-    .map(getCustomElementDefinitions)
-    .flat();
-
-  const allClasses = modules.map(getClassDeclarations).flat();
-
-  const elements = customElementDefinitions
-    .map<ElementData>((definition) => {
-      const declaration = allClasses.find(
-        (declaration) => declaration.name === definition.declaration.name
-      );
-
-      if (declaration === undefined)
-        throw new Error(
-          `Could not locate declaration for ${definition.name}: ${definition.declaration.name}`
-        );
-
-      const { members } = declaration as ClassDeclaration;
-
-      const [methods, fields] =
-        members === undefined
-          ? [[], []]
-          : members.reduce<[ClassMethod[], ClassField[]]>(
-              ([partialMethods, partialFields], member) => {
-                if (member.kind === "field")
-                  return [partialMethods, partialFields.concat(member)];
-                if (member.kind === "method")
-                  return [partialMethods.concat(member), partialFields];
-                throw new Error(
-                  `Unsupported member kind: ${(member as any).kind}`
-                );
-              },
-              [[], []]
-            );
-
-      return {
-        tag: definition.name,
-        constructorName: declaration.name,
-        methods,
-        fields,
-      };
-    })
-    .toSorted((a, b) => a.tag.localeCompare(b.tag));
-
-  const indexModule = modules.find((module) => module.path === "src/index.ts");
-
-  if (indexModule === undefined) throw new Error("Could not find index module");
-
-  const publicClasses = getClassDeclarations(indexModule).filter(
-    (c) => !elements.some((el) => el.constructorName === c.name)
-  );
-
-  return { elements, publicClasses };
 }
 
 function renderParameterRow(param: Parameter) {
@@ -168,30 +93,34 @@ function renderTableHeaders(...headerText: string[]) {
   return row;
 }
 
-function renderMethodDoc(method: ClassMethod) {
+function renderFunctionDoc(fn: FunctionLike, memberOfClass: boolean) {
   const div = document.createElement("div");
 
-  div.classList.add("method");
+  if (!memberOfClass) {
+    div.id = fn.name;
+  }
 
-  const heading = document.createElement("h5");
+  div.classList.add(memberOfClass ? "method" : "item");
 
-  heading.textContent = method.name;
+  const heading = document.createElement(memberOfClass ? "h5" : "h3");
+
+  heading.textContent = fn.name;
 
   div.appendChild(heading);
 
-  if (method.description !== undefined) {
+  if (fn.description !== undefined) {
     const descriptionPar = document.createElement("p");
 
-    descriptionPar.textContent = method.description;
+    descriptionPar.textContent = fn.description;
 
     div.appendChild(descriptionPar);
   }
 
-  const parameters = renderParametersTable(method.parameters ?? []);
+  const parameters = renderParametersTable(fn.parameters ?? []);
 
   div.appendChild(parameters);
 
-  const returnHeading = document.createElement("h6");
+  const returnHeading = document.createElement(memberOfClass ? "h6" : "h5");
 
   returnHeading.textContent = "Return value";
 
@@ -201,19 +130,27 @@ function renderMethodDoc(method: ClassMethod) {
 
   div.appendChild(returnTypePar);
 
-  if (method.return === undefined) {
+  if (fn.return === undefined) {
     returnTypePar.textContent = "None";
   } else {
-    returnTypePar.textContent = method.return.type?.text ?? "";
+    returnTypePar.textContent = fn.return.type?.text ?? "";
 
     const returnDescriptionPar = document.createElement("p");
 
-    returnDescriptionPar.textContent = method.return.description ?? "";
+    returnDescriptionPar.textContent = fn.return.description ?? "";
 
     div.appendChild(returnDescriptionPar);
   }
 
   return div;
+}
+
+function renderClassMethodDoc(method: ClassMethod) {
+  return renderFunctionDoc(method, true);
+}
+
+function renderStandaloneFunctionDoc(fn: FunctionDeclaration) {
+  return renderFunctionDoc(fn, false);
 }
 
 function renderMethodsDocs(methods: ClassMethod[]) {
@@ -231,7 +168,7 @@ function renderMethodsDocs(methods: ClassMethod[]) {
     (m) => m.privacy === undefined || m.privacy === "public"
   );
 
-  const methodDocs = publicMethods.map(renderMethodDoc);
+  const methodDocs = publicMethods.map(renderClassMethodDoc);
 
   for (const doc of methodDocs) {
     div.appendChild(doc);
@@ -246,7 +183,7 @@ const angleMatch = new RegExp(
 
 function renderPropertyRows(
   member: ClassFieldExtended,
-  demoElement: HTMLElement
+  demoElement?: HTMLElement
 ) {
   const statRow = document.createElement("tr");
 
@@ -276,7 +213,7 @@ function renderPropertyRows(
 
   const attributeName = member.attribute;
 
-  if (attributeName !== undefined) {
+  if (demoElement !== undefined && attributeName !== undefined) {
     const demoInput = document.createElement("input");
 
     const typeText = member.type?.text;
@@ -414,7 +351,7 @@ function renderPropertyRows(
   return [statRow, descriptionRow];
 }
 
-function renderPropertyTable(fields: ClassField[], demoElement: HTMLElement) {
+function renderPropertyTable(fields: ClassField[], demoElement?: HTMLElement) {
   const table = document.createElement("table");
 
   const caption = document.createElement("caption");
@@ -451,7 +388,9 @@ function renderPropertyTable(fields: ClassField[], demoElement: HTMLElement) {
   return table;
 }
 
-function renderDemo(element: ElementData): [HTMLDivElement, HTMLElement] {
+function renderDemo(
+  element: CustomElementDeclarationX
+): [HTMLDivElement, HTMLElement] {
   const div = document.createElement("div");
 
   div.classList.add("demo");
@@ -482,7 +421,7 @@ function renderDemo(element: ElementData): [HTMLDivElement, HTMLElement] {
     navigator.clipboard.writeText(htmlCode.textContent ?? "");
   });
 
-  if (element.tag === "c2d-canvas") {
+  if (element.tagName === "c2d-canvas") {
     const observer = new MutationObserver(() => {
       delete htmlCode.dataset.highlighted;
 
@@ -507,7 +446,7 @@ function renderDemo(element: ElementData): [HTMLDivElement, HTMLElement] {
     controlB: WebSpinner.Vector2D.xy(0, 100),
   };
 
-  const mainElement = document.createElement(element.tag);
+  const mainElement = document.createElement(element.tagName);
 
   // const jsCode = document.createElement("code");
 
@@ -531,12 +470,12 @@ function renderDemo(element: ElementData): [HTMLDivElement, HTMLElement] {
     }
   }
 
-  if (element.tag === "c2d-image") {
+  if (element.tagName === "c2d-image") {
     const image = mainElement as WebSpinner.WebSpinnerElement["Canvas2DImage"];
     image.source = imageSource;
     image.width = canvas.width;
     image.origin = "center";
-  } else if (element.tag === "c2d-video") {
+  } else if (element.tagName === "c2d-video") {
     const video = mainElement as WebSpinner.WebSpinnerElement["Canvas2DVideo"];
     video.source =
       "https://download.blender.org/peach/bigbuckbunny_movies/BigBuckBunny_320x180.mp4";
@@ -545,13 +484,13 @@ function renderDemo(element: ElementData): [HTMLDivElement, HTMLElement] {
     canvas.listen.click(() => video.play());
   }
 
-  if (element.tag === "c2d-text") {
+  if (element.tagName === "c2d-text") {
     mainElement.textContent = "Web Spinner";
 
     (mainElement as WebSpinner.WebSpinnerElement["Canvas2DText"]).lineWidth = 1;
 
     canvas.appendChild(mainElement);
-  } else if (element.tag.slice(0, 10) === "c2d-shape-") {
+  } else if (element.tagName.slice(0, 10) === "c2d-shape-") {
     const shape = document.createElement("c2d-shape");
 
     canvas.appendChild(shape);
@@ -566,35 +505,84 @@ function renderDemo(element: ElementData): [HTMLDivElement, HTMLElement] {
   return [div, mainElement];
 }
 
-function renderElementDoc(element: ElementData) {
-  const div = document.createElement("div");
+function renderClassDoc(
+  classData: ClassDeclaration | CustomElementDeclarationX
+) {
+  const container = document.createElement("div");
 
-  div.classList.add("element");
+  container.className = "item";
 
-  div.id = element.tag;
+  const name =
+    (classData as CustomElementDeclarationX).tagName ?? classData.name;
+
+  container.id = name;
 
   const heading = document.createElement("h3");
 
-  heading.textContent = element.tag;
+  heading.textContent = name;
 
-  div.appendChild(heading);
+  container.appendChild(heading);
 
-  const [demoDiv, demoElement] = renderDemo(element);
+  const [fields, methods] = (classData.members ?? []).reduce(
+    ([partialFields, partialMethods]: [ClassField[], ClassMethod[]], member) =>
+      member.kind === "field"
+        ? ([partialFields.concat(member), partialMethods] as const)
+        : ([partialFields, partialMethods.concat(member)] as const),
+    [[], []]
+  );
 
-  div.appendChild(demoDiv);
+  if ((classData as CustomElementDeclarationX).customElement) {
+    const [demoDiv, demoElement] = renderDemo(
+      classData as CustomElementDeclarationX
+    );
 
-  const fieldTable = renderPropertyTable(element.fields, demoElement);
+    container.appendChild(demoDiv);
 
-  div.appendChild(fieldTable);
+    const fieldTable = renderPropertyTable(fields, demoElement);
 
-  const methodTable = renderMethodsDocs(element.methods);
+    container.appendChild(fieldTable);
+  }
 
-  div.appendChild(methodTable);
+  const methodTable = renderMethodsDocs(methods);
 
-  return div;
+  container.appendChild(methodTable);
+
+  return container;
 }
 
-function renderNav(elements: ElementData[]) {
+function renderNavItem(
+  dataObject: ClassDeclaration | FunctionDeclaration | CustomElementDeclarationX
+) {
+  const item = document.createElement("li");
+
+  const anchor = document.createElement("a");
+
+  const asCustomElement = dataObject as CustomElementDeclarationX;
+
+  const name = asCustomElement.customElement
+    ? asCustomElement.tagName
+    : dataObject.name;
+
+  anchor.href = "#" + name;
+
+  anchor.textContent = name;
+
+  item.append(anchor);
+
+  if (asCustomElement.customElement && asCustomElement.children.length) {
+    const childList = document.createElement("ul");
+
+    item.append(childList);
+
+    const childItems = asCustomElement.children.map(renderNavItem);
+
+    childList.append(...childItems);
+  }
+
+  return item;
+}
+
+function renderNav() {
   const nav = document.createElement("nav");
 
   const topAnchor = document.createElement("a");
@@ -607,53 +595,80 @@ function renderNav(elements: ElementData[]) {
 
   topAnchor.appendChild(topHeading);
 
-  nav.appendChild(topAnchor);
+  const topList = document.createElement("ul");
 
-  for (const element of elements) {
-    const anchor = document.createElement("a");
+  nav.append(topAnchor, topList);
 
-    anchor.href = "#" + element.tag;
+  for (const [category, dataObjects] of Object.entries(data)) {
+    const categoryItem = document.createElement("li");
 
-    anchor.textContent = element.tag;
+    topList.append(categoryItem);
 
-    nav.appendChild(anchor);
+    const categoryAnchor = document.createElement("a");
+
+    categoryAnchor.href = `#${category}`;
+
+    // categoryAnchor.ariaHasPopup = "true";
+
+    categoryAnchor.append(category);
+
+    const categoryList = document.createElement("ul");
+
+    categoryItem.append(categoryAnchor, categoryList);
+
+    const dataItems = dataObjects.map(renderNavItem);
+
+    categoryList.append(...dataItems);
   }
 
   return nav;
 }
 
-function renderDocumentation() {
-  const { elements } = getDocData();
-
-  const canvasElements = elements.filter((el) => el.tag.slice(0, 3) === "c2d");
-
-  const docDiv = document.createElement("div");
-
-  docDiv.classList.add("doc");
-
-  const heading = document.createElement("h2");
-
-  heading.textContent = "Documentation";
-
-  docDiv.appendChild(heading);
-
-  const nav = renderNav(canvasElements);
-
-  docDiv.appendChild(nav);
-
+function renderCanvasElementDoc(canvasElementData: CustomElementDeclarationX) {
   const elementDiv = document.createElement("div");
 
-  elementDiv.classList.add("elements");
+  elementDiv.classList.add("canvas-elements");
 
-  docDiv.appendChild(elementDiv);
+  const canvasDoc = renderClassDoc(canvasElementData);
 
-  const elementDocs = canvasElements.map(renderElementDoc);
+  const elementDocs = canvasElementData.children.map(renderClassDoc);
 
-  for (const doc of elementDocs) {
-    elementDiv.appendChild(doc);
+  elementDiv.append(canvasDoc, ...elementDocs);
+
+  return elementDiv;
+}
+
+function renderBaseElementDoc(element: CustomElementDeclarationX) {
+  switch (element.tagName) {
+    case "c2d-canvas":
+      return renderCanvasElementDoc(element);
+    default:
+      throw new Error(
+        `No render process for defined for element with tagName ${element.tagName}`
+      );
   }
+}
 
-  return docDiv;
+function renderDocumentation() {
+  const main = document.createElement("main");
+
+  const nav = renderNav();
+
+  const docContainer = document.createElement("div");
+
+  docContainer.className = "doc";
+
+  main.append(nav, docContainer);
+
+  const classDocs = data.classes.map(renderClassDoc);
+
+  const elementDocs = data.elements.map(renderBaseElementDoc);
+
+  const functionDocs = data.functions.map(renderStandaloneFunctionDoc);
+
+  docContainer.append(...classDocs, ...elementDocs, ...functionDocs);
+
+  return main;
 }
 
 const reference = renderDocumentation();
