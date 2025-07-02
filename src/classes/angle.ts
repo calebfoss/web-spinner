@@ -47,13 +47,21 @@ export class Angle extends State<number> implements AngleConverter {
     this.value = Angle.convert(value, unit, "rad");
   }
 
-  get degrees() {
+  /**
+   * Current value in degrees. 360 degrees is a complete rotation.
+   */
+
+  get degrees(): number {
     return this.#getConverted("deg");
   }
 
   set degrees(value) {
     this.#setConverted("deg", value);
   }
+
+  /**
+   * @private
+   */
 
   toString() {
     const conversionCount = this.#conversions.size;
@@ -70,23 +78,50 @@ export class Angle extends State<number> implements AngleConverter {
     return valueString + unit;
   }
 
+  /**
+   * Converts a number from one angle unit to another.
+   *
+   * @param value angle number to convert
+   * @param unitFrom angle unit to convert from
+   * @param unitTo unit to convert to
+   * @returns converted value
+   */
+
   static convert(
     value: number,
     unitFrom: AngleUnitShort,
     unitTo: AngleUnitShort
-  ) {
+  ): number {
     return value * (unitsInCircle[unitTo] / unitsInCircle[unitFrom]);
   }
 
-  static degrees(value: number) {
+  /**
+   * Creates a new Angle from a value in degrees.
+   *
+   * @param value number of degrees
+   * @returns
+   */
+
+  static degrees(value: number): Angle {
     return new Angle(Angle.unit.degrees, value);
   }
 
-  equals(other: Angle) {
+  /**
+   * Checks if another angle represents the same value as this one.
+   *
+   * @param other Angle to compare
+   * @returns True if the angles are equal.
+   */
+
+  equals(other: Angle): boolean {
     return super.equals(other) || this.radians === other.radians;
   }
 
-  get gradians() {
+  /**
+   * Current value in gradians. 400 gradians is a complete rotation.
+   */
+
+  get gradians(): number {
     return this.#getConverted("grad");
   }
 
@@ -94,11 +129,22 @@ export class Angle extends State<number> implements AngleConverter {
     this.#setConverted("grad", value);
   }
 
+  /**
+   * Creates a new Angle from value in radians.
+   *
+   * @param value number of radians
+   * @returns
+   */
+
   static radians(value: number) {
     return new Angle(Angle.unit.radians, value);
   }
 
-  get radians() {
+  /**
+   * Current value in radians. 2π radians is a complete rotation.
+   */
+
+  get radians(): number {
     return this.value;
   }
 
@@ -110,13 +156,21 @@ export class Angle extends State<number> implements AngleConverter {
     super.value = value;
   }
 
-  get turn() {
+  /**
+   * Current value in turns. 1 turn is a complete rotation.
+   */
+
+  get turn(): number {
     return this.#getConverted("turn");
   }
 
   set turn(value) {
     this.#setConverted("turn", value);
   }
+
+  /**
+   * Most recently used angle unit
+   */
 
   get unit(): AngleUnitLong {
     const conversionCount = this.#conversions.size;
@@ -136,6 +190,11 @@ export class Angle extends State<number> implements AngleConverter {
     return longUnit as AngleUnitLong;
   }
 
+  /**
+   * Map of angle units. The keys are the full names of units, and their
+   * corresponding value is the abbreviation used in CSS and attribute values.
+   */
+
   static unit = {
     degrees: "deg",
     radians: "rad",
@@ -143,9 +202,18 @@ export class Angle extends State<number> implements AngleConverter {
     turn: "turn",
   } as const;
 
-  static get unitsInCircle() {
+  /**
+   * Map of angle unit abbreviations and the corresponding number of units in
+   * a complete rotation.
+   */
+
+  static get unitsInCircle(): { [unit in AngleUnitShort]: number } {
     return unitsInCircle;
   }
+
+  /**
+   * @private
+   */
 
   get value() {
     return super.value;
@@ -155,7 +223,13 @@ export class Angle extends State<number> implements AngleConverter {
     this.radians = value;
   }
 
-  static get zero() {
+  /**
+   * Creates a new Angle with a value of 0.
+   *
+   * @returns
+   */
+
+  static zero(): Angle {
     return Angle.radians(0);
   }
 }

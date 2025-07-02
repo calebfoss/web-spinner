@@ -153,14 +153,14 @@ function renderStandaloneFunctionDoc(fn: FunctionDeclaration) {
   return renderFunctionDoc(fn, false);
 }
 
-function renderMethodsDocs(methods: ClassMethod[]) {
+function renderMethodsDocs(methods: ClassMethod[], isStatic: boolean) {
   const div = document.createElement("div");
 
   div.classList.add("methods");
 
   const heading = document.createElement("h4");
 
-  heading.textContent = "Methods";
+  heading.append(`${isStatic ? "Static" : "Instance"} Methods`);
 
   div.appendChild(heading);
 
@@ -193,11 +193,13 @@ function renderPropertyRows(
 
   statRow.appendChild(jsNameCell);
 
-  const htmlNameCell = document.createElement("td");
+  if (demoElement !== undefined) {
+    const htmlNameCell = document.createElement("td");
 
-  htmlNameCell.textContent = member.attribute ?? "[none]";
+    htmlNameCell.textContent = member.attribute ?? "[none]";
 
-  statRow.appendChild(htmlNameCell);
+    statRow.appendChild(htmlNameCell);
+  }
 
   const typeCell = document.createElement("td");
 
@@ -209,128 +211,130 @@ function renderPropertyRows(
 
   statRow.appendChild(typeCell);
 
-  const demoCell = document.createElement("td");
+  if (demoElement !== undefined) {
+    const demoCell = document.createElement("td");
 
-  const attributeName = member.attribute;
+    const attributeName = member.attribute;
 
-  if (demoElement !== undefined && attributeName !== undefined) {
-    const demoInput = document.createElement("input");
+    if (attributeName !== undefined) {
+      const demoInput = document.createElement("input");
 
-    const typeText = member.type?.text;
+      const typeText = member.type?.text;
 
-    switch (typeText) {
-      case "Color":
-      case "DrawStyle":
-      case "DrawStyle | null":
-        demoInput.type = "color";
-        break;
-      case "number":
-      case "number | null":
-        demoInput.type = "number";
-        break;
-      case "Vector2D":
-      case "Vetor2D | null":
-        {
-          demoInput.type = "hidden";
+      switch (typeText) {
+        case "Color":
+        case "DrawStyle":
+        case "DrawStyle | null":
+          demoInput.type = "color";
+          break;
+        case "number":
+        case "number | null":
+          demoInput.type = "number";
+          break;
+        case "Vector2D":
+        case "Vetor2D | null":
+          {
+            demoInput.type = "hidden";
 
-          const vector = Reflect.get(
-            demoElement,
-            member.name
-          ) as WebSpinner.Vector2D;
+            const vector = Reflect.get(
+              demoElement,
+              member.name
+            ) as WebSpinner.Vector2D;
 
-          demoElement.setAttribute(attributeName, vector.toString());
+            demoElement.setAttribute(attributeName, vector.toString());
 
-          const xLabel = document.createElement("label");
+            const xLabel = document.createElement("label");
 
-          xLabel.textContent = "x";
+            xLabel.textContent = "x";
 
-          demoCell.appendChild(xLabel);
+            demoCell.appendChild(xLabel);
 
-          const xInput = document.createElement("input");
+            const xInput = document.createElement("input");
 
-          xInput.type = "number";
+            xInput.type = "number";
 
-          xInput.value = vector.x.toString();
+            xInput.value = vector.x.toString();
 
-          xLabel.appendChild(xInput);
+            xLabel.appendChild(xInput);
 
-          const yLabel = document.createElement("label");
+            const yLabel = document.createElement("label");
 
-          yLabel.textContent = "y";
+            yLabel.textContent = "y";
 
-          demoCell.appendChild(yLabel);
+            demoCell.appendChild(yLabel);
 
-          const yInput = document.createElement("input");
+            const yInput = document.createElement("input");
 
-          yInput.type = "number";
+            yInput.type = "number";
 
-          yInput.value = vector.y.toString();
+            yInput.value = vector.y.toString();
 
-          yLabel.appendChild(yInput);
+            yLabel.appendChild(yInput);
 
-          xInput.addEventListener("input", () => {
-            if (
-              xInput.value.length === 0 ||
-              yInput.value.length === 0 ||
-              Number.isNaN(Number(xInput.value)) ||
-              Number.isNaN(Number(yInput.value))
-            )
-              return;
+            xInput.addEventListener("input", () => {
+              if (
+                xInput.value.length === 0 ||
+                yInput.value.length === 0 ||
+                Number.isNaN(Number(xInput.value)) ||
+                Number.isNaN(Number(yInput.value))
+              )
+                return;
 
-            const newValue = `${xInput.value}, ${yInput.value}`;
+              const newValue = `${xInput.value}, ${yInput.value}`;
 
-            const currentValue = demoElement.getAttribute(attributeName);
+              const currentValue = demoElement.getAttribute(attributeName);
 
-            if (currentValue === newValue) return;
+              if (currentValue === newValue) return;
 
-            demoInput.value = newValue;
+              demoInput.value = newValue;
 
-            demoElement.setAttribute(attributeName, newValue);
-          });
+              demoElement.setAttribute(attributeName, newValue);
+            });
 
-          yInput.addEventListener("input", () => {
-            if (
-              xInput.value.length === 0 ||
-              yInput.value.length === 0 ||
-              Number.isNaN(Number(xInput.value)) ||
-              Number.isNaN(Number(yInput.value))
-            )
-              return;
+            yInput.addEventListener("input", () => {
+              if (
+                xInput.value.length === 0 ||
+                yInput.value.length === 0 ||
+                Number.isNaN(Number(xInput.value)) ||
+                Number.isNaN(Number(yInput.value))
+              )
+                return;
 
-            const newValue = `${xInput.value}, ${yInput.value}`;
+              const newValue = `${xInput.value}, ${yInput.value}`;
 
-            const currentValue = demoElement.getAttribute(attributeName);
+              const currentValue = demoElement.getAttribute(attributeName);
 
-            if (currentValue === newValue) return;
+              if (currentValue === newValue) return;
 
-            demoInput.value = newValue;
+              demoInput.value = newValue;
 
-            demoElement.setAttribute(attributeName, newValue);
-          });
-        }
-        break;
+              demoElement.setAttribute(attributeName, newValue);
+            });
+          }
+          break;
+      }
+
+      demoInput.addEventListener("input", (evt) => {
+        const currentValue = demoElement.getAttribute(attributeName);
+
+        if (currentValue === demoInput.value) return;
+
+        if (
+          member.type?.text === "Angle" &&
+          demoInput.value.match(angleMatch) === null
+        )
+          return;
+
+        demoElement.setAttribute(attributeName, demoInput.value);
+      });
+
+      demoInput.value = Reflect.get(demoElement, member.name);
+
+      demoCell.appendChild(demoInput);
     }
 
-    demoInput.addEventListener("input", (evt) => {
-      const currentValue = demoElement.getAttribute(attributeName);
-
-      if (currentValue === demoInput.value) return;
-
-      if (
-        member.type?.text === "Angle" &&
-        demoInput.value.match(angleMatch) === null
-      )
-        return;
-
-      demoElement.setAttribute(attributeName, demoInput.value);
-    });
-
-    demoInput.value = Reflect.get(demoElement, member.name);
-
-    demoCell.appendChild(demoInput);
+    statRow.appendChild(demoCell);
   }
-
-  statRow.appendChild(demoCell);
 
   const descriptionRow = document.createElement("tr");
 
@@ -351,12 +355,16 @@ function renderPropertyRows(
   return [statRow, descriptionRow];
 }
 
-function renderPropertyTable(fields: ClassField[], demoElement?: HTMLElement) {
+function renderPropertyTable(
+  fields: ClassField[],
+  isStatic: boolean,
+  demoElement?: HTMLElement
+) {
   const table = document.createElement("table");
 
   const caption = document.createElement("caption");
 
-  caption.textContent = "Properties";
+  caption.append(`${isStatic ? "Static" : "Instance"} Properties`);
 
   table.appendChild(caption);
 
@@ -364,12 +372,10 @@ function renderPropertyTable(fields: ClassField[], demoElement?: HTMLElement) {
 
   table.appendChild(body);
 
-  const fieldHeaderRow = renderTableHeaders(
-    "JS Name",
-    "HTML Name",
-    "Type",
-    "Demo"
-  );
+  const fieldHeaderRow =
+    demoElement === undefined
+      ? renderTableHeaders("Name", "Type")
+      : renderTableHeaders("JS Name", "HTML Name", "Type", "Demo");
 
   body.appendChild(fieldHeaderRow);
 
@@ -523,29 +529,87 @@ function renderClassDoc(
 
   container.appendChild(heading);
 
-  const [fields, methods] = (classData.members ?? []).reduce(
-    ([partialFields, partialMethods]: [ClassField[], ClassMethod[]], member) =>
-      member.kind === "field"
-        ? ([partialFields.concat(member), partialMethods] as const)
-        : ([partialFields, partialMethods.concat(member)] as const),
-    [[], []]
+  const [staticFields, staticMethods, instanceFields, instanceMethods] = (
+    classData.members ?? []
+  ).reduce(
+    (
+      [
+        partialStaticFields,
+        partialStaticMethods,
+        partialInstanceFields,
+        partialInstanceMethods,
+      ]: [ClassField[], ClassMethod[], ClassField[], ClassMethod[]],
+      member
+    ) => {
+      if (member.kind === "field") {
+        if (member.static)
+          return [
+            partialStaticFields.concat(member),
+            partialStaticMethods,
+            partialInstanceFields,
+            partialInstanceMethods,
+          ] as const;
+        return [
+          partialStaticFields,
+          partialStaticMethods,
+          partialInstanceFields.concat(member),
+          partialInstanceMethods,
+        ] as const;
+      }
+      if (member.kind === "method") {
+        if (member.static)
+          return [
+            partialStaticFields,
+            partialStaticMethods.concat(member),
+            partialInstanceFields,
+            partialInstanceMethods,
+          ] as const;
+        return [
+          partialStaticFields,
+          partialStaticMethods,
+          partialInstanceFields,
+          partialInstanceMethods.concat(member),
+        ] as const;
+      }
+      throw new Error("Unsupported member");
+    },
+    [[], [], [], []]
   );
 
-  if ((classData as CustomElementDeclarationX).customElement) {
-    const [demoDiv, demoElement] = renderDemo(
-      classData as CustomElementDeclarationX
-    );
+  const [demoDiv, demoElement] = (classData as CustomElementDeclarationX)
+    .customElement
+    ? renderDemo(classData as CustomElementDeclarationX)
+    : [];
 
-    container.appendChild(demoDiv);
+  if (demoDiv !== undefined) container.append(demoDiv);
 
-    const fieldTable = renderPropertyTable(fields, demoElement);
+  if (staticFields.length) {
+    const staticFieldTable = renderPropertyTable(staticFields, true);
 
-    container.appendChild(fieldTable);
+    container.append(staticFieldTable);
   }
 
-  const methodTable = renderMethodsDocs(methods);
+  if (staticMethods.length) {
+    const staticMethodTable = renderMethodsDocs(staticMethods, true);
 
-  container.appendChild(methodTable);
+    container.append(staticMethodTable);
+  }
+
+  if (instanceFields.length) {
+    const instanceFieldTable = renderPropertyTable(
+      instanceFields,
+      false,
+      demoElement
+    );
+
+    container.appendChild(instanceFieldTable);
+  }
+
+  if (instanceMethods.length) {
+    const instanceMethodTable = renderMethodsDocs(instanceMethods, false);
+
+    container.appendChild(instanceMethodTable);
+  }
 
   return container;
 }
