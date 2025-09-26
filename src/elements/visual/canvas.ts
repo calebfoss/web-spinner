@@ -371,6 +371,8 @@ export class Canvas2DCanvasElement extends c2dStandaloneChildren(C2DBase) {
     this.domCanvas.height *= scaleRatio;
 
     this.#devicePixelRatio = newPixelRatio;
+
+    this.queueRender();
   }
 
   waitFor(element: Element, eventName: keyof HTMLElementEventMap = "load") {
