@@ -17,7 +17,7 @@ export function testTransform(
 ) {
   describe("transform", () => {
     test("anchor", async () => {
-      const { element, canvas } = setup();
+      const { element, canvas, teardown } = setup();
 
       const translate = jest.spyOn(canvas.context, "translate");
 
@@ -33,18 +33,22 @@ export function testTransform(
           anchor.y,
         ]);
       });
+
+      teardown();
     });
 
     test("anchor reflection", () => {
-      const { element } = setup();
+      const { element, teardown } = setup();
 
       element.anchor = Vector2D.xy(45, 65);
 
       testReflection(element, "anchor", "anchor", Vector2D.xy(-65, -45));
+
+      teardown();
     });
 
     test("angle", async () => {
-      const { element, canvas } = setup();
+      const { element, canvas, teardown } = setup();
 
       const rotate = jest.spyOn(canvas.context, "rotate");
 
@@ -57,18 +61,22 @@ export function testTransform(
 
         expect(rotate.mock.calls[transformedParents][0]).toBe(angle.radians);
       });
+
+      teardown();
     });
 
     test("angle reflection", () => {
-      const { element } = setup();
+      const { element, teardown } = setup();
 
       element.angle = Angle.degrees(30);
 
       testReflection(element, "angle", "angle", Angle.degrees(-60));
+
+      teardown();
     });
 
     test("angular velocity", async () => {
-      const { element, canvas } = setup();
+      const { element, canvas, teardown } = setup();
 
       const fps = 60;
 
@@ -87,16 +95,18 @@ export function testTransform(
 
         const currentDegrees = element.angle.degrees;
 
-        expect(movedFrames).toBeGreaterThanOrEqual(30);
+        expect(movedFrames).toEqual(30);
 
         expect(currentDegrees).toBeCloseTo(
           rotationPerFrame.degrees * movedFrames
         );
       });
+
+      teardown();
     });
 
     test("angular velocity reflection", () => {
-      const { element } = setup();
+      const { element, teardown } = setup();
 
       element.angularVelocity = Angle.degrees(30);
 
@@ -106,10 +116,12 @@ export function testTransform(
         "angular-velocity",
         Angle.degrees(60)
       );
+
+      teardown();
     });
 
     test("scale", async () => {
-      const { element, canvas } = setup();
+      const { element, canvas, teardown } = setup();
 
       const scale = jest.spyOn(canvas.context, "scale");
 
@@ -126,18 +138,22 @@ export function testTransform(
           scaleValue.y,
         ]);
       });
+
+      teardown();
     });
 
     test("scale reflection", () => {
-      const { element } = setup();
+      const { element, teardown } = setup();
 
       element.scale = Vector2D.xy(1.5, 2.5);
 
       testReflection(element, "scale", "scale", Vector2D.xy(-2.5, -1.5));
+
+      teardown();
     });
 
     test("velocity", async () => {
-      const { element, canvas } = setup();
+      const { element, canvas, teardown } = setup();
 
       const fps = 60;
 
@@ -147,29 +163,41 @@ export function testTransform(
 
       const movementPerFrame = Vector2D.xy(velocity.x / fps, velocity.y / fps);
 
-      element.velocity = velocity;
-
       const applyMovement = jest.spyOn(element, "_applyMovement");
 
-      await waitFor(() => {
-        const movedFrames = applyMovement.mock.calls.length - 1;
+      const movedFrames = 30;
 
-        const { x, y } = element.anchor;
+      const { x, y } = await new Promise<{ x: number; y: number }>(
+        (resolve) => {
+          canvas.everyFrame = (frame: number) => {
+            if (frame === movedFrames) {
+              expect(applyMovement.mock.calls.length).toEqual(movedFrames);
 
-        expect(movedFrames).toBeGreaterThanOrEqual(30);
+              const { x, y } = element.anchor;
 
-        expect(x).toBeCloseTo(movementPerFrame.x * movedFrames, 0);
+              resolve({ x, y });
+            }
+          };
 
-        expect(y).toBeCloseTo(movementPerFrame.y * movedFrames, 0);
-      });
+          element.velocity = velocity;
+        }
+      );
+
+      expect(x).toBeCloseTo(movementPerFrame.x * (movedFrames - 1));
+
+      expect(y).toBeCloseTo(movementPerFrame.y * (movedFrames - 1));
+
+      teardown();
     });
 
     test("velocity reflection", () => {
-      const { element } = setup();
+      const { element, teardown } = setup();
 
       element.velocity = Vector2D.xy(1, 2);
 
       testReflection(element, "velocity", "velocity", Vector2D.xy(3, 4));
+
+      teardown();
     });
   });
 }

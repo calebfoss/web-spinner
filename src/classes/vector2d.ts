@@ -69,10 +69,10 @@ export class Vector2D extends State<Vector2DBase> {
   toString() {
     const xString = Number.isInteger(this.x)
       ? this.x.toString()
-      : this.x.toPrecision(3);
+      : this.x.toFixed(1);
     const yString = Number.isInteger(this.y)
       ? this.y.toString()
-      : this.y.toPrecision(3);
+      : this.y.toFixed(1);
 
     return `${xString}, ${yString}`;
   }

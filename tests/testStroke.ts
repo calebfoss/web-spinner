@@ -32,7 +32,7 @@ export function testStroke(
 ) {
   describe("stroke", () => {
     test("lineWidth", async () => {
-      const { canvas, element } = setup();
+      const { canvas, element, teardown } = setup();
 
       let renderedLineWidth = -1;
 
@@ -53,11 +53,13 @@ export function testStroke(
       });
 
       testReflection(element, "lineWidth", "line-width", 7);
+
+      teardown();
     });
   });
 
   test("stroke", async () => {
-    const { canvas, element } = setup();
+    const { canvas, element, teardown } = setup();
 
     let renderedStroke: string | CanvasGradient | CanvasPattern;
 
@@ -133,5 +135,7 @@ export function testStroke(
         expect(stroke).toHaveBeenCalledTimes(4);
       });
     }
+
+    teardown();
   });
 }

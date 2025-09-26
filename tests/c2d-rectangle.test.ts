@@ -10,6 +10,10 @@ import { testTransform } from "./testTransform";
 import { testOffset } from "./testOffset";
 import { ElementTestSetup } from "./types";
 import { testShadow } from "./testShadow";
+import {
+  Canvas2DRectangle,
+  Canvas2DShapeRectangle,
+} from "../dist/types/elements/visual/rectangle";
 
 function testBorderRadius(
   setup: ElementTestSetup<{
@@ -21,7 +25,7 @@ function testBorderRadius(
 ) {
   describe("border radius", () => {
     test("dimensions are passed into render function with border radius", async () => {
-      const { element, canvas } = setup();
+      const { element, canvas, teardown } = setup();
 
       const roundRect = jest.spyOn(canvas.context, "roundRect");
 
@@ -42,10 +46,12 @@ function testBorderRadius(
 
         expect(roundRect.mock.calls[0][3]).toBe(height);
       });
+
+      teardown();
     });
 
     test("renders with border radius single value", async () => {
-      const { element, canvas } = setup();
+      const { element, canvas, teardown } = setup();
 
       const roundRect = jest.spyOn(canvas.context, "roundRect");
 
@@ -65,10 +71,12 @@ function testBorderRadius(
 
         expect(radii).toEqual([radius, radius, radius, radius]);
       });
+
+      teardown();
     });
 
     test("render with border radius object", async () => {
-      const { element, canvas } = setup();
+      const { element, canvas, teardown } = setup();
 
       const roundRect = jest.spyOn(canvas.context, "roundRect");
 
@@ -98,10 +106,12 @@ function testBorderRadius(
 
         expect(radii).toEqual([topLeft, topRight, bottomRight, bottomLeft]);
       });
+
+      teardown();
     });
 
     test("responds to border radius state change", async () => {
-      const { element, canvas } = setup();
+      const { element, canvas, teardown } = setup();
 
       const roundRect = jest.spyOn(canvas.context, "roundRect");
 
@@ -144,10 +154,12 @@ function testBorderRadius(
           bottomLeft,
         ]);
       });
+
+      teardown();
     });
 
     test("reflection", () => {
-      const { element } = setup();
+      const { element, teardown } = setup();
 
       testReflection(
         element,
@@ -155,6 +167,8 @@ function testBorderRadius(
         "border-radius",
         new BorderRadius(5)
       );
+
+      teardown();
     });
   });
 }
@@ -164,7 +178,7 @@ describe("c2d-rectangle", () => {
 
   setupJestCanvasMock();
 
-  const setup = () => {
+  const setup: ElementTestSetup<Canvas2DRectangle> = () => {
     const root = createRoot();
 
     const canvas = root.canvas2D();
@@ -175,7 +189,7 @@ describe("c2d-rectangle", () => {
 
     const rectangle = canvas.rectangle();
 
-    return { canvas, element: rectangle };
+    return { canvas, element: rectangle, teardown: root.remove.bind(root) };
   };
 
   afterEach(() => {
@@ -198,7 +212,7 @@ describe("c2d-rectangle", () => {
 });
 
 describe("c2d-shape-rectangle", () => {
-  const setup = () => {
+  const setup: ElementTestSetup<Canvas2DShapeRectangle> = () => {
     const root = createRoot();
 
     const canvas = root.canvas2D();
@@ -211,7 +225,7 @@ describe("c2d-shape-rectangle", () => {
 
     const rectangle = shape.rectangle();
 
-    return { canvas, element: rectangle };
+    return { canvas, element: rectangle, teardown: root.remove.bind(root) };
   };
 
   testTransform(setup, 1);

@@ -10,13 +10,17 @@ import { waitFor } from "@testing-library/dom";
 import { testOffset } from "./testOffset";
 import { ElementTestSetup } from "./types";
 import { testShadow } from "./testShadow";
+import {
+  Canvas2DEllipse,
+  Canvas2DShapeEllipse,
+} from "../dist/types/elements/visual/ellipse";
 
 function testStartEndAngles(
   setup: ElementTestSetup<{ startAngle: Angle; endAngle: Angle }>
 ) {
   describe("start and end angle", () => {
     test("values are passed to render function", async () => {
-      const { element, canvas } = setup();
+      const { element, canvas, teardown } = setup();
 
       const render = jest.spyOn(canvas.context, "ellipse");
 
@@ -35,10 +39,12 @@ function testStartEndAngles(
 
         expect(render.mock.calls[0][6]).toBe(endAngle.radians);
       });
+
+      teardown();
     });
 
     test("reflection", () => {
-      const { element } = setup();
+      const { element, teardown } = setup();
 
       element.startAngle = Angle.degrees(30);
 
@@ -47,6 +53,8 @@ function testStartEndAngles(
       testReflection(element, "startAngle", "start-angle", Angle.degrees(60));
 
       testReflection(element, "endAngle", "end-angle", Angle.degrees(30));
+
+      teardown();
     });
   });
 }
@@ -56,14 +64,14 @@ describe("c2d-ellipse", () => {
 
   setupJestCanvasMock();
 
-  const setup = () => {
+  const setup: ElementTestSetup<Canvas2DEllipse> = () => {
     const root = createRoot();
 
     const canvas = root.canvas2D();
 
     const ellipse = canvas.ellipse();
 
-    return { canvas, element: ellipse };
+    return { canvas, element: ellipse, teardown: root.remove.bind(root) };
   };
 
   afterEach(() => {
@@ -86,7 +94,7 @@ describe("c2d-ellipse", () => {
 });
 
 describe("c2d-shape-ellipse", () => {
-  const setup = () => {
+  const setup: ElementTestSetup<Canvas2DShapeEllipse> = () => {
     const root = createRoot();
 
     const canvas = root.canvas2D();
@@ -95,7 +103,7 @@ describe("c2d-shape-ellipse", () => {
 
     const ellipse = shape.ellipse();
 
-    return { canvas, element: ellipse };
+    return { canvas, element: ellipse, teardown: root.remove.bind(root) };
   };
 
   testStartEndAngles(setup);

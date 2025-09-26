@@ -142,8 +142,8 @@ export function baseTransform<B extends typeof CustomHTMLElement>(Base: B) {
             this.angularVelocity = attributeParser.Angle(newValue);
             break;
           case "anchor":
-            const newAnchor = attributeParser.Vector2D(newValue);
-            if (!this.#anchor.equals(newAnchor)) this.anchor = newAnchor;
+            if (this.#anchor.toString() !== newValue)
+              this.anchor = attributeParser.Vector2D(newValue);
             break;
           case "scale":
             const newScale = attributeParser.Vector2D(newValue);

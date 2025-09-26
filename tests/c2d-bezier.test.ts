@@ -8,6 +8,10 @@ import { testStroke } from "./testStroke";
 import { testFill } from "./testFill";
 import { ElementTestSetup } from "./types";
 import { testShadow } from "./testShadow";
+import {
+  Canvas2DBezier,
+  Canvas2DShapeBezier,
+} from "../dist/types/elements/visual/bezier";
 
 function testControlPoints(
   setup: ElementTestSetup<{ controlA: Vector2D; controlB: Vector2D }>
@@ -41,7 +45,7 @@ function testControlPoints(
     });
 
     test("controlB coordinates passed into bezierCurveTo", async () => {
-      const { element, canvas } = setup();
+      const { element, canvas, teardown } = setup();
 
       const controlB = Vector2D.xy(3, 4);
 
@@ -57,14 +61,18 @@ function testControlPoints(
           controlB.y,
         ]);
       });
+
+      teardown();
     });
 
     test("controlB reflection", () => {
-      const { element } = setup();
+      const { element, teardown } = setup();
 
       element.controlB = Vector2D.xy(3, 4);
 
       testReflection(element, "controlB", "control-b", Vector2D.xy(6, 5));
+
+      teardown();
     });
   });
 }
@@ -72,7 +80,7 @@ function testControlPoints(
 function testTo(setup: ElementTestSetup<{ to: Vector2D }>) {
   describe("to", () => {
     test("coordinates passed into bezierCurveTo", async () => {
-      const { element, canvas } = setup();
+      const { element, canvas, teardown } = setup();
 
       const to = Vector2D.xy(1, 2);
 
@@ -85,14 +93,18 @@ function testTo(setup: ElementTestSetup<{ to: Vector2D }>) {
 
         expect(bezierCurveTo.mock.calls[0].slice(4)).toEqual([to.x, to.y]);
       });
+
+      teardown();
     });
 
     test("reflection", () => {
-      const { element } = setup();
+      const { element, teardown } = setup();
 
       element.to = Vector2D.xy(1, 2);
 
       testReflection(element, "to", "to", Vector2D.xy(4, 3));
+
+      teardown();
     });
   });
 }
@@ -102,14 +114,14 @@ describe("c2d-bezier", () => {
 
   setupJestCanvasMock();
 
-  const setup = () => {
+  const setup: ElementTestSetup<Canvas2DBezier> = () => {
     const root = createRoot();
 
     const canvas = root.canvas2D();
 
     const bezier = canvas.bezier();
 
-    return { canvas, element: bezier };
+    return { canvas, element: bezier, teardown: root.remove.bind(root) };
   };
 
   afterEach(() => {
@@ -118,7 +130,7 @@ describe("c2d-bezier", () => {
 
   describe("from", () => {
     test("coordinates passed into moveTo", async () => {
-      const { element, canvas } = setup();
+      const { element, canvas, teardown } = setup();
 
       const from = Vector2D.xy(1, 2);
 
@@ -131,14 +143,18 @@ describe("c2d-bezier", () => {
 
         expect(moveTo.mock.calls[0]).toEqual([from.x, from.y]);
       });
+
+      teardown();
     });
 
     test("reflection", () => {
-      const { element } = setup();
+      const { element, teardown } = setup();
 
       element.from = Vector2D.xy(1, 2);
 
       testReflection(element, "from", "from", Vector2D.xy(4, 3));
+
+      teardown();
     });
   });
 
@@ -156,7 +172,7 @@ describe("c2d-bezier", () => {
 });
 
 describe("c2d-shape-bezier", () => {
-  const setup = () => {
+  const setup: ElementTestSetup<Canvas2DShapeBezier> = () => {
     const root = createRoot();
 
     const canvas = root.canvas2D();
@@ -165,7 +181,7 @@ describe("c2d-shape-bezier", () => {
 
     const bezier = shape.bezier();
 
-    return { canvas, element: bezier };
+    return { canvas, element: bezier, teardown: root.remove.bind(root) };
   };
 
   testTo(setup);

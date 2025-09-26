@@ -14,7 +14,7 @@ export function testOffset(
 ) {
   describe("offset", () => {
     test("coordinates passed into render function", async () => {
-      const { element, canvas } = setup();
+      const { element, canvas, teardown } = setup();
 
       const offset = Vector2D.xy(7, 6);
 
@@ -33,20 +33,24 @@ export function testOffset(
           offset.y
         );
       });
+
+      teardown();
     });
 
     test("reflection", () => {
-      const { element } = setup();
+      const { element, teardown } = setup();
 
       const offset = Vector2D.xy(7, 6);
 
       element.offset = offset;
 
       testReflection(element, "offset", "offset", Vector2D.xy(5, 4));
+
+      teardown();
     });
 
     test("move offset", async () => {
-      const { element, canvas } = setup();
+      const { element, canvas, teardown } = setup();
 
       const render = jest.spyOn(canvas.context, renderFunctionName);
 
@@ -73,6 +77,8 @@ export function testOffset(
           offset.y + movement.y
         );
       });
+
+      teardown();
     });
   });
 }

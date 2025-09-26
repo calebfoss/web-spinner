@@ -31,7 +31,7 @@ export function testFill(
 ) {
   describe("fill", () => {
     test("fill", async () => {
-      const { canvas, element } = setup();
+      const { canvas, element, teardown } = setup();
 
       let renderedFill: string | CanvasGradient | CanvasPattern;
 
@@ -108,6 +108,8 @@ export function testFill(
 
         testReflection(element, "fill", "fill", Color.rgb(225, 150, 75));
       }
+
+      teardown();
     });
   });
 }
