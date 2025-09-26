@@ -8,20 +8,22 @@ import { mockMatchMedia, testReflection } from "./shared";
 import { testTransform } from "./testTransform";
 import { waitFor } from "@testing-library/dom";
 import { testShadow } from "./testShadow";
+import { ElementTestSetup } from "./types";
+import { Canvas2DShape } from "../dist/types/elements/visual/shape";
 
 describe("c2d-shape", () => {
   setupJestCanvasMock();
 
   mockMatchMedia();
 
-  const setup = () => {
+  const setup: ElementTestSetup<Canvas2DShape> = () => {
     const root = createRoot();
 
     const canvas = root.canvas2D();
 
     const shape = canvas.shape();
 
-    return { canvas, element: shape };
+    return { canvas, element: shape, teardown: root.remove.bind(root) };
   };
 
   afterEach(() => {

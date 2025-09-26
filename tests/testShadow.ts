@@ -9,7 +9,7 @@ export function testShadow(
 ) {
   describe("shadow", () => {
     test("renders", async () => {
-      const { element, canvas } = setup();
+      const { element, canvas, teardown } = setup();
 
       const { context } = canvas;
 
@@ -32,6 +32,8 @@ export function testShadow(
       await waitFor(() => {
         expect(render).toHaveBeenCalled();
       });
+
+      teardown();
     });
   });
 }

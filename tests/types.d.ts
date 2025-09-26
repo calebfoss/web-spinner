@@ -3,12 +3,8 @@ import { Canvas2DCanvasElement } from "../dist/types/elements/visual/canvas";
 type ElementTestSetup<T> = () => {
   canvas: Canvas2DCanvasElement;
   element: Element & T;
+  teardown: () => void;
 };
-
-type ElementTestTeardown = (
-  canvas: Canvas2DCanvasElement,
-  element: Element
-) => void;
 
 type VoidCanvasMethods = {
   [Key in keyof CanvasRenderingContext2D as ((

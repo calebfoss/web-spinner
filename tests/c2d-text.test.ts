@@ -6,20 +6,22 @@ import { mockMatchMedia, testReflection } from "./shared";
 import { setupJestCanvasMock } from "jest-canvas-mock";
 import { waitFor } from "@testing-library/dom";
 import { testShadow } from "./testShadow";
+import { ElementTestSetup } from "./types";
+import { Canvas2DText } from "../dist/types/elements/visual/text";
 
 describe("c2d-text", () => {
   setupJestCanvasMock();
 
   mockMatchMedia();
 
-  const setup = () => {
+  const setup: ElementTestSetup<Canvas2DText> = () => {
     const root = createRoot();
 
     const canvas = root.canvas2D();
 
     const text = canvas.text();
 
-    return { canvas, element: text };
+    return { canvas, element: text, teardown: root.remove.bind(root) };
   };
 
   afterEach(() => {

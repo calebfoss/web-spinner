@@ -7,6 +7,8 @@ import { testRectangleBounds } from "./testRectangleBounds";
 import { testTransform } from "./testTransform";
 import { waitFor } from "@testing-library/dom";
 import { testShadow } from "./testShadow";
+import { ElementTestSetup } from "./types";
+import { Canvas2DVideo } from "../dist/types/elements/visual/video";
 
 describe("c2d-video", () => {
   mockMatchMedia();
@@ -19,7 +21,7 @@ describe("c2d-video", () => {
 
   const videoHeight = 45;
 
-  const setup = () => {
+  const setup: ElementTestSetup<Canvas2DVideo> = () => {
     const root = createRoot();
 
     const canvas = root.canvas2D();
@@ -65,7 +67,7 @@ describe("c2d-video", () => {
       },
     });
 
-    return { canvas, element: video };
+    return { canvas, element: video, teardown: root.remove.bind(root) };
   };
 
   afterEach(() => {

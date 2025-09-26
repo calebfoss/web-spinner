@@ -7,6 +7,10 @@ import { testStroke } from "./testStroke";
 import { waitFor } from "@testing-library/dom";
 import { ElementTestSetup } from "./types";
 import { testShadow } from "./testShadow";
+import {
+  Canvas2DLine,
+  Canvas2DShapeLine,
+} from "../dist/types/elements/visual/line";
 
 function testTo(setup: ElementTestSetup<{ to: Vector2D }>) {
   describe("to", () => {
@@ -41,14 +45,14 @@ describe("c2d-line", () => {
 
   setupJestCanvasMock();
 
-  const setup = () => {
+  const setup: ElementTestSetup<Canvas2DLine> = () => {
     const root = createRoot();
 
     const canvas = root.canvas2D();
 
     const line = canvas.line();
 
-    return { canvas, element: line };
+    return { canvas, element: line, teardown: root.remove.bind(root) };
   };
 
   afterEach(() => {
@@ -107,7 +111,7 @@ describe("c2d-line", () => {
 });
 
 describe("c2d-shape-line", () => {
-  const setup = () => {
+  const setup: ElementTestSetup<Canvas2DShapeLine> = () => {
     const root = createRoot();
 
     const canvas = root.canvas2D();
@@ -116,7 +120,7 @@ describe("c2d-shape-line", () => {
 
     const line = shape.line();
 
-    return { canvas, element: line };
+    return { canvas, element: line, teardown: root.remove.bind(root) };
   };
 
   testTo(setup);

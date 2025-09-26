@@ -24,7 +24,7 @@ export function testRectangleBounds(
 ) {
   describe("dimensions", () => {
     test("reflection", () => {
-      const { element } = setup();
+      const { element, teardown } = setup();
 
       element.width = 75;
 
@@ -33,10 +33,12 @@ export function testRectangleBounds(
       testReflection(element, "width", "width", 115);
 
       testReflection(element, "height", "height", 125);
+
+      teardown();
     });
 
     test("passed into render function", async () => {
-      const { element, canvas } = setup();
+      const { element, canvas, teardown } = setup();
 
       const render = jest.spyOn(canvas.context, renderFunctionName);
 
@@ -63,11 +65,13 @@ export function testRectangleBounds(
           height * dimensionRenderScale
         );
       });
+
+      teardown();
     });
   });
 
   describe("rectangle bounds", () => {
-    const { element } = setup();
+    const { element, teardown } = setup();
 
     element.offset = Vector2D.xy(50, 65);
 
@@ -120,5 +124,7 @@ export function testRectangleBounds(
     test("reflection", () => {
       testReflection(element, "origin", "origin", "topLeft");
     });
+
+    teardown();
   });
 }

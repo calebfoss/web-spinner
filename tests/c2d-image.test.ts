@@ -5,6 +5,8 @@ import { testTransform } from "./testTransform";
 import { testRectangleBounds } from "./testRectangleBounds";
 import { testOffset } from "./testOffset";
 import { testShadow } from "./testShadow";
+import { ElementTestSetup } from "./types";
+import { Canvas2DImage } from "../dist/types/elements/visual/image";
 
 describe("c2d-image", () => {
   mockMatchMedia();
@@ -15,7 +17,7 @@ describe("c2d-image", () => {
 
   const imageHeight = 45;
 
-  const setup = () => {
+  const setup: ElementTestSetup<Canvas2DImage> = () => {
     const root = createRoot();
 
     const canvas = root.canvas2D();
@@ -28,7 +30,7 @@ describe("c2d-image", () => {
 
     image.mediaElement.height = imageHeight;
 
-    return { canvas, element: image };
+    return { canvas, element: image, teardown: root.remove.bind(root) };
   };
 
   afterEach(() => {
