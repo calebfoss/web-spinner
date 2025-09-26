@@ -183,9 +183,9 @@ export function testTransform(
         }
       );
 
-      expect(x).toBeCloseTo(movementPerFrame.x * (movedFrames - 1), 0);
+      expect(x).toBeCloseTo(movementPerFrame.x * (movedFrames - 1));
 
-      expect(y).toBeCloseTo(movementPerFrame.y * (movedFrames - 1), 0);
+      expect(y).toBeCloseTo(movementPerFrame.y * (movedFrames - 1));
 
       teardown();
     });
