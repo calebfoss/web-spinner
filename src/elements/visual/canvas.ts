@@ -269,6 +269,8 @@ export class Canvas2DCanvasElement extends c2dStandaloneChildren(C2DBase) {
 
     this.domCanvas.width = value * devicePixelRatio;
 
+    this.domCanvas.style.width = `${value}px`;
+
     this.registerChange("width", value);
   }
 
@@ -288,6 +290,8 @@ export class Canvas2DCanvasElement extends c2dStandaloneChildren(C2DBase) {
     if (value === this.domCanvas.height / devicePixelRatio) return;
 
     this.domCanvas.height = value * devicePixelRatio;
+
+    this.domCanvas.style.height = `${value}px`;
 
     this.registerChange("height", value);
   }
@@ -365,8 +369,6 @@ export class Canvas2DCanvasElement extends c2dStandaloneChildren(C2DBase) {
 
     this.domCanvas.width *= scaleRatio;
     this.domCanvas.height *= scaleRatio;
-
-    this.domCanvas.style.scale = `${1 / newPixelRatio}`;
 
     this.#devicePixelRatio = newPixelRatio;
   }
