@@ -19,7 +19,7 @@
     "webpack": "^5.97.1",
     "webpack-cli": "^6.0.1"
   },
-  "name": "web-spinner",
+  "name": "@calebfoss/web-spinner",
   "version": "0.0.0",
   "main": "src/index.ts",
   "type": "module",
