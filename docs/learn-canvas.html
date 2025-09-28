@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script
+      async
+      src="https://public.codepenassets.com/embed/index.js"
+    ></script>
+
+    <link rel="stylesheet" href="docStyle.css" />
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        height: fit-content;
+      }
+
+      header {
+        text-align: center;
+      }
+
+      main {
+        display: block;
+        width: fit-content;
+        margin: auto;
+      }
+
+      p,
+      li {
+        max-width: 600px;
+      }
+
+      header {
+        background: inherit;
+        position: sticky;
+        top: 0;
+      }
+
+      .html,
+      .js {
+        display: none;
+        display: none;
+      }
+
+      .html-on .html {
+        display: block;
+      }
+
+      .js-on .js {
+        display: block;
+      }
+
+      .cp_embed_wrapper {
+        max-width: 800px;
+      }
+    </style>
+    <title>Web-Spinner - Learn: Canvas</title>
+  </head>
+  <body>
+    <header>
+      <form>
+        <label
+          ><input type="checkbox" checked id="js-toggle" /> JavaScript</label
+        >
+        <label><input type="checkbox" checked id="html-toggle" /> HTML</label>
+      </form>
+    </header>
+    <main class="html-on js-on">
+      <h1>Web-Spinner - Learn: Canvas</h1>
+      <h2>Introduction</h2>
+      <p>
+        This is a beginner-friendly guide to using the 2D canvas in Web Spinner.
+        The guide covers how to create graphics, animations, and interactive
+        content.
+      </p>
+      <h2>Setup</h2>
+      <p>
+        You can create a Web Spinner project using either HTML or JavaScript.
+        HTML is simpler but more limited. JavaScript allows for more
+        opportunities with animation and interactivity. Let&apos;s begin with a
+        blank canvas and look at both options.
+      </p>
+      <div class="html">
+        <h3>HTML</h3>
+        <p
+          class="codepen"
+          data-height="300"
+          data-default-tab="html,result"
+          data-slug-hash="RNrrjqq"
+          data-pen-title="Web Spinner Learn HTML 01"
+          data-editable="true"
+          data-user="calebfoss"
+          style="
+            height: 300px;
+            box-sizing: border-box;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid;
+            margin: 1em 0;
+            padding: 1em;
+          "
+        >
+          <span
+            >See the Pen
+            <a href="https://codepen.io/calebfoss/pen/RNrrjqq">
+              Web Spinner Learn HTML 01</a
+            >
+            by Caleb Foss (<a href="https://codepen.io/calebfoss">@calebfoss</a
+            >) on <a href="https://codepen.io">CodePen</a>.</span
+          >
+        </p>
+        <p>
+          <abbr>c2d</abbr> stands for Canvas 2D, meaning a space to render
+          two-dimensional imagery.
+        </p>
+        <p>
+          The canvas is an example of an element, a unit of content on a web
+          page.
+        </p>
+      </div>
+      <div class="js">
+        <h3>JavaScript</h3>
+        <p
+          class="codepen"
+          data-height="300"
+          data-default-tab="js,result"
+          data-slug-hash="RNrrjKy"
+          data-pen-title="Web Spinner Learn JS 01"
+          data-editable="true"
+          data-user="calebfoss"
+          style="
+            height: 300px;
+            box-sizing: border-box;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid;
+            margin: 1em 0;
+            padding: 1em;
+          "
+        >
+          <span
+            >See the Pen
+            <a href="https://codepen.io/calebfoss/pen/RNrrjKy">
+              Web Spinner Learn JS 01</a
+            >
+            by Caleb Foss (<a href="https://codepen.io/calebfoss">@calebfoss</a
+            >) on <a href="https://codepen.io">CodePen</a>.</span
+          >
+        </p>
+        <p>
+          The lines in the code that begin with <code>//</code> are called
+          <a
+            href="https://developer.mozilla.org/en-US/docs/MDN/Writing_guidelines/Code_style_guide/JavaScript#comments"
+            target="_blank"
+            >comments</a
+          >. They are ignored by the browser and meant instead for humans to
+          read. In this case, they describe what each line of code does.
+        </p>
+      </div>
+      <p>Try changing the canvas settings.</p>
+      <ul>
+        <li>
+          You can swap the word <code>pink</code> with any
+          <a
+            href="https://developer.mozilla.org/en-US/docs/Web/CSS/named-color"
+            target="_blank"
+            >named color</a
+          >
+          or a hex value:
+          <ws-color-picker></ws-color-picker>. Make sure to keep the quotation
+          marks around it.
+        </li>
+        <li>
+          You can change the height and width numbers to adjust the dimensions
+          of the canvas.
+        </li>
+      </ul>
+      <h2>Drawing Shapes</h2>
+      <h3>Start with One Shape</h3>
+      <p>Let's put a shape on the canvas.</p>
+      <div class="html">
+        <h4>HTML</h4>
+        <p
+          class="codepen"
+          data-height="300"
+          data-default-tab="html,result"
+          data-slug-hash="OPMMOYK"
+          data-pen-title="Web Spinner Learn HTML 02"
+          data-editable="true"
+          data-user="calebfoss"
+          style="
+            height: 300px;
+            box-sizing: border-box;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid;
+            margin: 1em 0;
+            padding: 1em;
+          "
+        >
+          <span
+            >See the Pen
+            <a href="https://codepen.io/calebfoss/pen/OPMMOYK">
+              Web Spinner Learn HTML 02</a
+            >
+            by Caleb Foss (<a href="https://codepen.io/calebfoss">@calebfoss</a
+            >) on <a href="https://codepen.io">CodePen</a>.</span
+          >
+        </p>
+      </div>
+      <div class="js">
+        <h4>JavaScript</h4>
+        <p
+          class="codepen"
+          data-height="300"
+          data-default-tab="js,result"
+          data-slug-hash="ByjjmXB"
+          data-pen-title="Web Spinner Learn JS 02"
+          data-editable="true"
+          data-user="calebfoss"
+          style="
+            height: 300px;
+            box-sizing: border-box;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid;
+            margin: 1em 0;
+            padding: 1em;
+          "
+        >
+          <span
+            >See the Pen
+            <a href="https://codepen.io/calebfoss/pen/ByjjmXB">
+              Web Spinner Learn JS 02</a
+            >
+            by Caleb Foss (<a href="https://codepen.io/calebfoss">@calebfoss</a
+            >) on <a href="https://codepen.io">CodePen</a>.</span
+          >
+        </p>
+      </div>
+      <h3>Adding Another</h3>
+      <p>
+        How we add another shape changes its behavior. When a shape is added
+        directly to the canvas, it starts with default settings. When a shape is
+        added as a child of another shape, however, it starts with that
+        shape&apos;s settings.
+      </p>
+      <div class="html">
+        <h4>HTML</h4>
+        <p
+          class="codepen"
+          data-height="300"
+          data-default-tab="html,result"
+          data-slug-hash="NPxxXWG"
+          data-pen-title="Web Spinner Learn HTML 03-b"
+          data-editable="true"
+          data-user="calebfoss"
+          style="
+            height: 300px;
+            box-sizing: border-box;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid;
+            margin: 1em 0;
+            padding: 1em;
+          "
+        >
+          <span
+            >See the Pen
+            <a href="https://codepen.io/calebfoss/pen/NPxxXWG">
+              Web Spinner Learn HTML 03-b</a
+            >
+            by Caleb Foss (<a href="https://codepen.io/calebfoss">@calebfoss</a
+            >) on <a href="https://codepen.io">CodePen</a>.</span
+          >
+        </p>
+        <p
+          class="codepen"
+          data-height="300"
+          data-default-tab="html,result"
+          data-slug-hash="qEbbpWK"
+          data-pen-title="Web Spinner Learn HTML 03-a"
+          data-editable="true"
+          data-user="calebfoss"
+          style="
+            height: 300px;
+            box-sizing: border-box;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid;
+            margin: 1em 0;
+            padding: 1em;
+          "
+        >
+          <span
+            >See the Pen
+            <a href="https://codepen.io/calebfoss/pen/qEbbpWK">
+              Web Spinner Learn HTML 03-a</a
+            >
+            by Caleb Foss (<a href="https://codepen.io/calebfoss">@calebfoss</a
+            >) on <a href="https://codepen.io">CodePen</a>.</span
+          >
+        </p>
+      </div>
+      <div class="js">
+        <h4>JavaScript</h4>
+        <p
+          class="codepen"
+          data-height="300"
+          data-default-tab="js,result"
+          data-slug-hash="ZYQQvQy"
+          data-pen-title="Web Spinner Learn JS 02"
+          data-editable="true"
+          data-user="calebfoss"
+          style="
+            height: 300px;
+            box-sizing: border-box;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid;
+            margin: 1em 0;
+            padding: 1em;
+          "
+        >
+          <span
+            >See the Pen
+            <a href="https://codepen.io/calebfoss/pen/ZYQQvQy">
+              Web Spinner Learn JS 02</a
+            >
+            by Caleb Foss (<a href="https://codepen.io/calebfoss">@calebfoss</a
+            >) on <a href="https://codepen.io">CodePen</a>.</span
+          >
+        </p>
+        <p
+          class="codepen"
+          data-height="300"
+          data-default-tab="js,result"
+          data-slug-hash="qEbbpby"
+          data-pen-title="Web Spinner Learn JS 03-a"
+          data-editable="true"
+          data-user="calebfoss"
+          style="
+            height: 300px;
+            box-sizing: border-box;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid;
+            margin: 1em 0;
+            padding: 1em;
+          "
+        >
+          <span
+            >See the Pen
+            <a href="https://codepen.io/calebfoss/pen/qEbbpby">
+              Web Spinner Learn JS 03-a</a
+            >
+            by Caleb Foss (<a href="https://codepen.io/calebfoss">@calebfoss</a
+            >) on <a href="https://codepen.io">CodePen</a>.</span
+          >
+        </p>
+      </div>
+    </main>
+    <script>
+      window.customElements.define(
+        "ws-color-picker",
+        class extends HTMLElement {
+          connectedCallback() {
+            const shadowRoot = this.attachShadow({ mode: "open" });
+
+            const picker = document.createElement("input");
+
+            picker.type = "color";
+
+            shadowRoot.appendChild(picker);
+
+            const value = new Text(` ${picker.value}`);
+
+            shadowRoot.appendChild(value);
+
+            picker.addEventListener("input", () => {
+              value.textContent = ` ${picker.value}`;
+            });
+          }
+        }
+      );
+
+      const main = document.querySelector("main");
+
+      const htmlToggle = document.querySelector("#html-toggle");
+
+      htmlToggle.addEventListener("change", updateToggles);
+
+      const jsToggle = document.querySelector("#js-toggle");
+
+      jsToggle.addEventListener("change", updateToggles);
+
+      function updateToggles() {
+        if (jsToggle.checked) {
+          main.classList.add("js-on");
+        } else {
+          main.classList.remove("js-on");
+        }
+
+        if (htmlToggle.checked) {
+          main.classList.add("html-on");
+        } else {
+          main.classList.remove("html-on");
+        }
+      }
+
+      updateToggles();
+    </script>
+  </body>
+</html>
