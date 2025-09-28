@@ -10,7 +10,7 @@ import untypedData from "./doc-data.json";
 import { createRoot, Color } from "web-spinner";
 import * as WebSpinner from "web-spinner";
 import highlight from "highlight.js";
-import imageSource from "./Embia_major_mf.jpg";
+import imageSource from "./public/Embia_major_mf.jpg";
 import {
   CustomElementDeclarationX,
   WebSpinnerDocData,
