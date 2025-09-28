@@ -81,6 +81,10 @@ main {
       text-decoration: none;
     }
 
+    a:visited {
+      color: var(--lightest);
+    }
+
     a:hover {
       background-color: var(--dark);
       text-decoration: underline;
