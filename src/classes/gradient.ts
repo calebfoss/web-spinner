@@ -205,7 +205,7 @@ export class ConicalGradient extends Gradient {
 
   constructor(
     startAngle: Angle = Angle.zero(),
-    offset: Vector2D = Vector2D.zero
+    offset: Vector2D = Vector2D.zero()
   ) {
     super();
 

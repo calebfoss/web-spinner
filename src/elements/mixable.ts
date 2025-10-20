@@ -31,6 +31,7 @@ export class CustomHTMLElement extends HTMLElement {
   /**
    * @private
    */
+
   registerChange<P extends keyof Writeable<this>>(
     propertyName: P,
     newValue: this[P]

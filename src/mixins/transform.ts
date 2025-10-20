@@ -22,11 +22,11 @@ export function baseTransform<B extends typeof CustomHTMLElement>(Base: B) {
       "velocity",
     ];
 
-    #anchor = Vector2D.zero;
+    #anchor = Vector2D.zero();
     #angle = Angle.radians(0);
     #angularVelocity = Angle.radians(0);
-    #scale = Vector2D.one;
-    #velocity = Vector2D.zero;
+    #scale = Vector2D.one();
+    #velocity = Vector2D.zero();
 
     constructor(...args: any[]) {
       super(...args);
@@ -34,6 +34,14 @@ export function baseTransform<B extends typeof CustomHTMLElement>(Base: B) {
       this.#anchor.addChangeListener(this.#anchorChangeListener);
 
       this.#angle.addChangeListener(this.#angleChangeListener);
+
+      this.#angularVelocity.addChangeListener(
+        this.#angularVelocityChangeListener
+      );
+
+      this.#scale.addChangeListener(this.#scaleChangeListener);
+
+      this.#velocity.addChangeListener(this.#velocityChangeListener);
     }
 
     #angleChangeListener: ChangeListener<number> = () => {
@@ -51,12 +59,16 @@ export function baseTransform<B extends typeof CustomHTMLElement>(Base: B) {
     }
 
     set angle(value) {
-      const replace = this.#angle.replace.bind(this.#angle);
-
-      replace((this.#angle = value), this.#angleChangeListener);
+      this.#angle.replace((this.#angle = value), this.#angleChangeListener);
     }
 
     #angularVelocityChangedTime = -1;
+
+    #angularVelocityChangeListener: ChangeListener<number> = () => {
+      this.#angularVelocityChangedTime = performance.now();
+
+      this.registerChange("angularVelocity", this.angularVelocity);
+    };
     /**
      * Clockwise rotation per second.
      *
@@ -68,13 +80,10 @@ export function baseTransform<B extends typeof CustomHTMLElement>(Base: B) {
     }
 
     set angularVelocity(value) {
-      if (this.#angularVelocity.equals(value)) {
-        return;
-      }
-
-      this.#angularVelocityChangedTime = performance.now();
-
-      this.registerChange("angularVelocity", (this.#angularVelocity = value));
+      this.#angularVelocity.replace(
+        (this.#angularVelocity = value),
+        this.#angularVelocityChangeListener
+      );
     }
 
     /**
@@ -92,9 +101,7 @@ export function baseTransform<B extends typeof CustomHTMLElement>(Base: B) {
     };
 
     set anchor(value) {
-      const replace = this.#anchor.replace.bind(this.#anchor);
-
-      replace((this.#anchor = value), this.#anchorChangeListener);
+      this.#anchor.replace((this.#anchor = value), this.#anchorChangeListener);
     }
 
     _applyMovement(deltaTime: number) {
@@ -179,6 +186,10 @@ export function baseTransform<B extends typeof CustomHTMLElement>(Base: B) {
       this.angle = Angle.radians(this.#angle.radians - angle.radians);
     }
 
+    #scaleChangeListener: ChangeListener<Vector2DBase> = () => {
+      this.registerChange("scale", this.#scale);
+    };
+
     /**
      * Multiplies the size of the element in the x and y direction. This also affects
      * line width. Setting scale to a number will set both the x and y scale to that
@@ -198,14 +209,20 @@ export function baseTransform<B extends typeof CustomHTMLElement>(Base: B) {
         if (this.#scale.equals(vectorValue)) return;
 
         this.registerChange("scale", (this.#scale = vectorValue));
-      } else if (this.#scale.equals(value)) {
+
         return;
-      } else {
-        this.registerChange("scale", (this.#scale = value));
       }
+
+      this.#scale.replace((this.#scale = value), this.#scaleChangeListener);
     }
 
     #velocityChangedTime = -1;
+
+    #velocityChangeListener: ChangeListener<Vector2DBase> = () => {
+      this.#velocityChangedTime = performance.now();
+
+      this.registerChange("velocity", this.#velocity);
+    };
 
     /**
      * Anchor movement per second.
@@ -218,11 +235,10 @@ export function baseTransform<B extends typeof CustomHTMLElement>(Base: B) {
     }
 
     set velocity(value) {
-      if (this.#velocity.equals(value)) return;
-
-      this.registerChange("velocity", (this.#velocity = value));
-
-      this.#velocityChangedTime = performance.now();
+      this.#velocity.replace(
+        (this.#velocity = value),
+        this.#velocityChangeListener
+      );
     }
   };
 }

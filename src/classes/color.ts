@@ -57,14 +57,6 @@ export class Color {
     return this.#str;
   }
 
-  static get random() {
-    return Color.rgb(
-      Math.random() * 255,
-      Math.random() * 255,
-      Math.random() * 255
-    );
-  }
-
   static rgb(red: number, green: number, blue: number, alpha?: number) {
     return new Color(red, green, blue, alpha);
   }

@@ -7,6 +7,7 @@ import { attributeParser } from "../../utlities/attributeParser";
 import { C2DBase } from "./c2dBase";
 import { Canvas2DBaseRenderable } from "./renderable";
 import { DrawStyle } from "../../classes/gradient";
+import { CustomHTMLElement } from "../mixable";
 
 export class Canvas2DCanvasElement extends c2dStandaloneChildren(C2DBase) {
   static observedAttributes: string[] = [
@@ -175,6 +176,17 @@ export class Canvas2DCanvasElement extends c2dStandaloneChildren(C2DBase) {
     set when creating the canvas.
     */
     this.alpha = this.alpha;
+  }
+
+  createChild<E extends typeof CustomHTMLElement>(
+    ElementClass: E,
+    options?: Partial<Writeable<InstanceType<E>>> | undefined
+  ): InstanceType<E> {
+    const child = super.createChild(ElementClass, options);
+
+    this.queueRender();
+
+    return child;
   }
 
   get keyDown() {

@@ -5,7 +5,7 @@ import { Vector2D } from "./vector2d";
 export class Shadow {
   #blur = createState(0);
   #color = Color.gray(0);
-  #offset = Vector2D.zero;
+  #offset = Vector2D.zero();
   #changeListenerMap = new Map<ChangeListener<Shadow>, () => void>();
 
   constructor(options: Partial<Shadow>) {

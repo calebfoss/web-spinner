@@ -41,7 +41,7 @@ export function hasFrom<B extends typeof Canvas2DBaseRenderable>(Base: B) {
   return class extends Base {
     static observedAttributes = [...super.observedAttributes, "from"];
 
-    #from = Vector2D.zero;
+    #from = Vector2D.zero();
 
     /**
      * Starting point of the element relative to its anchor.
