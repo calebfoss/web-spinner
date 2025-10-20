@@ -44,6 +44,8 @@ export class Canvas2DShape extends c2dFill(
 
     const { context } = canvas2D;
 
+    context.beginPath();
+
     context.moveTo(this.offset.x, this.offset.y);
 
     super.renderChildren(canvas2D);
