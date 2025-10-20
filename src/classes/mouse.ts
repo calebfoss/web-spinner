@@ -34,26 +34,34 @@ export class MouseTracker extends MouseData {
 
     this.#previous = new MouseData();
 
-    (target as HTMLElement).addEventListener("mousedown", (event) => {
+    const updatePosition = (event: MouseEvent) => {
+      super.x = event.x;
+      super.y = event.y;
+    };
+
+    const targetElement = target as HTMLElement;
+
+    targetElement.addEventListener("mousedown", (event) => {
       super.buttonStates[event.button] = true;
+
+      updatePosition(event);
     });
 
-    (target as HTMLElement).addEventListener("mouseup", (event) => {
+    targetElement.addEventListener("mouseup", (event) => {
       super.buttonStates[event.button] = false;
+
+      updatePosition(event);
     });
 
-    target.addEventListener("mouseenter", (event) => {
+    targetElement.addEventListener("mouseenter", (event) => {
       super.over = true;
     });
 
-    target.addEventListener("mouseleave", (event) => {
+    targetElement.addEventListener("mouseleave", (event) => {
       super.over = false;
     });
 
-    window.addEventListener("mousemove", (event) => {
-      super.x = event.x;
-      super.y = event.y;
-    });
+    window.addEventListener("mousemove", updatePosition);
   }
 
   advanceFrame() {

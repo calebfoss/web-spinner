@@ -486,7 +486,7 @@ function renderDemo(
     video.source =
       "https://download.blender.org/peach/bigbuckbunny_movies/BigBuckBunny_320x180.mp4";
     video.width = canvas.width;
-    video.anchor = WebSpinner.Vector2D.zero;
+    video.anchor = WebSpinner.Vector2D.zero();
     canvas.listen.click(() => video.play());
   }
 

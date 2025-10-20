@@ -18,8 +18,8 @@ function hasControlPoints<B extends typeof Canvas2DBaseRenderable>(Base: B) {
       "control-b",
     ];
 
-    #controlA = Vector2D.zero;
-    #controlB = Vector2D.zero;
+    #controlA = Vector2D.zero();
+    #controlB = Vector2D.zero();
 
     /**
      * Controls the shape at the beginning of the curve.

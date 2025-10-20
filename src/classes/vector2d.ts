@@ -46,7 +46,7 @@ export class Vector2D extends State<Vector2DBase> {
     return Vector2D.xy(-this.x, -this.y);
   }
 
-  static get one() {
+  static one() {
     return new Vector2D(1);
   }
 
@@ -105,7 +105,7 @@ export class Vector2D extends State<Vector2DBase> {
     this.handleChange();
   }
 
-  static get zero() {
+  static zero() {
     return new Vector2D();
   }
 }

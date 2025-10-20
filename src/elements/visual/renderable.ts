@@ -10,6 +10,7 @@ import { c2dShapeChildren, c2dStandaloneChildren } from "../../mixins/children";
 import { Canvas2DCanvasElement } from "./canvas";
 import { C2DBase } from "./c2dBase";
 import { Canvas2DShape } from "./shape";
+import { CustomHTMLElement } from "../mixable";
 
 export const changedEvent = new Event("change", { bubbles: true });
 
@@ -54,6 +55,17 @@ export class Canvas2DBaseRenderable extends C2DBase {
     }
 
     super.addEventListener(type, listener, options);
+  }
+
+  createChild<E extends typeof CustomHTMLElement>(
+    ElementClass: E,
+    options?: Partial<Writeable<InstanceType<E>>> | undefined
+  ): InstanceType<E> {
+    const child = super.createChild(ElementClass, options);
+
+    this.dispatchEvent(changedEvent);
+
+    return child;
   }
 
   /**

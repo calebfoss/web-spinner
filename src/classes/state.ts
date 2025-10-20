@@ -59,10 +59,7 @@ export class State<T> {
    * @returns
    */
 
-  replace<O extends this>(
-    other: O,
-    changeListener: ChangeListener<T>
-  ): State<T> {
+  replace<O extends this>(other: O, changeListener: ChangeListener<T>): O {
     if (this.equals(other)) {
       if (this === other) return other;
 
