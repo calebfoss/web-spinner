@@ -149,7 +149,14 @@ export class Canvas2DBaseRenderable extends C2DBase {
   #handleMouse(canvas2D: Canvas2DCanvasElement) {
     const { context, mouse } = canvas2D;
 
-    const inPath = context.isPointInPath(mouse.x, mouse.y);
+    this.#localMouse.x = mouse.x * devicePixelRatio;
+
+    this.#localMouse.y = mouse.y * devicePixelRatio;
+
+    const inPath = context.isPointInPath(
+      this.#localMouse.x,
+      this.#localMouse.y
+    );
 
     if (!inPath) {
       if (this.#localMouse.over === true) {
