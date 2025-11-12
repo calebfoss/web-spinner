@@ -5,52 +5,78 @@ import {
 } from "../../classes/gradient";
 import { MouseData } from "../../classes/mouse";
 import { Shadow } from "../../classes/shadow";
-import { Vector2D } from "../../classes/vector2d";
 import { c2dShapeChildren, c2dStandaloneChildren } from "../../mixins/children";
 import { Canvas2DCanvasElement } from "./canvas";
 import { C2DBase } from "./c2dBase";
-import { Canvas2DShape } from "./shape";
 import { CustomHTMLElement } from "../mixable";
 
 export const changedEvent = new Event("change", { bubbles: true });
 
+type QueuedEventListener<E extends keyof HTMLElementEventMap> = {
+  eventName: E;
+  listener: TypedEventListener<E>;
+};
+
 export class Canvas2DBaseRenderable extends C2DBase {
   #changedSinceRender = false;
-  #clickListeners = new Set<EventListenerOrEventListenerObject>();
+  #clickListeners = new Set<TypedEventListener<"click">>();
   #localMouse = new MouseData();
-  #mouseListeners = new Set<EventListenerOrEventListenerObject>();
+  #mouseListeners = new Set<TypedEventListener<"mousemove">>();
   #shadow: Shadow | null = null;
+  #connected = false;
+  #queuedEventListeners: QueuedEventListener<any>[] = [];
 
   constructor(...args: any[]) {
     super();
   }
 
+  connectedCallback() {
+    this.#connected = true;
+
+    while (this.#queuedEventListeners.length) {
+      const firstListener = this.#queuedEventListeners.shift();
+
+      if (firstListener === undefined) break;
+
+      this.addEventListener(firstListener.eventName, firstListener.listener);
+    }
+  }
+
   /**
    * @private
    */
-  addEventListener(
-    type: keyof HTMLElementEventMap,
-    listener: EventListenerOrEventListenerObject,
+  addEventListener<E extends keyof HTMLElementEventMap>(
+    type: E,
+    listener: TypedEventListener<E>,
     options?: boolean | AddEventListenerOptions
   ): void {
+    if (!this.#connected) {
+      this.#queuedEventListeners.push({
+        eventName: type,
+        listener,
+      });
+
+      return;
+    }
+
     switch (type) {
       case "click":
         this.canvas.renderOn(type);
-        this.#clickListeners.add(listener);
+        this.#clickListeners.add(listener as TypedEventListener<"click">);
         break;
 
       case "mousedown":
       case "mouseup":
       case "mousemove":
         this.canvas.renderOn(type);
-        this.#mouseListeners.add(listener);
+        this.#mouseListeners.add(listener as TypedEventListener<"mousemove">);
         break;
 
       case "mouseenter":
       case "mouseout":
       case "mouseover":
         this.canvas.renderOn("mousemove");
-        this.#mouseListeners.add(listener);
+        this.#mouseListeners.add(listener as TypedEventListener<"mousemove">);
         break;
     }
 
@@ -105,14 +131,14 @@ export class Canvas2DBaseRenderable extends C2DBase {
   /**
    * @private
    */
-  removeEventListener(
-    type: keyof HTMLElementEventMap,
-    listener: EventListenerOrEventListenerObject,
+  removeEventListener<E extends keyof HTMLElementEventMap>(
+    type: E,
+    listener: TypedEventListener<E>,
     options?: boolean | AddEventListenerOptions
   ): void {
     switch (type) {
       case "click":
-        this.#clickListeners.delete(listener);
+        this.#clickListeners.delete(listener as TypedEventListener<"click">);
         break;
       case "mousedown":
       case "mouseup":
@@ -120,7 +146,9 @@ export class Canvas2DBaseRenderable extends C2DBase {
       case "mouseout":
       case "mouseover":
       case "mousemove":
-        this.#mouseListeners.delete(listener);
+        this.#mouseListeners.delete(
+          listener as TypedEventListener<"mousemove">
+        );
         break;
     }
 
@@ -170,8 +198,20 @@ export class Canvas2DBaseRenderable extends C2DBase {
 
     this.dispatchEvent(new MouseEvent("mouseover"));
 
-    if (!this.#localMouse.equals(mouse))
-      this.dispatchEvent(new MouseEvent("mousemove"));
+    const movementX = mouse.x - mouse.previous.x;
+
+    const movementY = mouse.y - mouse.previous.y;
+
+    if (
+      this.#localMouse.x !== mouse.previous.x * devicePixelRatio ||
+      this.#localMouse.y !== mouse.previous.y * devicePixelRatio
+    )
+      this.dispatchEvent(
+        new MouseEvent("mousemove", {
+          movementX,
+          movementY,
+        })
+      );
 
     if (!this.#localMouse.over) {
       this.dispatchEvent(new MouseEvent("mouseenter"));

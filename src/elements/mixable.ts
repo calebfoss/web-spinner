@@ -6,6 +6,29 @@ export class CustomHTMLElement extends HTMLElement {
 
   constructor(...args: any[]) {
     super();
+
+    const element = this;
+
+    this.#eventsProxy = new Proxy({} as EventListenerMap, {
+      get(_, eventName: keyof HTMLElementEventMap) {
+        return element.#eventListeners.get(eventName);
+      },
+      set(_, eventName: keyof HTMLElementEventMap, listener) {
+        const currentListener = element.#eventListeners.get(eventName);
+
+        if (currentListener === listener) return true;
+
+        if (currentListener !== undefined) {
+          element.removeEventListener(eventName, currentListener);
+        }
+
+        element.addEventListener(eventName, listener);
+
+        element.#eventListeners.set(eventName, listener);
+
+        return true;
+      },
+    });
   }
 
   attributeChangedCallback(
@@ -26,6 +49,27 @@ export class CustomHTMLElement extends HTMLElement {
     this.appendChild(element);
 
     return element;
+  }
+
+  #eventListeners = new Map<keyof HTMLElementEventMap, EventListener>();
+
+  #eventsProxy: EventListenerMap;
+
+  get events() {
+    return this.#eventsProxy as EventListenerMap;
+  }
+
+  set events(map) {
+    Object.assign(this.#eventsProxy, map);
+  }
+
+  /**
+   * Interface for adding event listeners with alternative syntax. For example,
+   * element.addEventListener("click", listener) becomes
+   * element.listen.click(listener).
+   */
+  get listen(): EventListenerMap {
+    return this.#eventsProxy;
   }
 
   /**

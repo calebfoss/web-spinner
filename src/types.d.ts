@@ -25,3 +25,7 @@ type Writeable<T> = {
 };
 
 type Options<T> = Partial<Writeable<T>>;
+
+type EventListenerMap = {
+  [EventName in keyof HTMLElementEventMap]?: TypedEventListener<EventName>
+};
