@@ -8,6 +8,7 @@ import { waitFor } from "@testing-library/dom";
 import { testShadow } from "./testShadow";
 import { ElementTestSetup } from "./types";
 import { Canvas2DText } from "../dist/types/elements/visual/text";
+import { testRemoval } from "./testRemoval";
 
 describe("c2d-text", () => {
   setupJestCanvasMock();
@@ -130,4 +131,6 @@ describe("c2d-text", () => {
   testFill(setup, "fillText", false);
 
   testShadow(setup, "fillText");
+
+  testRemoval(setup);
 });

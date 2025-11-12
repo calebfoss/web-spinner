@@ -61,6 +61,10 @@ export class C2DBase extends CustomHTMLElement {
     return this.#eventProxy;
   }
 
+  remove() {
+    this.canvas.queueRemoval(this);
+  }
+
   /**
    * Scales a vector by the device's pixel ratio.
    */

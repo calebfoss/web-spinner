@@ -12,6 +12,7 @@ import {
   Canvas2DBezier,
   Canvas2DShapeBezier,
 } from "../dist/types/elements/visual/bezier";
+import { testRemoval } from "./testRemoval";
 
 function testControlPoints(
   setup: ElementTestSetup<{ controlA: Vector2D; controlB: Vector2D }>
@@ -169,6 +170,8 @@ describe("c2d-bezier", () => {
   testFill(setup, "bezierCurveTo");
 
   testShadow(setup, "bezierCurveTo");
+
+  testRemoval(setup);
 });
 
 describe("c2d-shape-bezier", () => {
@@ -189,4 +192,6 @@ describe("c2d-shape-bezier", () => {
   testControlPoints(setup);
 
   testTransform(setup, 1);
+
+  testRemoval(setup);
 });

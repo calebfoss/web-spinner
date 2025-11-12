@@ -31,6 +31,7 @@ export class Canvas2DCanvasElement extends c2dStandaloneChildren(C2DBase) {
   #keyboardTracker = new KeyboardTracker();
   #lastFrameTime = -1;
   #mouseTracker: MouseTracker;
+  #removalQueue = new Set<HTMLElement>();
   #renderEvents = new Set<keyof HTMLElementEventMap>();
   #renderQueued = false;
   #setAlpha: number | null = null;
@@ -250,6 +251,12 @@ export class Canvas2DCanvasElement extends c2dStandaloneChildren(C2DBase) {
     return this.#mouseTracker;
   }
 
+  queueRemoval(child: HTMLElement) {
+    this.#removalQueue.add(child);
+
+    this.queueRender();
+  }
+
   queueRender() {
     if (this.#renderQueued || this.#waitFor.size) return;
 
@@ -321,6 +328,19 @@ export class Canvas2DCanvasElement extends c2dStandaloneChildren(C2DBase) {
     if (this.#waitFor.size) {
       this.#renderQueued = false;
       return;
+    }
+
+    while (this.#removalQueue.size) {
+      const next = this.#removalQueue.values().next();
+
+      if (next.value === undefined)
+        throw new Error("Found undefined value in canvas's removal queue.");
+
+      const child = next.value;
+
+      this.removeChild(child);
+
+      this.#removalQueue.delete(child);
     }
 
     const context = this.#context;

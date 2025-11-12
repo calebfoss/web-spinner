@@ -14,6 +14,7 @@ import {
   Canvas2DEllipse,
   Canvas2DShapeEllipse,
 } from "../dist/types/elements/visual/ellipse";
+import { testRemoval } from "./testRemoval";
 
 function testStartEndAngles(
   setup: ElementTestSetup<{ startAngle: Angle; endAngle: Angle }>
@@ -91,6 +92,8 @@ describe("c2d-ellipse", () => {
   testFill(setup, "ellipse");
 
   testShadow(setup, "ellipse");
+
+  testRemoval(setup);
 });
 
 describe("c2d-shape-ellipse", () => {
@@ -111,4 +114,6 @@ describe("c2d-shape-ellipse", () => {
   testTransform(setup, 1);
 
   testRectangleBounds(setup, "ellipse", 0.5);
+
+  testRemoval(setup);
 });
