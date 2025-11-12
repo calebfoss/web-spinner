@@ -10,6 +10,7 @@ import { waitFor } from "@testing-library/dom";
 import { testShadow } from "./testShadow";
 import { ElementTestSetup } from "./types";
 import { Canvas2DShape } from "../dist/types/elements/visual/shape";
+import { testRemoval } from "./testRemoval";
 
 describe("c2d-shape", () => {
   setupJestCanvasMock();
@@ -73,4 +74,6 @@ describe("c2d-shape", () => {
   testStroke(setup, "moveTo");
 
   testShadow(setup, "moveTo");
+
+  testRemoval(setup);
 });

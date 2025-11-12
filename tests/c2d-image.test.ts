@@ -7,6 +7,7 @@ import { testOffset } from "./testOffset";
 import { testShadow } from "./testShadow";
 import { ElementTestSetup } from "./types";
 import { Canvas2DImage } from "../dist/types/elements/visual/image";
+import { testRemoval } from "./testRemoval";
 
 describe("c2d-image", () => {
   mockMatchMedia();
@@ -91,4 +92,6 @@ describe("c2d-image", () => {
   testRectangleBounds(setup, "drawImage", 1, 3, 4);
 
   testShadow(setup, "drawImage");
+
+  testRemoval(setup);
 });

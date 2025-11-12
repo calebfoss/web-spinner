@@ -11,6 +11,7 @@ import {
   Canvas2DLine,
   Canvas2DShapeLine,
 } from "../dist/types/elements/visual/line";
+import { testRemoval } from "./testRemoval";
 
 function testTo(setup: ElementTestSetup<{ to: Vector2D }>) {
   describe("to", () => {
@@ -108,6 +109,8 @@ describe("c2d-line", () => {
   testStroke(setup, "lineTo");
 
   testShadow(setup, "lineTo");
+
+  testRemoval(setup);
 });
 
 describe("c2d-shape-line", () => {
@@ -126,4 +129,6 @@ describe("c2d-shape-line", () => {
   testTo(setup);
 
   testTransform(setup, 1);
+
+  testRemoval(setup);
 });

@@ -14,6 +14,7 @@ import {
   Canvas2DRectangle,
   Canvas2DShapeRectangle,
 } from "../dist/types/elements/visual/rectangle";
+import { testRemoval } from "./testRemoval";
 
 function testBorderRadius(
   setup: ElementTestSetup<{
@@ -209,6 +210,8 @@ describe("c2d-rectangle", () => {
   testFill(setup, "rect");
 
   testShadow(setup, "rect");
+
+  testRemoval(setup);
 });
 
 describe("c2d-shape-rectangle", () => {
@@ -233,4 +236,6 @@ describe("c2d-shape-rectangle", () => {
   testBorderRadius(setup);
 
   testRectangleBounds(setup, "rect");
+
+  testRemoval(setup);
 });

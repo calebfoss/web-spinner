@@ -9,6 +9,7 @@ import { waitFor } from "@testing-library/dom";
 import { testShadow } from "./testShadow";
 import { ElementTestSetup } from "./types";
 import { Canvas2DVideo } from "../dist/types/elements/visual/video";
+import { testRemoval } from "./testRemoval";
 
 describe("c2d-video", () => {
   mockMatchMedia();
@@ -145,4 +146,6 @@ describe("c2d-video", () => {
   });
 
   testShadow(setup, "drawImage");
+
+  testRemoval(setup);
 });
