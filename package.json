@@ -21,7 +21,7 @@
   },
   "name": "@calebfoss/web-spinner",
   "version": "0.0.0",
-  "main": "src/index.ts",
+  "main": "dist/webSpinner.js",
   "type": "module",
   "types": "dist/types/index.d.ts",
   "scripts": {
