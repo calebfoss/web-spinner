@@ -165,7 +165,7 @@ function renderMethodsDocs(methods: ClassMethod[], isStatic: boolean) {
   div.appendChild(heading);
 
   const publicMethods = methods.filter(
-    (m) => m.privacy === undefined || m.privacy === "public"
+    (m) => m.privacy === undefined || m.privacy === "public",
   );
 
   const methodDocs = publicMethods.map(renderClassMethodDoc);
@@ -178,12 +178,12 @@ function renderMethodsDocs(methods: ClassMethod[], isStatic: boolean) {
 }
 
 const angleMatch = new RegExp(
-  `([\\d\\.]+)\\s*(${Object.values(WebSpinner.Angle.unit).join("|")})`
+  `([\\d\\.]+)\\s*(${Object.values(WebSpinner.Angle.unit).join("|")})`,
 );
 
 function renderPropertyRows(
   member: ClassFieldExtended,
-  demoElement?: HTMLElement
+  demoElement?: HTMLElement,
 ) {
   const statRow = document.createElement("tr");
 
@@ -238,7 +238,7 @@ function renderPropertyRows(
 
             const vector = Reflect.get(
               demoElement,
-              member.name
+              member.name,
             ) as WebSpinner.Vector2D;
 
             demoElement.setAttribute(attributeName, vector.toString());
@@ -358,7 +358,7 @@ function renderPropertyRows(
 function renderPropertyTable(
   fields: ClassField[],
   isStatic: boolean,
-  demoElement?: HTMLElement
+  demoElement?: HTMLElement,
 ) {
   const table = document.createElement("table");
 
@@ -380,7 +380,7 @@ function renderPropertyTable(
   body.appendChild(fieldHeaderRow);
 
   const publicFields = fields.filter(
-    (field) => field.privacy === undefined || field.privacy === "public"
+    (field) => field.privacy === undefined || field.privacy === "public",
   ) as ClassFieldExtended[];
 
   const rows = publicFields
@@ -395,7 +395,7 @@ function renderPropertyTable(
 }
 
 function renderDemo(
-  element: CustomElementDeclarationX
+  element: CustomElementDeclarationX,
 ): [HTMLDivElement, HTMLElement] {
   const div = document.createElement("div");
 
@@ -438,15 +438,15 @@ function renderDemo(
 
     observer.observe(canvas, { attributes: true });
 
-    canvas.background = Color.random;
+    canvas.background = WebSpinner.Random.colorHSL({});
 
     return [div, canvas];
   }
 
   const defaults = {
     anchor: canvas.center,
-    fill: Color.random,
-    stroke: Color.random,
+    fill: WebSpinner.Random.colorHSL({}),
+    stroke: WebSpinner.Random.colorHSL({}),
     lineWidth: Math.ceil(Math.random() * 10),
     controlA: WebSpinner.Vector2D.xy(100, 0),
     controlB: WebSpinner.Vector2D.xy(0, 100),
@@ -487,7 +487,7 @@ function renderDemo(
       "https://download.blender.org/peach/bigbuckbunny_movies/BigBuckBunny_320x180.mp4";
     video.width = canvas.width;
     video.anchor = WebSpinner.Vector2D.zero();
-    canvas.listen.click(() => video.play());
+    canvas.listen.click = () => video.play();
   }
 
   if (element.tagName === "c2d-text") {
@@ -512,7 +512,7 @@ function renderDemo(
 }
 
 function renderClassDoc(
-  classData: ClassDeclaration | CustomElementDeclarationX
+  classData: ClassDeclaration | CustomElementDeclarationX,
 ) {
   const container = document.createElement("div");
 
@@ -539,7 +539,7 @@ function renderClassDoc(
         partialInstanceFields,
         partialInstanceMethods,
       ]: [ClassField[], ClassMethod[], ClassField[], ClassMethod[]],
-      member
+      member,
     ) => {
       if (member.kind === "field") {
         if (member.static)
@@ -573,7 +573,7 @@ function renderClassDoc(
       }
       throw new Error("Unsupported member");
     },
-    [[], [], [], []]
+    [[], [], [], []],
   );
 
   const [demoDiv, demoElement] = (classData as CustomElementDeclarationX)
@@ -599,7 +599,7 @@ function renderClassDoc(
     const instanceFieldTable = renderPropertyTable(
       instanceFields,
       false,
-      demoElement
+      demoElement,
     );
 
     container.appendChild(instanceFieldTable);
@@ -615,7 +615,10 @@ function renderClassDoc(
 }
 
 function renderNavItem(
-  dataObject: ClassDeclaration | FunctionDeclaration | CustomElementDeclarationX
+  dataObject:
+    | ClassDeclaration
+    | FunctionDeclaration
+    | CustomElementDeclarationX,
 ) {
   const item = document.createElement("li");
 
@@ -708,7 +711,7 @@ function renderBaseElementDoc(element: CustomElementDeclarationX) {
       return renderCanvasElementDoc(element);
     default:
       throw new Error(
-        `No render process for defined for element with tagName ${element.tagName}`
+        `No render process for defined for element with tagName ${element.tagName}`,
       );
   }
 }
