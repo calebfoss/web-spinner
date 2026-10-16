@@ -30,7 +30,7 @@
     "demo": "vite demo",
     "docs": "cem analyze --globs src --outdir docs && tsx docs/reorganizeDocData.ts && vite build docs",
     "start": "npm run build && vite docs",
-    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
+    "test": "npm run build && node --experimental-vm-modules node_modules/jest/bin/jest.js"
   },
   "author": "Caleb Foss",
   "license": "ISC",
