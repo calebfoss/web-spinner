@@ -1,7 +1,6 @@
 {
   "compilerOptions": {
-    "types": ["@testing-library/jest-dom"],
-    "downlevelIteration": true
+    "types": ["@testing-library/jest-dom"]
   },
   "include": ["./*"]
 }
