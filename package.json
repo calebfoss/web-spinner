@@ -20,8 +20,8 @@
     "webpack-cli": "^6.0.1"
   },
   "name": "@calebfoss/web-spinner",
-  "version": "0.0.0",
-  "main": "dist/webSpinner.js",
+  "version": "0.0.1",
+  "main": "src/index.ts",
   "type": "module",
   "types": "dist/types/index.d.ts",
   "scripts": {
