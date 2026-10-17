@@ -5,7 +5,7 @@ import { C2DTransformed } from "./transform";
 
 export function rendersVisualMedia<
   B extends C2DTransformed,
-  T extends "img" | "video"
+  T extends "img" | "video",
 >(Base: B, mediaTag: T) {
   return class extends c2dRectangleBounds(Base, "topLeft") {
     static observedAttributes = [...super.observedAttributes, "source"];
@@ -23,7 +23,7 @@ export function rendersVisualMedia<
     attributeChangedCallback(
       name: string,
       oldValue: string | null,
-      newValue: string | null
+      newValue: string | null,
     ): void {
       if (newValue === null)
         return super.attributeChangedCallback(name, oldValue, newValue);
@@ -49,8 +49,10 @@ export function rendersVisualMedia<
     connectedCallback() {
       this.canvas.waitFor(
         this.#mediaElement,
-        mediaTag === "video" ? "canplay" : "load"
+        mediaTag === "video" ? "canplay" : "load",
       );
+
+      super.connectedCallback();
     }
 
     get mediaElement() {
@@ -89,7 +91,7 @@ export function rendersVisualMedia<
             this.width = this.mediaWidth;
             this.height = this.mediaHeight;
           }
-        }
+        },
       );
     }
 
@@ -101,14 +103,14 @@ export function rendersVisualMedia<
         this.topLeft.x,
         this.topLeft.y,
         this.width,
-        this.height
+        this.height,
       );
 
       canvas2D.context.rect(
         this.topLeft.x,
         this.topLeft.y,
         this.width,
-        this.height
+        this.height,
       );
 
       this.afterRender(canvas2D);
