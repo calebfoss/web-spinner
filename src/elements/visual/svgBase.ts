@@ -73,6 +73,8 @@ export function createSVGController<T extends keyof SVGElementTagNameMap>(
 
     connectedCallback() {
       this.#attachMain();
+
+      this.connectedCallback();
     }
 
     #createGroup() {

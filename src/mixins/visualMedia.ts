@@ -51,6 +51,8 @@ export function rendersVisualMedia<
         this.#mediaElement,
         mediaTag === "video" ? "canplay" : "load"
       );
+
+      super.connectedCallback();
     }
 
     get mediaElement() {
